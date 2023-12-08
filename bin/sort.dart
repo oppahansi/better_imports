@@ -2,40 +2,33 @@ import "dart:io";
 
 import "package:args/args.dart";
 import "package:better_imports/src/constants.dart" as constants;
+import "package:better_imports/src/sort_cmd.dart" as sort_cmd;
 
 void main(List<String> args) {
   final parser = setupParser();
-  ArgResults parsedOptions;
+  ArgResults argResults;
 
   try {
-    parsedOptions = parser.parse(args);
+    argResults = parser.parse(args);
   } catch (e) {
     if (e is ArgParserException) {
       printError(e.message);
     }
 
-    constants.printUsage;
+    constants.printUsage();
     exit(2);
   }
 
-  processOptions(parsedOptions);
+  processOptions(argResults);
 }
 
-void processOptions(ArgResults parsedOptions) {
-  if (parsedOptions.wasParsed(constants.help)) {
+void processOptions(ArgResults argResults) {
+  if (argResults.wasParsed(constants.help)) {
     constants.printUsage();
     return;
   }
 
-  sort(parsedOptions);
-}
-
-void sort(ArgResults parsedOptions) {
-  var path = parsedOptions[constants.folder];
-  var recursive = parsedOptions[constants.recursive];
-
-  print("folder :  $path");
-  print("recursive : $recursive");
+  sort_cmd.run(argResults);
 }
 
 ArgParser setupParser() {
@@ -52,12 +45,12 @@ ArgParser setupParser() {
     defaultsTo: true,
   );
 
-  parser.addOption(
-    constants.folder,
-    abbr: constants.folderAbbr,
-    defaultsTo: Directory.current.path,
-    mandatory: false,
-  );
+  // parser.addOption(
+  //   constants.folder,
+  //   abbr: constants.folderAbbr,
+  //   defaultsTo: Directory.current.path,
+  //   mandatory: false,
+  // );
 
   return parser;
 }

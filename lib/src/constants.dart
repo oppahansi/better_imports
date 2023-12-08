@@ -1,5 +1,10 @@
 import 'dart:io';
 
+const nameYamlKey = "name";
+const packagesYamlKey = "packages";
+
+const betterImports = "better_imports";
+
 const help = "help";
 const helpAbbr = "h";
 
@@ -9,8 +14,7 @@ const recursiveAbbr = "r";
 const folder = "folder";
 const folderAbbr = "f";
 
-void printUsage() {
-  final title = """
+final title = """
     _          _   _                     
   | |        | | | |                    
   | |__   ___| |_| |_ ___ _ __          
@@ -26,7 +30,7 @@ void printUsage() {
               |_|
   """;
 
-  final summary = """
+final usage = """
       FLAGS
 
   Name           Abbr  Args                   Description
@@ -35,16 +39,18 @@ void printUsage() {
   --recursive    -r                           Include subfolders? Default is true.
                                               Negateable by:
                                                 --no-recursive
-
-      OPTIONS
-
-  Name           Abbr  Args                   Description
-
-  --folder       -f    "path/to/folder/"      Sorts the given folder and subfolders. "" are optional. 
-                                              Path cantaining folder names with spaces require "".
-
   """;
 
+//     OPTIONS
+
+// Name           Abbr  Args                   Description
+
+// --folder       -f    "path/to/folder/"      Sorts the given folder and subfolders. "" are optional.
+//                                             Path cantaining folder names with spaces require "".
+
+// """;
+
+void printUsage() {
   stdout.writeln("\x1B[36m$title\x1B[0m");
-  stdout.writeln(summary);
+  stdout.writeln(usage);
 }

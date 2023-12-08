@@ -5,12 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "sort no args",
+            "request": "launch",
+            "type": "dart",
+            "args": [],
+            "program": "bin/sort.dart",
+        },
+        {
             "name": "sort -t",
             "request": "launch",
             "type": "dart",
             "args": [
-                "-x"
-            ]
+                "-f",
+                "tset/here"
+            ],
+            "program": "bin/sort.dart",
         }
     ]
 }
