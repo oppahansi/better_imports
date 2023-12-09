@@ -18,3 +18,13 @@ dev_dependencies:
 
 better_imports:
   recursive: true
+  folders:
+    - lib
+    - bin
+    - example
+    - test
+    - tests
+    - integration_test
+    - integration_tests
+    - test_driver
+  ignored_folders:

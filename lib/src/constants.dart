@@ -1,20 +1,22 @@
-import 'dart:io';
+class Constants {
+  static const nameKey = "name";
+  static const packagesKey = "packages";
+  static const foldersKey = "folders";
+  static const ignoredFoldersKey = "ignored_folders";
 
-const nameYamlKey = "name";
-const packagesYamlKey = "packages";
+  static const betterImports = "better_imports";
 
-const betterImports = "better_imports";
+  static const helpFlag = "help";
+  static const helpFlagAbbr = "h";
 
-const help = "help";
-const helpAbbr = "h";
+  static const recursiveFlag = "recursive";
+  static const recursiveFlagAbbr = "r";
 
-const recursive = "recursive";
-const recursiveAbbr = "r";
+  static const filesOption = "files";
 
-const folder = "folder";
-const folderAbbr = "f";
+  static const foldersOption = "folders";
 
-final title = """
+  static final title = """
     _          _   _                     
   | |        | | | |                    
   | |__   ___| |_| |_ ___ _ __          
@@ -30,8 +32,8 @@ final title = """
               |_|
   """;
 
-final usage = """
-      FLAGS
+  static final usage = """
+  FLAGS
 
   Name           Abbr  Args                   Description
 
@@ -39,18 +41,19 @@ final usage = """
   --recursive    -r                           Include subfolders? Default is true.
                                               Negateable by:
                                                 --no-recursive
-  """;
 
-//     OPTIONS
+  OPTIONS
 
-// Name           Abbr  Args                   Description
+  Name           Abbr   Args                    Description
 
-// --folder       -f    "path/to/folder/"      Sorts the given folder and subfolders. "" are optional.
-//                                             Path cantaining folder names with spaces require "".
+  --folders             "folder1,folder2"       Sorts the given folders and subfolders only. "" are optional.
+                                                If folder names contain spaces, then "" is required.
+                                                Must be seperated by ','
 
-// """;
+  --files               "file1,file2"           Sorts only the given Files. "" are optional.
+                                                If file names contain spaces, then "" is required.
+                                                Must be seperated by ','
 
-void printUsage() {
-  stdout.writeln("\x1B[36m$title\x1B[0m");
-  stdout.writeln(usage);
+
+""";
 }

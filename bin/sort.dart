@@ -1,64 +1,66 @@
 import "dart:io";
 
 import "package:args/args.dart";
-import "package:better_imports/src/constants.dart" as constants;
-import "package:better_imports/src/sort_cmd.dart" as sort_cmd;
+import "package:better_imports/src/constants.dart";
+import "package:better_imports/src/print.dart";
+import "package:better_imports/src/sort_cmd.dart";
 
 void main(List<String> args) {
-  final parser = setupParser();
+  final parser = _setupParser();
   ArgResults argResults;
 
   try {
     argResults = parser.parse(args);
   } catch (e) {
     if (e is ArgParserException) {
-      printError(e.message);
+      Printer.error(e.message);
     }
 
-    constants.printUsage();
+    Printer.usage();
     exit(2);
   }
 
-  processOptions(argResults);
+  _processOptions(argResults);
 }
 
-void processOptions(ArgResults argResults) {
-  if (argResults.wasParsed(constants.help)) {
-    constants.printUsage();
+void _processOptions(ArgResults argResults) {
+  if (argResults.wasParsed(Constants.helpFlag)) {
+    Printer.usage();
     return;
   }
 
-  sort_cmd.run(argResults);
+  _run(SortCmd(argResults: argResults));
 }
 
-ArgParser setupParser() {
+void _run(SortCmd sortCmd) {
+  sortCmd.run();
+}
+
+ArgParser _setupParser() {
   var parser = ArgParser();
 
   parser.addFlag(
-    constants.help,
-    abbr: constants.helpAbbr,
+    Constants.helpFlag,
+    abbr: Constants.helpFlagAbbr,
     negatable: false,
   );
   parser.addFlag(
-    constants.recursive,
-    abbr: constants.recursiveAbbr,
+    Constants.recursiveFlag,
+    abbr: Constants.recursiveFlagAbbr,
     defaultsTo: true,
   );
 
-  // parser.addOption(
-  //   constants.folder,
-  //   abbr: constants.folderAbbr,
-  //   defaultsTo: Directory.current.path,
-  //   mandatory: false,
-  // );
+  parser.addOption(
+    Constants.filesOption,
+    defaultsTo: "",
+    mandatory: false,
+  );
+
+  parser.addOption(
+    Constants.foldersOption,
+    defaultsTo: "",
+    mandatory: false,
+  );
 
   return parser;
-}
-
-void printWarning(String message) {
-  stderr.writeln('\x1B[33m$message\x1B[0m');
-}
-
-void printError(String message) {
-  stdout.writeln('\x1B[31m$message\x1B[0m');
 }

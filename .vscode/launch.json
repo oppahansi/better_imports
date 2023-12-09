@@ -20,6 +20,16 @@
                 "tset/here"
             ],
             "program": "bin/sort.dart",
+        },
+        {
+            "name": "sort files",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--files",
+                "better_imports_test"
+            ],
+            "program": "bin/sort.dart",
         }
     ]
 }
