@@ -3,9 +3,12 @@
 better_imports:
   # If set overwrites the project name
   # Used for sorting project imports
-  # Must be set if using an external config
-  project_name: better_imports
-  
+  project_name:
+
+  # Absolute path to an external configuration
+  # If set, rest in this section will be ignored
+  cfg_path:
+
   # Flag to include subfolders
   recursive: true
 
@@ -23,5 +26,14 @@ better_imports:
   # Folder names which will be excluded when collecting dart files
   ignored_folders:
 
+  # Files which should be sorted
+  files:
+
+  # RegEx for files which should be collected
+  files_like:
+
   # RegEx for files which should be excluded
-  ignore_files:
+  ignored_files_like:
+    - .*\.g\.dart
+    - .*\.gr\.dart
+    - .*\.freezed\.dart
