@@ -16,8 +16,21 @@ dev_dependencies:
   lints: ^3.0.0
   test: ^1.24.0
 
+# Better Imports default config
+# Default config is overwritten when settings are passed in as arguments in the cli
 better_imports:
+  # If set overwrites the project name
+  # Used for sorting project imports
+  project_name:
+
+  # Absolute path to an external configuration
+  # If set, rest in this section will be ignored
+  cfg_path:
+
+  # Flag to include subfolders
   recursive: true
+
+  # Folder names used for collecting dart files
   folders:
     - lib
     - bin
@@ -27,4 +40,18 @@ better_imports:
     - integration_test
     - integration_tests
     - test_driver
+
+  # Folder names which will be excluded when collecting dart files
   ignored_folders:
+
+  # Files which should be sorted
+  files:
+
+  # RegEx for files which should be collected
+  files_like:
+
+  # RegEx for files which should be excluded
+  ignored_files_like:
+    - .*\.g\.dart
+    - .*\.gr\.dart
+    - .*\.freezed\.dart

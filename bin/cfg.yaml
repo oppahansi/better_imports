@@ -1,0 +1,27 @@
+# Better Imports default config
+# Default config is overwritten when settings are passed in as arguments in the cli
+better_imports:
+  # If set overwrites the project name
+  # Used for sorting project imports
+  # Must be set if using an external config
+  project_name: better_imports
+  
+  # Flag to include subfolders
+  recursive: true
+
+  # Folder names used for collecting dart files
+  folders:
+    - lib
+    - bin
+    - example
+    - test
+    - tests
+    - integration_test
+    - integration_tests
+    - test_driver
+
+  # Folder names which will be excluded when collecting dart files
+  ignored_folders:
+
+  # RegEx for files which should be excluded
+  ignore_files:

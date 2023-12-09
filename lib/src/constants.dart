@@ -1,8 +1,19 @@
 class Constants {
   static const nameKey = "name";
+  static const projectNameKey = "project_name";
+
+  static const cfgPathKey = "cfg_path";
+
   static const packagesKey = "packages";
+
   static const foldersKey = "folders";
-  static const ignoredFoldersKey = "ignored_folders";
+  static const ignoreFoldersKey = "ignored_folders";
+
+  static const filesKey = "files";
+  static const ignoreFilesKey = "ignore_files";
+
+  static const filesLikeKey = "files_like";
+  static const ignoreFilesLikeKey = "ignored_files_like";
 
   static const betterImports = "better_imports";
 
@@ -12,9 +23,18 @@ class Constants {
   static const recursiveFlag = "recursive";
   static const recursiveFlagAbbr = "r";
 
-  static const filesOption = "files";
-
   static const foldersOption = "folders";
+  static const ignoreFoldersOption = "ignore-folders";
+
+  static const filesOption = "files";
+  static const ignoreFilesOption = "ignore-files";
+
+  static const filesLikeOption = "files-like";
+  static const ignoreFilesLikeOption = "ignore-files-like";
+
+  static const cfgPathOption = "cfg";
+
+  static const projectNameOption = "project-name";
 
   static final title = """
     _          _   _                     
