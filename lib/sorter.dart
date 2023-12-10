@@ -57,6 +57,8 @@ class Sorter {
       if (_startsWithComment(line) || !line.startsWith("import")) {
         if (!importsProcessed && line.isEmpty) {
           emptyLinesInImports++;
+        } else {
+          importsProcessed = true;
         }
 
         continue;
@@ -236,7 +238,11 @@ class Sorter {
   }
 
   void _removeImportLine(List<String> sorted, String line) {
-    sorted.removeWhere((element) => element == line);
+    if (line.isEmpty) {
+      sorted.remove(line);
+    } else {
+      sorted.removeWhere((element) => element == line);
+    }
   }
 }
 

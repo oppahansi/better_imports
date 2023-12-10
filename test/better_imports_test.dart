@@ -18,4 +18,12 @@ import 'package:better_imports/anotherFile2.dart';
 import 'anotherFile.dart';
 
 /// asdf
-void main() {}
+void main() {
+  var test = ";";
+
+  var more = 1;
+
+  // ahahahs
+
+  var brre = "  ;";
+}
