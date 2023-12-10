@@ -142,6 +142,7 @@ class Sorter {
     projectImports.clear();
     relativeProjectImports.clear();
     toBeRemoved.clear();
+    emptyLinesInImports = 0;
   }
 
   ImportLine _extractImport(int startIndex, List<String> original) {
