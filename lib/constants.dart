@@ -23,6 +23,9 @@ class Constants {
   static const recursiveFlag = "recursive";
   static const recursiveFlagAbbr = "r";
 
+  static const commentsFlag = "comments";
+  static const commentsFlagAbbr = "c";
+
   static const foldersOption = "folders";
   static const ignoreFoldersOption = "ignore-folders";
 
@@ -35,6 +38,12 @@ class Constants {
   static const cfgPathOption = "cfg";
 
   static const projectNameOption = "project-name";
+
+  static const dartImportsComment = "// Dart Imports";
+  static const flutterImportsComment = "// Flutter Imports";
+  static const packageImportsComment = "// Package Imports";
+  static const projectImportsComment = "// Project Imports";
+  static const relativeProjectImportsComment = "// Relative Project Imports";
 
   static final title = """
     _          _   _                     

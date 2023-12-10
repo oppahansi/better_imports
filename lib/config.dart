@@ -7,11 +7,12 @@ import 'constants.dart';
 import 'print.dart';
 
 class Config {
-  late String projectName;
   late String sortPath;
   late String configPath;
+  late String projectName;
 
   var recursive = true;
+  var comments = true;
   var packageNames = <String>[];
   var folders = <String>[
     "lib",
@@ -58,6 +59,7 @@ class Config {
     _setPackages();
 
     _setRecursive();
+    _setComments();
 
     _setFolders();
     _setIgnoredFolders();
@@ -156,6 +158,20 @@ class Config {
 
     if (_argResults.wasParsed(Constants.recursiveFlag)) {
       recursive = _argResults[Constants.recursiveFlag];
+    }
+  }
+
+  void _setComments() {
+    if (_biConfig[Constants.commentsFlag] == null) {
+      Printer.warning("\"comments\" config value could not be found.");
+    }
+
+    if (_biConfig[Constants.commentsFlag] != null) {
+      comments = _biConfig[Constants.commentsFlag];
+    }
+
+    if (_argResults.wasParsed(Constants.commentsFlag)) {
+      comments = _argResults[Constants.commentsFlag];
     }
   }
 

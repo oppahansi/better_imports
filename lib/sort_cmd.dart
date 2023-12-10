@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
-import 'package:better_imports/src/config.dart';
-import 'package:better_imports/src/collector.dart';
+import 'package:better_imports/config.dart';
+import 'package:better_imports/collector.dart';
+import 'package:better_imports/sorter.dart';
 
 class SortCmd {
   final ArgResults argResults;
@@ -11,7 +12,9 @@ class SortCmd {
     final cfg = Config(argResults);
     final collector = Collector(cfg: cfg);
     final files = collector.collect();
+    final sorter = Sorter(paths: files, cfg: cfg);
+    final sorted = sorter.sort();
 
-    print(files);
+    print(sorted);
   }
 }

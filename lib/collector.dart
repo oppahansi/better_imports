@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:better_imports/src/config.dart';
-import 'package:better_imports/src/extensions.dart';
+import 'package:better_imports/config.dart';
+import 'package:better_imports/extensions.dart';
 
 class Collector {
   final Config cfg;

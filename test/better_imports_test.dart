@@ -1,16 +1,21 @@
-// import 'package:better_imports/better_imports.dart';
-// import 'package:test/test.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:js';
 
-// void main() {
-//   group('A group of tests', () {
-//     final awesome = Awesome();
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/local_notifications/flutter_local_notifications.dart'
+    hide PendingNotificationRequest;
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart' as painting;
+import 'package:flutter/physics.dart';
 
-//     setUp(() {
-//       // Additional setup goes here.
-//     });
+import 'package:intl/intl.dart';
+import 'package:mdi/mdi.dart';
+import 'package:provider/provider.dart';
 
-//     test('First Test', () {
-//       expect(awesome.isAwesome, isTrue);
-//     });
-//   });
-// }
+import 'package:better_imports/anotherFile2.dart';
+
+import 'anotherFile.dart';
+
+/// asdf
+void main() {}

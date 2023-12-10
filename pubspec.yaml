@@ -30,6 +30,9 @@ better_imports:
   # Flag to include subfolders
   recursive: true
 
+  # Flag to add comments above import sections
+  comments: true
+
   # Folder names used for collecting dart files
   folders:
     - lib

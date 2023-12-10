@@ -1,5 +1,5 @@
 import 'package:args/args.dart';
-import 'package:better_imports/src/constants.dart';
+import 'package:better_imports/constants.dart';
 
 class Parser {
   static final _parser = ArgParser();
@@ -14,6 +14,13 @@ class Parser {
       Constants.recursiveFlag,
       abbr: Constants.recursiveFlagAbbr,
       defaultsTo: true,
+      negatable: true,
+    );
+    _parser.addFlag(
+      Constants.commentsFlag,
+      abbr: Constants.commentsFlagAbbr,
+      defaultsTo: true,
+      negatable: true,
     );
 
     _parser.addOption(
@@ -21,43 +28,36 @@ class Parser {
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.projectNameOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.foldersOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.ignoreFoldersOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.filesOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.ignoreFilesOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.filesLikeOption,
       defaultsTo: "",
       mandatory: false,
     );
-
     _parser.addOption(
       Constants.ignoreFilesLikeOption,
       defaultsTo: "",

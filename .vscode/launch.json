@@ -27,7 +27,9 @@
             "type": "dart",
             "args": [
                 "--files",
-                "better_imports_test"
+                "better_imports_test",
+                "--no-comments"
+            
             ],
             "program": "bin/sort.dart",
         }

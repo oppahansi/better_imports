@@ -1,10 +1,7 @@
 import "dart:io";
 
 import "package:args/args.dart";
-import "package:better_imports/src/constants.dart";
-import "package:better_imports/src/parser.dart";
-import "package:better_imports/src/print.dart";
-import "package:better_imports/src/sort_cmd.dart";
+import "package:better_imports/better_imports.dart";
 
 void main(List<String> args) {
   final argParser = Parser.setupParser();
