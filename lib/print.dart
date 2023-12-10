@@ -1,5 +1,7 @@
+// Dart Imports
 import 'dart:io';
 
+// Relative Project Imports
 import 'constants.dart';
 
 class Printer {

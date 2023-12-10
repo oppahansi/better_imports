@@ -1,6 +1,9 @@
+// Package Imports
 import 'package:args/args.dart';
-import 'package:better_imports/config.dart';
+
+// Project Imports
 import 'package:better_imports/collector.dart';
+import 'package:better_imports/config.dart';
 import 'package:better_imports/sorter.dart';
 
 class SortCmd {

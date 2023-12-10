@@ -1,6 +1,10 @@
+// Dart Imports
 import "dart:io";
 
+// Package Imports
 import "package:args/args.dart";
+
+// Project Imports
 import "package:better_imports/better_imports.dart";
 
 void main(List<String> args) {
