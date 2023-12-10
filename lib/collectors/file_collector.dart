@@ -2,11 +2,11 @@
 import 'dart:io';
 
 // Project Imports
-import 'package:better_imports/config.dart';
-import 'package:better_imports/extensions.dart';
+import 'package:better_imports/config/config.dart';
+import 'package:better_imports/extensions/extensions.dart';
 
 class Collector {
-  final Config cfg;
+  final Cfg cfg;
 
   Collector({required this.cfg});
 

@@ -5,11 +5,10 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:yaml/yaml.dart';
 
-// Relative Project Imports
-import 'constants.dart';
-import 'print.dart';
+// Project Imports
+import 'package:better_imports/utils/utils.dart';
 
-class Config {
+class Cfg {
   late String sortPath;
   late String configPath;
   late String projectName;
@@ -43,7 +42,7 @@ class Config {
   late Map<dynamic, dynamic> _config;
   late Map<dynamic, dynamic> _biConfig;
 
-  Config(this._argResults) {
+  Cfg(this._argResults) {
     _init();
   }
 

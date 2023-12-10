@@ -5,7 +5,11 @@ import "dart:io";
 import "package:args/args.dart";
 
 // Project Imports
-import "package:better_imports/better_imports.dart";
+import "package:better_imports/cmds/cmds.dart";
+import "package:better_imports/parser/parser.dart";
+import "package:better_imports/utils/utils.dart";
+
+
 
 void main(List<String> args) {
   final argParser = Parser.setupParser();

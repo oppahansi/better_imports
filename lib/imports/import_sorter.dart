@@ -2,15 +2,13 @@
 import 'dart:io';
 
 // Project Imports
-import 'package:better_imports/extensions.dart';
-
-// Relative Project Imports
-import 'config.dart';
-import 'constants.dart';
+import 'package:better_imports/config/config.dart';
+import 'package:better_imports/extensions/extensions.dart';
+import 'package:better_imports/utils/utils.dart';
 
 class Sorter {
   final List<String> paths;
-  final Config cfg;
+  final Cfg cfg;
 
   final dartImports = <String>[];
   final flutterImports = <String>[];

@@ -1,8 +1,8 @@
 // Dart Imports
 import 'dart:io';
 
-// Relative Project Imports
-import 'constants.dart';
+// Project Imports
+import 'package:better_imports/utils/utils.dart';
 
 class Printer {
   static void print(String message) {
