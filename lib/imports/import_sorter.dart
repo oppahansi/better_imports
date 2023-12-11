@@ -27,11 +27,12 @@ class Sorter {
     var results = <String>[];
 
     for (var path in paths) {
-      var sorted = sortFile(path);
+      var result = sortFile(path);
 
-      if (sorted.changed) {
+      if (result.changed) {
         var file = File(path);
-        file.writeAsStringSync(sorted.sorted.join(Platform.lineTerminator));
+        file.writeAsStringSync(
+            "${result.sorted.join(Platform.lineTerminator)}\n");
 
         results.add(file.name);
       }
