@@ -27,21 +27,20 @@ class Sorter {
     var results = <String>[];
 
     for (var path in paths) {
-      var result = sortFile(path);
+      var result = _sortFile(path);
 
       if (result.changed) {
-        var file = File(path);
-        file.writeAsStringSync(
-            "${result.sorted.join(Platform.lineTerminator)}\n");
+        result.file.writeAsStringSync(
+            "${result.sorted.join(Platform.lineTerminator)}${Platform.lineTerminator}");
 
-        results.add(file.name);
+        results.add(result.file.name);
       }
     }
 
     return results;
   }
 
-  SortedFileEntity sortFile(String path) {
+  SortedFileEntity _sortFile(String path) {
     _reset();
 
     var file = File(path);
@@ -103,6 +102,7 @@ class Sorter {
     var sorted = _getSorted();
 
     return SortedFileEntity(
+      file: file,
       original: original,
       sorted: sorted,
       changed: !_listEquals(original, sorted),
@@ -267,11 +267,13 @@ class Sorter {
 }
 
 class SortedFileEntity {
+  final File file;
   final List<String> original;
   final List<String> sorted;
   final bool changed;
 
   SortedFileEntity({
+    required this.file,
     required this.original,
     required this.sorted,
     required this.changed,
