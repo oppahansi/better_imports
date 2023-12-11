@@ -1,4 +1,3 @@
-// Dart Imports
 import 'dart:io';
 
 extension FileSystemEntityExtension on FileSystemEntity {

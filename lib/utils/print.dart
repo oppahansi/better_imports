@@ -1,7 +1,5 @@
-// Dart Imports
 import 'dart:io';
 
-// Project Imports
 import 'package:better_imports/utils/utils.dart';
 
 class Printer {

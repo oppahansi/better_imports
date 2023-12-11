@@ -1,11 +1,8 @@
-// Dart Imports
 import 'dart:io';
 
-// Package Imports
 import 'package:args/args.dart';
 import 'package:yaml/yaml.dart';
 
-// Project Imports
 import 'package:better_imports/utils/utils.dart';
 
 class Cfg {
