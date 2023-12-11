@@ -55,13 +55,17 @@ class Sorter {
     for (var i = 0; i < original.length; i++) {
       var line = original[i];
 
-      if (_startsWithComment(line) || !line.startsWith("import")) {
-        if (inImportSection && line.isEmpty) {
-          emptyLinesInImports++;
-        } else {
-          inImportSection = false;
+      if (!line.startsWith("import") && inImportSection) {
+        if (_startsWithComment(line)) {
+          continue;
         }
 
+        if (line.isEmpty) {
+          emptyLinesInImports++;
+          continue;
+        }
+
+        inImportSection = false;
         continue;
       }
 

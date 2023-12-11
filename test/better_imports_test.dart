@@ -1,26 +1,19 @@
-// Dart Imports
 import 'dart:async';
 import 'dart:io';
 import 'dart:js';
 
-// Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/local_notifications/flutter_local_notifications.dart'
     hide PendingNotificationRequest;
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart' as painting;
-import 'package:flutter/physics.dart';
-
-// Package Imports
-import 'package:intl/intl.dart';
+import 'anotherFile.dart';
 import 'package:mdi/mdi.dart';
+import 'package:flutter/painting.dart' as painting;
+import 'package:better_imports/anotherFile2.dart';
+import 'package:flutter/physics.dart';
 import 'package:provider/provider.dart';
 
-// Project Imports
-import 'package:better_imports/anotherFile2.dart';
-
-// Relative Project Imports
-import 'anotherFile.dart';
+import 'package:intl/intl.dart';
 
 /// asdf
 void main() {
