@@ -1,5 +1,7 @@
+// Package Imports
 import 'package:args/args.dart';
 
+// Project Imports
 import 'package:better_imports/collectors/collectors.dart';
 import 'package:better_imports/config/config.dart';
 import 'package:better_imports/imports/imports.dart';
