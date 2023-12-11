@@ -10,11 +10,11 @@ class Sorter {
   final List<String> paths;
   final Cfg cfg;
 
-  final dartImports = <String>[];
-  final flutterImports = <String>[];
-  final packageImports = <String>[];
-  final relativeProjectImports = <String>[];
-  final projectImports = <String>[];
+  final dartImports = <ImportLine>[];
+  final flutterImports = <ImportLine>[];
+  final packageImports = <ImportLine>[];
+  final relativeProjectImports = <ImportLine>[];
+  final projectImports = <ImportLine>[];
   final toBeRemoved = <String>[];
 
   final original = <String>[];
@@ -71,26 +71,27 @@ class Sorter {
 
       if (inImportSection) {
         var importLine = _extractImport(i, original);
+        var importSet = importLine.importLines.toSet();
 
-        if (importLine.import.contains('dart:')) {
-          if (!dartImports.contains(importLine.import)) {
-            dartImports.add(importLine.import);
+        if (importSet.first.contains('dart:')) {
+          if (!dartImports.contains(importLine)) {
+            dartImports.add(importLine);
           }
-        } else if (importLine.import.contains('package:flutter/')) {
-          if (!flutterImports.contains(importLine.import)) {
-            flutterImports.add(importLine.import);
+        } else if (importSet.first.contains('package:flutter/')) {
+          if (!flutterImports.contains(importLine)) {
+            flutterImports.add(importLine);
           }
-        } else if (importLine.import.contains('package:${cfg.projectName}/')) {
-          if (!projectImports.contains(importLine.import)) {
-            projectImports.add(importLine.import);
+        } else if (importSet.first.contains('package:${cfg.projectName}/')) {
+          if (!projectImports.contains(importLine)) {
+            projectImports.add(importLine);
           }
-        } else if (importLine.import.contains('package:')) {
-          if (!packageImports.contains(importLine.import)) {
-            packageImports.add(importLine.import);
+        } else if (importSet.first.contains('package:')) {
+          if (!packageImports.contains(importLine)) {
+            packageImports.add(importLine);
           }
         } else {
-          if (!relativeProjectImports.contains(importLine.import)) {
-            relativeProjectImports.add(importLine.import);
+          if (!relativeProjectImports.contains(importLine)) {
+            relativeProjectImports.add(importLine);
           }
         }
 
@@ -128,11 +129,22 @@ class Sorter {
   }
 
   void _addImportComments() {
-    dartImports.add(Constants.dartImportsComment);
-    flutterImports.add(Constants.flutterImportsComment);
-    packageImports.add(Constants.packageImportsComment);
-    projectImports.add(Constants.projectImportsComment);
-    relativeProjectImports.add(Constants.relativeProjectImportsComment);
+    dartImports.add(
+      ImportLine(importLines: [Constants.dartImportsComment], endIndex: 0),
+    );
+    flutterImports.add(
+      ImportLine(importLines: [Constants.flutterImportsComment], endIndex: 0),
+    );
+    packageImports.add(
+      ImportLine(importLines: [Constants.packageImportsComment], endIndex: 0),
+    );
+    projectImports.add(
+      ImportLine(importLines: [Constants.projectImportsComment], endIndex: 0),
+    );
+    relativeProjectImports.add(
+      ImportLine(
+          importLines: [Constants.relativeProjectImportsComment], endIndex: 0),
+    );
   }
 
   void _reset() {
@@ -147,24 +159,21 @@ class Sorter {
   }
 
   ImportLine _extractImport(int startIndex, List<String> original) {
-    var import = "";
     var endIndex = startIndex;
+    var importLines = <String>[];
 
     for (var i = startIndex;; i++) {
-      import += original[i];
-      endIndex = i;
+      importLines.add(original[i]);
       toBeRemoved.add(original[i]);
+      endIndex = i;
 
       if (original[i].endsWith(";")) {
         break;
       }
-
-      import += Platform.lineTerminator;
     }
 
     return ImportLine(
-      import: import,
-      startIndex: startIndex,
+      importLines: importLines,
       endIndex: endIndex,
     );
   }
@@ -191,24 +200,39 @@ class Sorter {
     }
 
     if (dartImports.isNotEmpty) {
-      dartImports.sort();
-      dartImports.add("");
+      dartImports
+          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
+      dartImports.add(
+        ImportLine(importLines: [""], endIndex: 0),
+      );
     }
     if (flutterImports.isNotEmpty) {
-      flutterImports.sort();
-      flutterImports.add("");
+      flutterImports
+          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
+      flutterImports.add(
+        ImportLine(importLines: [""], endIndex: 0),
+      );
     }
     if (packageImports.isNotEmpty) {
-      packageImports.sort();
-      packageImports.add("");
+      packageImports
+          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
+      packageImports.add(
+        ImportLine(importLines: [""], endIndex: 0),
+      );
     }
     if (projectImports.isNotEmpty) {
-      projectImports.sort();
-      projectImports.add("");
+      projectImports
+          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
+      projectImports.add(
+        ImportLine(importLines: [""], endIndex: 0),
+      );
     }
     if (relativeProjectImports.isNotEmpty) {
-      relativeProjectImports.sort();
-      relativeProjectImports.add("");
+      relativeProjectImports
+          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
+      relativeProjectImports.add(
+        ImportLine(importLines: [""], endIndex: 0),
+      );
     }
 
     _removeImports(sorted, toBeRemoved);
@@ -218,11 +242,11 @@ class Sorter {
     _removeImportLine(sorted, Constants.projectImportsComment);
     _removeImportLine(sorted, Constants.relativeProjectImportsComment);
 
-    sorted.insertAll(0, relativeProjectImports);
-    sorted.insertAll(0, projectImports);
-    sorted.insertAll(0, packageImports);
-    sorted.insertAll(0, flutterImports);
-    sorted.insertAll(0, dartImports);
+    _insertImports(sorted, relativeProjectImports);
+    _insertImports(sorted, projectImports);
+    _insertImports(sorted, packageImports);
+    _insertImports(sorted, flutterImports);
+    _insertImports(sorted, dartImports);
 
     return sorted;
   }
@@ -243,7 +267,13 @@ class Sorter {
     if (line.isEmpty) {
       sorted.remove(line);
     } else {
-      sorted.removeWhere((element) => element == line);
+      sorted.removeWhere((element) => element.contains(line));
+    }
+  }
+
+  _insertImports(List<String> sorted, List<ImportLine> importLines) {
+    for (var importLine in importLines.reversed) {
+      sorted.insertAll(0, importLine.importLines);
     }
   }
 
@@ -281,13 +311,11 @@ class SortedFileEntity {
 }
 
 class ImportLine {
-  final String import;
-  final int startIndex;
+  final List<String> importLines;
   final int endIndex;
 
   ImportLine({
-    required this.import,
-    required this.startIndex,
+    required this.importLines,
     required this.endIndex,
   });
 }
