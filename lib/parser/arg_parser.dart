@@ -34,7 +34,6 @@ class Parser {
 
     _parser.addOption(
       Constants.cfgPathOption,
-      defaultsTo: "",
       mandatory: false,
     );
     _parser.addOption(

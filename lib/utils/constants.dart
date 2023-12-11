@@ -3,6 +3,7 @@ class Constants {
   static const projectNameKey = "project_name";
 
   static const cfgPathKey = "cfg_path";
+  static const pubspecLockPathKey = "pubspec_lock_path";
 
   static const packagesKey = "packages";
 
@@ -102,7 +103,5 @@ class Constants {
   --ignore-files-like   ".*\.g\.dart,.*\.g\.dart"   Regex used to filter files which should be ignored. "" are optional.
                                                     If regex contain spaces, then "" is required.
                                                     Must be seperated by ','
-
-
 """;
 }
