@@ -50,46 +50,49 @@ class Sorter {
       _addImportComments();
     }
 
-    bool importsProcessed = false;
+    bool inImportSection = true;
 
     for (var i = 0; i < original.length; i++) {
       var line = original[i];
 
       if (_startsWithComment(line) || !line.startsWith("import")) {
-        if (!importsProcessed && line.isEmpty) {
+        if (inImportSection && line.isEmpty) {
           emptyLinesInImports++;
         } else {
-          importsProcessed = true;
+          inImportSection = false;
         }
 
         continue;
       }
 
-      var importLine = _extractImport(i, original);
+      if (inImportSection) {
+        var importLine = _extractImport(i, original);
 
-      if (importLine.import.contains('dart:')) {
-        if (!dartImports.contains(importLine.import)) {
-          dartImports.add(importLine.import);
+        if (importLine.import.contains('dart:')) {
+          if (!dartImports.contains(importLine.import)) {
+            dartImports.add(importLine.import);
+          }
+        } else if (importLine.import.contains('package:flutter/')) {
+          if (!flutterImports.contains(importLine.import)) {
+            flutterImports.add(importLine.import);
+          }
+        } else if (importLine.import.contains('package:${cfg.projectName}/')) {
+          if (!projectImports.contains(importLine.import)) {
+            projectImports.add(importLine.import);
+          }
+        } else if (importLine.import.contains('package:')) {
+          if (!packageImports.contains(importLine.import)) {
+            packageImports.add(importLine.import);
+          }
+        } else {
+          if (!relativeProjectImports.contains(importLine.import)) {
+            relativeProjectImports.add(importLine.import);
+          }
         }
-      } else if (importLine.import.contains('package:flutter/')) {
-        if (!flutterImports.contains(importLine.import)) {
-          flutterImports.add(importLine.import);
-        }
-      } else if (importLine.import.contains('package:${cfg.projectName}/')) {
-        if (!projectImports.contains(importLine.import)) {
-          projectImports.add(importLine.import);
-        }
-      } else if (importLine.import.contains('package:')) {
-        if (!packageImports.contains(importLine.import)) {
-          packageImports.add(importLine.import);
-        }
-      } else {
-        if (!relativeProjectImports.contains(importLine.import)) {
-          relativeProjectImports.add(importLine.import);
-        }
+
+        i = importLine.endIndex;
+        continue;
       }
-
-      i = importLine.endIndex;
     }
 
     var sorted = _getSorted();
@@ -102,29 +105,21 @@ class Sorter {
   }
 
   bool _startsWithComment(String line) {
-    var isImportComment = false;
+    var isComment = false;
 
-    if (!isImportComment && line == Constants.dartImportsComment) {
-      isImportComment = !isImportComment;
-    }
-    if (!isImportComment && line == Constants.flutterImportsComment) {
-      isImportComment = !isImportComment;
-    }
-    if (!isImportComment && line == Constants.packageImportsComment) {
-      isImportComment = !isImportComment;
-    }
-    if (!isImportComment && line == Constants.projectImportsComment) {
-      isImportComment = !isImportComment;
-    }
-    if (!isImportComment && line == Constants.relativeProjectImportsComment) {
-      isImportComment = !isImportComment;
+    if (!isComment && line == Constants.dartImportsComment) {
+      isComment = !isComment;
+    } else if (!isComment && line == Constants.flutterImportsComment) {
+      isComment = !isComment;
+    } else if (!isComment && line == Constants.packageImportsComment) {
+      isComment = !isComment;
+    } else if (!isComment && line == Constants.projectImportsComment) {
+      isComment = !isComment;
+    } else if (!isComment && line == Constants.relativeProjectImportsComment) {
+      isComment = !isComment;
     }
 
-    if (isImportComment) {
-      toBeRemoved.add(line);
-    }
-
-    return isImportComment;
+    return isComment;
   }
 
   void _addImportComments() {
