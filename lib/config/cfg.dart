@@ -38,15 +38,22 @@ class Cfg {
 
     _config = _loadConfig();
 
-    if (_config == null || _config![Constants.betterImports] == null) {
-      Printer.warning(
-          "Could not find config section in the configuration file. Config path:"
-          "\n$configPath"
-          "Default values will be used.");
-      return;
+    if (_config == null) {
+      Printer.warning("Could not find config file Config path:"
+          "\n$configPath");
     }
 
     _biConfig = _config![Constants.betterImports];
+    if (_biConfig == null) {
+      Printer.warning(
+          "Could not find config section in the config file. Config path:"
+          "\n$configPath");
+    }
+
+    if (_config == null || _biConfig == null) {
+      Printer.warning(
+          "Default values will be used if no cli arguments are passed in.");
+    }
 
     _setProjectName();
 
@@ -132,7 +139,7 @@ class Cfg {
   }
 
   void _setProjectName() {
-    if (_biConfig![Constants.projectNameKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.projectNameKey] != null) {
       projectName = _biConfig![Constants.projectNameKey];
     }
 
@@ -142,11 +149,7 @@ class Cfg {
   }
 
   void _setRecursive() {
-    if (_biConfig![Constants.recursiveFlag] == null) {
-      Printer.warning("\"recursive\" config value could not be found.");
-    }
-
-    if (_biConfig![Constants.recursiveFlag] != null) {
+    if (_biConfig != null && _biConfig![Constants.recursiveFlag] != null) {
       recursive = _biConfig![Constants.recursiveFlag];
     }
 
@@ -156,11 +159,7 @@ class Cfg {
   }
 
   void _setComments() {
-    if (_biConfig![Constants.commentsFlag] == null) {
-      Printer.warning("\"comments\" config value could not be found.");
-    }
-
-    if (_biConfig![Constants.commentsFlag] != null) {
+    if (_biConfig != null && _biConfig![Constants.commentsFlag] != null) {
       comments = _biConfig![Constants.commentsFlag];
     }
 
@@ -170,11 +169,7 @@ class Cfg {
   }
 
   void _setSilent() {
-    if (_biConfig![Constants.silentFlag] == null) {
-      Printer.warning("\"silent\" config value could not be found.");
-    }
-
-    if (_biConfig![Constants.silentFlag] != null) {
+    if (_biConfig != null && _biConfig![Constants.silentFlag] != null) {
       silent = _biConfig![Constants.silentFlag];
     }
 
@@ -184,7 +179,7 @@ class Cfg {
   }
 
   void _setFolders() {
-    if (_biConfig![Constants.foldersKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.foldersKey] != null) {
       for (var folder in _biConfig![Constants.foldersKey]) {
         folders.add(folder);
       }
@@ -196,7 +191,7 @@ class Cfg {
   }
 
   void _setIgnoredFolders() {
-    if (_biConfig![Constants.ignoreFoldersKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.ignoreFoldersKey] != null) {
       for (var ignored in _biConfig![Constants.ignoreFoldersKey]) {
         ignoredFolders.add(ignored);
       }
@@ -209,7 +204,7 @@ class Cfg {
   }
 
   void _setFiles() {
-    if (_biConfig![Constants.filesKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.filesKey] != null) {
       for (var file in _biConfig![Constants.filesKey]) {
         files.add(file);
       }
@@ -221,7 +216,7 @@ class Cfg {
   }
 
   void _setFilesLike() {
-    if (_biConfig![Constants.filesLikeKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.filesLikeKey] != null) {
       for (var file in _biConfig![Constants.filesLikeKey]) {
         filesLike.add(file);
       }
@@ -233,7 +228,7 @@ class Cfg {
   }
 
   void _setIgnoredFilesLike() {
-    if (_biConfig![Constants.ignoreFilesLikeKey] != null) {
+    if (_biConfig != null && _biConfig![Constants.ignoreFilesLikeKey] != null) {
       for (var ignored in _biConfig![Constants.ignoreFilesLikeKey]) {
         ignoreFilesLike.add(ignored);
       }

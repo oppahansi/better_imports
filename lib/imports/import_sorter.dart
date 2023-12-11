@@ -56,7 +56,7 @@ class Sorter {
       var line = original[i];
 
       if (!line.startsWith("import") && inImportSection) {
-        if (_startsWithComment(line)) {
+        if (_startsWithComment(line.toLowerCase())) {
           continue;
         }
 
@@ -111,21 +111,7 @@ class Sorter {
   }
 
   bool _startsWithComment(String line) {
-    var isComment = false;
-
-    if (!isComment && line == Constants.dartImportsComment) {
-      isComment = !isComment;
-    } else if (!isComment && line == Constants.flutterImportsComment) {
-      isComment = !isComment;
-    } else if (!isComment && line == Constants.packageImportsComment) {
-      isComment = !isComment;
-    } else if (!isComment && line == Constants.projectImportsComment) {
-      isComment = !isComment;
-    } else if (!isComment && line == Constants.relativeProjectImportsComment) {
-      isComment = !isComment;
-    }
-
-    return isComment;
+    return line.trimLeft().startsWith("//");
   }
 
   void _addImportComments() {
@@ -244,19 +230,26 @@ class Sorter {
     }
 
     _removeImports(sorted, toBeRemoved);
-    _removeImportLine(sorted, Constants.dartImportsComment);
-    _removeImportLine(sorted, Constants.flutterImportsComment);
-    _removeImportLine(sorted, Constants.packageImportsComment);
-    _removeImportLine(sorted, Constants.projectImportsComment);
-    _removeImportLine(sorted, Constants.relativeProjectImportsComment);
+    _removeImportSectionComment(sorted);
+    _insertSortedImports(sorted);
 
+    return sorted;
+  }
+
+  void _insertSortedImports(List<String> sorted) {
     _insertImports(sorted, relativeProjectImports);
     _insertImports(sorted, projectImports);
     _insertImports(sorted, packageImports);
     _insertImports(sorted, flutterImports);
     _insertImports(sorted, dartImports);
+  }
 
-    return sorted;
+  void _removeImportSectionComment(List<String> sorted) {
+    _removeImportLine(sorted, Constants.dartImportsComment);
+    _removeImportLine(sorted, Constants.flutterImportsComment);
+    _removeImportLine(sorted, Constants.packageImportsComment);
+    _removeImportLine(sorted, Constants.projectImportsComment);
+    _removeImportLine(sorted, Constants.relativeProjectImportsComment);
   }
 
   void _removeImports(List<String> sorted, List<String> toBeRemoved) {
@@ -275,7 +268,8 @@ class Sorter {
     if (line.isEmpty) {
       sorted.remove(line);
     } else {
-      sorted.removeWhere((element) => element.contains(line));
+      sorted.removeWhere(
+          (element) => element.toLowerCase().contains(line.toLowerCase()));
     }
   }
 

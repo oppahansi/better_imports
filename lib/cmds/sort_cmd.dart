@@ -18,8 +18,10 @@ class SortCmd {
     stopwatch.start();
 
     final cfg = Cfg(argResults);
+
     final collector = Collector(cfg: cfg);
     final files = collector.collect();
+
     final sorter = Sorter(paths: files, cfg: cfg);
     final sorted = sorter.sort();
 
@@ -40,6 +42,6 @@ class SortCmd {
     }
 
     Printer.print("\n$success Sorted ${sorted.length} files in "
-        "${stopwatch.elapsed.inSeconds}.${stopwatch.elapsedMilliseconds} seconds\n");
+        "${stopwatch.elapsed.inMilliseconds} ms\n");
   }
 }
