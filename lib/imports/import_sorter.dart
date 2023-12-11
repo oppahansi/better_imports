@@ -199,6 +199,14 @@ class Sorter {
       }
     }
 
+    if (dartImports.isEmpty &&
+        flutterImports.isEmpty &&
+        packageImports.isEmpty &&
+        projectImports.isEmpty &&
+        relativeProjectImports.isEmpty) {
+      return sorted;
+    }
+
     if (dartImports.isNotEmpty) {
       dartImports
           .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
