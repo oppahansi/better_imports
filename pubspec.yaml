@@ -9,6 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   args: ^2.4.2
+  tint: ^2.0.1
   yaml: ^3.1.2
   # path: ^1.8.0
 
@@ -32,6 +33,9 @@ better_imports:
 
   # Flag to add comments above import sections
   comments: true
+
+  # Flag to disable results output in console
+  silent: false
 
   # Folder names used for collecting dart files
   folders:

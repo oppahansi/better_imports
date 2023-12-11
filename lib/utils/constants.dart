@@ -26,6 +26,9 @@ class Constants {
   static const commentsFlag = "comments";
   static const commentsFlagAbbr = "c";
 
+  static const silentFlag = "silent";
+  static const silentFlagAbbr = "s";
+
   static const foldersOption = "folders";
   static const ignoreFoldersOption = "ignore-folders";
 
@@ -61,7 +64,7 @@ class Constants {
               |_|
   """;
 
-  static final usage = """
+  static final usage = r"""
   FLAGS
 
   Name           Abbr  Args                   Description
@@ -70,18 +73,35 @@ class Constants {
   --recursive    -r                           Include subfolders? Default is true.
                                               Negateable by:
                                                 --no-recursive
+  --silent       -s                           Disables results output in console. Default is false.
+
 
   OPTIONS
 
   Name           Abbr   Args                    Description
 
-  --folders             "folder1,folder2"       Sorts the given folders and subfolders only. "" are optional.
-                                                If folder names contain spaces, then "" is required.
-                                                Must be seperated by ','
-
-  --files               "file1,file2"           Sorts only the given Files. "" are optional.
-                                                If file names contain spaces, then "" is required.
-                                                Must be seperated by ','
+  --cfg                 "path/to/cfg"               Path to an external yaml config. "" are optional.
+                                                    If path contains spaces, then "" is required.
+  --project-name        "project_name"              Project name used to identify project imports. "" are optional.
+                                                    If project name contains spaces, then "" are required.
+  --folders             "folder1,folder2"           Sorts the given folders and subfolders only. "" are optional.
+                                                    If folder names contain spaces, then "" is required.
+                                                    Must be seperated by ','
+  --ignore-folders      "folder1,folder2"           Folders to be ignored when sorting imports. "" are optional.
+                                                    If folder names contain spaces, then "" is required.
+                                                    Must be seperated by ','
+  --files               "file1,file2"               Sorts only the given Files. "" are optional.
+                                                    If file names contain spaces, then "" is required.
+                                                    Must be seperated by ','
+  --ignore-files        "file1,file2"               Files to be ignored when sorting imports. "" are optional.
+                                                    If file names contain spaces, then "" is required.
+                                                    Must be seperated by ','
+  --files-like          ".*\.g\.dart,.*\.g\.dart"   Regex used to filter files which should be sorted. "" are optional.
+                                                    If regex contain spaces, then "" is required.
+                                                    Must be seperated by ','
+  --ignore-files-like   ".*\.g\.dart,.*\.g\.dart"   Regex used to filter files which should be ignored. "" are optional.
+                                                    If regex contain spaces, then "" is required.
+                                                    Must be seperated by ','
 
 
 """;

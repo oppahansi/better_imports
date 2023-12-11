@@ -15,6 +15,7 @@ class Cfg {
 
   var recursive = true;
   var comments = true;
+  var silent = false;
   var packageNames = <String>[];
   var folders = <String>[
     "lib",
@@ -62,6 +63,7 @@ class Cfg {
 
     _setRecursive();
     _setComments();
+    _setSilent();
 
     _setFolders();
     _setIgnoredFolders();
@@ -174,6 +176,20 @@ class Cfg {
 
     if (_argResults.wasParsed(Constants.commentsFlag)) {
       comments = _argResults[Constants.commentsFlag];
+    }
+  }
+
+  void _setSilent() {
+    if (_biConfig[Constants.silentFlag] == null) {
+      Printer.warning("\"silent\" config value could not be found.");
+    }
+
+    if (_biConfig[Constants.silentFlag] != null) {
+      silent = _biConfig[Constants.silentFlag];
+    }
+
+    if (_argResults.wasParsed(Constants.silentFlag)) {
+      silent = _argResults[Constants.silentFlag];
     }
   }
 
