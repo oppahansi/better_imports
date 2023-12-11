@@ -105,7 +105,7 @@ class Sorter {
     return SortedFileEntity(
       original: original,
       sorted: sorted,
-      changed: original != sorted,
+      changed: !_listEquals(original, sorted),
     );
   }
 
@@ -245,6 +245,24 @@ class Sorter {
     } else {
       sorted.removeWhere((element) => element == line);
     }
+  }
+
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) {
+      return b == null;
+    }
+    if (b == null || a.length != b.length) {
+      return false;
+    }
+    if (identical(a, b)) {
+      return true;
+    }
+    for (int index = 0; index < a.length; index += 1) {
+      if (a[index] != b[index]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 
