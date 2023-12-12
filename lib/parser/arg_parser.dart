@@ -52,11 +52,6 @@ class Parser {
       mandatory: false,
     );
     _parser.addOption(
-      Constants.ignoreFoldersOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
       Constants.filesOption,
       defaultsTo: "",
       mandatory: false,

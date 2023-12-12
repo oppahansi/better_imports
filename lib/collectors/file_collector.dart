@@ -56,9 +56,8 @@ class Collector {
     final results = <String>[];
     final collectedFileEntities = <FileSystemEntity>[];
     final emptyFolders = <String>[];
-    final filteredFolders = _filterIgnoredFolders(folders);
 
-    for (var folder in filteredFolders) {
+    for (var folder in folders) {
       final collected = _collectInFolder(folder);
 
       collectedFileEntities.addAll(collected);
@@ -126,15 +125,6 @@ class Collector {
     }
 
     return [];
-  }
-
-  List<String> _filterIgnoredFolders(List<String> folders) {
-    final filteredFolders = <String>[];
-
-    filteredFolders.addAll(
-        folders.where((element) => !cfg.ignoredFolders.contains(element)));
-
-    return filteredFolders;
   }
 
   List<String> _filterIgnoredFiles(List<String> files) {

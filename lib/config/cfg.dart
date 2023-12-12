@@ -17,7 +17,6 @@ class Cfg {
   late bool silent;
   late bool relative;
   late List<String> folders;
-  late List<String> ignoredFolders;
   late List<String> files;
   late List<String> ignoreFiles;
   late List<String> filesLike;
@@ -52,7 +51,6 @@ class Cfg {
       "integration_tests",
       "test_driver",
     ];
-    ignoredFolders = <String>[];
     files = <String>[];
     ignoreFiles = <String>[];
     filesLike = <String>[];
@@ -83,7 +81,6 @@ class Cfg {
     _setRelative();
 
     _setFolders();
-    _setIgnoredFolders();
 
     _setFiles();
     _setFilesLike();
@@ -115,6 +112,7 @@ class Cfg {
     if (config[Constants.betterImports] == null) {
       return config;
     }
+
     _biConfig = config[Constants.betterImports];
 
     if (_biConfig![Constants.cfgPathKey] != null) {
@@ -206,19 +204,6 @@ class Cfg {
 
     if (_argResults.wasParsed(Constants.foldersOption)) {
       folders = (_argResults[Constants.foldersOption] as String).split(",");
-    }
-  }
-
-  void _setIgnoredFolders() {
-    if (_biConfig != null && _biConfig![Constants.ignoreFoldersKey] != null) {
-      for (var ignored in _biConfig![Constants.ignoreFoldersKey]) {
-        ignoredFolders.add(ignored);
-      }
-    }
-
-    if (_argResults.wasParsed(Constants.foldersOption)) {
-      ignoredFolders =
-          (_argResults[Constants.ignoreFoldersOption] as String).split(",");
     }
   }
 

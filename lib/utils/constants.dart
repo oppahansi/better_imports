@@ -8,13 +8,12 @@ class Constants {
   static const packagesKey = "packages";
 
   static const foldersKey = "folders";
-  static const ignoreFoldersKey = "ignored_folders";
 
   static const filesKey = "files";
   static const ignoreFilesKey = "ignore_files";
 
   static const filesLikeKey = "files_like";
-  static const ignoreFilesLikeKey = "ignored_files_like";
+  static const ignoreFilesLikeKey = "ignore_files_like";
 
   static const betterImports = "better_imports";
 
@@ -33,7 +32,6 @@ class Constants {
   static const relativeFlag = "relative";
 
   static const foldersOption = "folders";
-  static const ignoreFoldersOption = "ignore-folders";
 
   static const filesOption = "files";
   static const ignoreFilesOption = "ignore-files";
@@ -89,9 +87,6 @@ class Constants {
   --project-name        "project_name"              Project name used to identify project imports. "" are optional.
                                                     If project name contains spaces, then "" are required.
   --folders             "folder1,folder2"           Sorts the given folders and subfolders only. "" are optional.
-                                                    If folder names contain spaces, then "" is required.
-                                                    Must be seperated by ','
-  --ignore-folders      "folder1,folder2"           Folders to be ignored when sorting imports. "" are optional.
                                                     If folder names contain spaces, then "" is required.
                                                     Must be seperated by ','
   --files               "file1,file2"               Sorts only the given Files. "" are optional.
