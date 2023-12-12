@@ -58,6 +58,7 @@ better_imports:
 
   # RegEx for files which should be excluded
   ignore_files_like:
+    - .*generated_plugin_registrant\.dart
     - .*\.g\.dart
     - .*\.gr\.dart
     - .*\.freezed\.dart

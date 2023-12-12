@@ -1,0 +1,10 @@
+# Better Imports default config
+# Default config is overwritten when settings are passed in as arguments in the cli
+better_imports:
+  # If set overwrites the project name
+  # Used for sorting project imports
+  project_name: external_cfg
+
+  # Folder names used for collecting dart files
+  folders:
+    - lib

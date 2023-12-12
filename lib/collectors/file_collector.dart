@@ -26,8 +26,7 @@ class Collector {
     final results = <String>[];
 
     for (var file in files) {
-      var fileName =
-          file.contains(".dart") ? file.trim() : "${file.trim()}.dart";
+      var fileName = file.contains(".dart") ? file : "$file.dart";
 
       var match = collectedFiles.firstWhere(
         (element) => element.endsWith(fileName),
@@ -52,12 +51,12 @@ class Collector {
     final emptyFolders = <String>[];
 
     for (var folder in folders) {
-      final collected = _collectInFolder(folder.trim());
+      final collected = _collectInFolder(folder);
 
       collectedFileEntities.addAll(collected);
 
       if (collected.isEmpty) {
-        emptyFolders.add(folder.trim());
+        emptyFolders.add(folder);
       }
     }
 
@@ -75,7 +74,7 @@ class Collector {
   }
 
   List<FileSystemEntity> _collectInFolder(String folder) {
-    var path = '${cfg.sortPath}${Platform.pathSeparator}${folder.trim()}';
+    var path = '${cfg.sortPath}${Platform.pathSeparator}$folder';
 
     if (Directory(path).existsSync()) {
       return Directory(path).listSync(recursive: cfg.recursive);
@@ -86,7 +85,12 @@ class Collector {
 
   List<String> _filterIgnoredFiles(List<String> files) {
     for (var pattern in cfg.ignoreFilesLike) {
-      files.removeWhere((element) => RegExp(pattern.trim()).hasMatch(element));
+      files.removeWhere((element) => RegExp(pattern).hasMatch(element));
+    }
+
+    for (var ignored in cfg.ignoreFiles) {
+      files.removeWhere((element) =>
+          element.endsWith("${Platform.pathSeparator}$ignored.dart"));
     }
 
     return files;
@@ -94,7 +98,7 @@ class Collector {
 
   List<String> _filterFilesLike(List<String> files) {
     for (var pattern in cfg.filesLike) {
-      files.removeWhere((element) => !RegExp(pattern.trim()).hasMatch(element));
+      files.removeWhere((element) => !RegExp(pattern).hasMatch(element));
     }
 
     return files;

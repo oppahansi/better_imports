@@ -55,10 +55,10 @@ class Cfg {
     ignoreFiles = <String>[];
     filesLike = <String>[];
     ignoreFilesLike = <String>[
-      "generated_plugin_registrant",
+      r".*generated_plugin_registrant\.dart",
+      r".*\.g\.dart",
       r".*\.gr\.dart",
       r".*\.freezed\.dart",
-      r".*\.g\.dart",
     ];
   }
 
@@ -83,6 +83,7 @@ class Cfg {
     _setFolders();
 
     _setFiles();
+    _setIgnoreFiles();
     _setFilesLike();
     _setIgnoredFilesLike();
   }
@@ -197,50 +198,134 @@ class Cfg {
 
   void _setFolders() {
     if (_biConfig != null && _biConfig![Constants.foldersKey] != null) {
+      var cfgValues = _biConfig![Constants.foldersKey];
+
+      if (cfgValues.isNotEmpty) {
+        folders.clear();
+      }
+
       for (var folder in _biConfig![Constants.foldersKey]) {
-        folders.add(folder);
+        if (!folders.contains((folder as String).trim())) {
+          folders.add((folder).trim());
+        }
       }
     }
 
     if (_argResults.wasParsed(Constants.foldersOption)) {
-      folders = (_argResults[Constants.foldersOption] as String).split(",");
+      folders.clear();
+
+      var argValues =
+          (_argResults[Constants.foldersOption] as String).split(",");
+
+      for (var argValue in argValues) {
+        folders.add(argValue.trim());
+      }
     }
   }
 
   void _setFiles() {
     if (_biConfig != null && _biConfig![Constants.filesKey] != null) {
+      var cfgValues = _biConfig![Constants.filesKey];
+
+      if (cfgValues.isNotEmpty) {
+        files.clear();
+      }
+
       for (var file in _biConfig![Constants.filesKey]) {
-        files.add(file);
+        if (!files.contains((file).trim())) {
+          files.add((file).trim());
+        }
       }
     }
 
     if (_argResults.wasParsed(Constants.filesOption)) {
-      files = (_argResults[Constants.filesOption] as String).split(",");
+      files.clear();
+
+      var argValues = (_argResults[Constants.filesOption] as String).split(",");
+
+      for (var argValue in argValues) {
+        files.add(argValue.trim());
+      }
+    }
+  }
+
+  void _setIgnoreFiles() {
+    if (_biConfig != null && _biConfig![Constants.ignoreFilesKey] != null) {
+      var cfgValues = _biConfig![Constants.ignoreFilesKey];
+
+      if (cfgValues.isNotEmpty) {
+        ignoreFiles.clear();
+      }
+
+      for (var file in _biConfig![Constants.ignoreFilesKey]) {
+        if (!files.contains((file).trim())) {
+          ignoreFiles.add((file).trim());
+        }
+      }
+    }
+
+    if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
+      ignoreFiles.clear();
+
+      var argValues =
+          (_argResults[Constants.ignoreFilesOption] as String).split(",");
+
+      for (var argValue in argValues) {
+        ignoreFiles.add(argValue.trim());
+      }
     }
   }
 
   void _setFilesLike() {
     if (_biConfig != null && _biConfig![Constants.filesLikeKey] != null) {
+      var cfgValues = _biConfig![Constants.filesLikeKey];
+
+      if (cfgValues.isNotEmpty) {
+        filesLike.clear();
+      }
+
       for (var file in _biConfig![Constants.filesLikeKey]) {
-        filesLike.add(file);
+        if (!filesLike.contains((file).trim())) {
+          filesLike.add((file).trim());
+        }
       }
     }
 
     if (_argResults.wasParsed(Constants.filesLikeOption)) {
-      filesLike = (_argResults[Constants.filesLikeOption] as String).split(",");
+      filesLike.clear();
+
+      var argValues =
+          (_argResults[Constants.filesLikeOption] as String).split(",");
+
+      for (var argValue in argValues) {
+        filesLike.add(argValue.trim());
+      }
     }
   }
 
   void _setIgnoredFilesLike() {
     if (_biConfig != null && _biConfig![Constants.ignoreFilesLikeKey] != null) {
+      var cfgValues = _biConfig![Constants.ignoreFilesLikeKey];
+
+      if (cfgValues.isNotEmpty) {
+        ignoreFilesLike.clear();
+      }
       for (var ignored in _biConfig![Constants.ignoreFilesLikeKey]) {
-        ignoreFilesLike.add(ignored);
+        if (!ignoreFilesLike.contains((ignored).trim())) {
+          ignoreFilesLike.add((ignored).trim());
+        }
       }
     }
 
     if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
-      ignoreFilesLike =
+      ignoreFilesLike.clear();
+
+      var argValues =
           (_argResults[Constants.ignoreFilesLikeOption] as String).split(",");
+
+      for (var argValue in argValues) {
+        ignoreFilesLike.add(argValue.trim());
+      }
     }
   }
 }

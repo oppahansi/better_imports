@@ -28,7 +28,7 @@ class Parser {
     _parser.addFlag(
       Constants.silentFlag,
       abbr: Constants.silentFlagAbbr,
-      defaultsTo: true,
+      defaultsTo: false,
       negatable: false,
     );
     _parser.addFlag(
