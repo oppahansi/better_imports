@@ -89,6 +89,9 @@ class Constants {
   --folders             "folder1,folder2"           Sorts the given folders and subfolders only. "" are optional.
                                                     If folder names contain spaces, then "" is required.
                                                     Must be seperated by ','
+                                                    If folders are not in the project root, then provide a path relative
+                                                    to project root. Example:
+                                                    "lib/sub folder/folder1, bin/subfolder/folder2"
   --files               "file1,file2"               Sorts only the given Files. "" are optional.
                                                     If file names contain spaces, then "" is required.
                                                     Must be seperated by ','

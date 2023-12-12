@@ -18,20 +18,16 @@ class Collector {
       return _collectFilesLike();
     }
 
-    if (cfg.folders.isNotEmpty) {
-      return _collectInFolders(cfg.folders);
-    }
-
-    return _collectInProject();
+    return _collectInFolders(cfg.folders);
   }
 
   List<String> _collectFiles(List<String> files) {
-    final collectedFiles = _collectInProject();
+    final collectedFiles = _collectInFolders(cfg.folders);
     final results = <String>[];
-    final notFound = <String>[];
 
     for (var file in files) {
-      var fileName = file.contains(".dart") ? file : "$file.dart";
+      var fileName =
+          file.contains(".dart") ? file.trim() : "${file.trim()}.dart";
 
       var match = collectedFiles.firstWhere(
         (element) => element.endsWith(fileName),
@@ -40,8 +36,6 @@ class Collector {
 
       if (File(match).existsSync()) {
         results.add(match);
-      } else {
-        notFound.add(file);
       }
     }
 
@@ -49,7 +43,7 @@ class Collector {
   }
 
   List<String> _collectFilesLike() {
-    return _filterFilesLike(_collectInProject());
+    return _filterFilesLike(_collectInFolders(cfg.folders));
   }
 
   List<String> _collectInFolders(List<String> folders) {
@@ -58,49 +52,12 @@ class Collector {
     final emptyFolders = <String>[];
 
     for (var folder in folders) {
-      final collected = _collectInFolder(folder);
+      final collected = _collectInFolder(folder.trim());
 
       collectedFileEntities.addAll(collected);
 
       if (collected.isEmpty) {
-        emptyFolders.add(folder);
-      }
-    }
-
-    for (var file in collectedFileEntities) {
-      if (file.existsSync() && file.isFile && file.name.endsWith(".dart")) {
-        var newFilePath = file.path;
-
-        if (!results.contains(newFilePath)) {
-          results.add(newFilePath);
-        }
-      }
-    }
-
-    return _filterIgnoredFiles(results);
-  }
-
-  List<String> _collectInProject() {
-    var projectEntities = Directory.current.listSync(recursive: cfg.recursive);
-    var projectFolders = <String>[];
-
-    for (var entity in projectEntities) {
-      if (entity.isDirectory) {
-        projectFolders.add(entity.name);
-      }
-    }
-
-    final results = <String>[];
-    final collectedFileEntities = <FileSystemEntity>[];
-    final emptyFolders = <String>[];
-
-    for (var folder in projectFolders) {
-      final collected = _collectInFolder(folder);
-
-      collectedFileEntities.addAll(collected);
-
-      if (collected.isEmpty) {
-        emptyFolders.add(folder);
+        emptyFolders.add(folder.trim());
       }
     }
 
@@ -118,7 +75,7 @@ class Collector {
   }
 
   List<FileSystemEntity> _collectInFolder(String folder) {
-    var path = '${cfg.sortPath}${Platform.pathSeparator}$folder';
+    var path = '${cfg.sortPath}${Platform.pathSeparator}${folder.trim()}';
 
     if (Directory(path).existsSync()) {
       return Directory(path).listSync(recursive: cfg.recursive);
@@ -129,7 +86,7 @@ class Collector {
 
   List<String> _filterIgnoredFiles(List<String> files) {
     for (var pattern in cfg.ignoreFilesLike) {
-      files.removeWhere((element) => RegExp(pattern).hasMatch(element));
+      files.removeWhere((element) => RegExp(pattern.trim()).hasMatch(element));
     }
 
     return files;
@@ -137,7 +94,7 @@ class Collector {
 
   List<String> _filterFilesLike(List<String> files) {
     for (var pattern in cfg.filesLike) {
-      files.removeWhere((element) => !RegExp(pattern).hasMatch(element));
+      files.removeWhere((element) => !RegExp(pattern.trim()).hasMatch(element));
     }
 
     return files;

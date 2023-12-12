@@ -11,6 +11,6 @@ extension FileSystemEntityExtension on FileSystemEntity {
   }
 
   String get name {
-    return path.split(Platform.pathSeparator).last;
+    return uri.pathSegments.last;
   }
 }
