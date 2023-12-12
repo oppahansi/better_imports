@@ -77,7 +77,8 @@ class Constants {
                                               Negateable by:
                                                 --no-recursive
   --silent       -s                           Disables results output in console. Default is false.
-
+  --relative                                  Converts all project package imports to relative project imports.
+                                              Default is false.
 
   OPTIONS
 
