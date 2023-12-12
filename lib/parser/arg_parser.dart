@@ -2,7 +2,7 @@
 import 'package:args/args.dart';
 
 // Project Imports
-import 'package:better_imports/utils/utils.dart';
+import "package:better_imports/lib.dart";
 
 class Parser {
   static final _parser = ArgParser();

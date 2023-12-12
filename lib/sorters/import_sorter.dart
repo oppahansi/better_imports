@@ -2,9 +2,7 @@
 import 'dart:io';
 
 // Project Imports
-import 'package:better_imports/config/config.dart';
-import 'package:better_imports/extensions/extensions.dart';
-import 'package:better_imports/utils/utils.dart';
+import "package:better_imports/lib.dart";
 
 class Sorter {
   final List<String> paths;

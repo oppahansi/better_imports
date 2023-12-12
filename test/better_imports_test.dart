@@ -17,9 +17,9 @@ import 'package:mdi/mdi.dart';
 import 'package:provider/provider.dart';
 
 // Project Imports
+import 'package:better_imports/anotherFile.dart';
 import 'package:better_imports/anotherFile2.dart';
 import 'package:better_imports/anotherFile3.dart';
-import 'package:better_imports/anotherFile.dart';
 
 /// asdf
 void main() {

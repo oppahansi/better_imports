@@ -2,7 +2,7 @@
 import 'dart:io';
 
 // Project Imports
-import 'package:better_imports/utils/utils.dart';
+import "package:better_imports/lib.dart";
 
 class Printer {
   static void print(String message) {
