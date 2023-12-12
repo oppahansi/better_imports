@@ -34,7 +34,7 @@ class Parser {
     _parser.addFlag(
       Constants.relativeFlag,
       defaultsTo: false,
-      negatable: true,
+      negatable: false,
     );
 
     _parser.addOption(
