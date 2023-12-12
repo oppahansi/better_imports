@@ -31,6 +31,11 @@ class Parser {
       defaultsTo: true,
       negatable: false,
     );
+    _parser.addFlag(
+      Constants.relativeFlag,
+      defaultsTo: false,
+      negatable: true,
+    );
 
     _parser.addOption(
       Constants.cfgPathOption,

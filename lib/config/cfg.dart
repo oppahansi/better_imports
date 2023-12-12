@@ -16,6 +16,7 @@ class Cfg {
   late bool recursive;
   late bool comments;
   late bool silent;
+  late bool relative;
   late List<String> folders;
   late List<String> ignoredFolders;
   late List<String> files;
@@ -60,6 +61,7 @@ class Cfg {
     _setRecursive();
     _setComments();
     _setSilent();
+    _setRelative();
 
     _setFolders();
     _setIgnoredFolders();
@@ -76,6 +78,7 @@ class Cfg {
     recursive = true;
     comments = true;
     silent = false;
+    relative = false;
 
     folders = <String>[
       "lib",
@@ -175,6 +178,16 @@ class Cfg {
 
     if (_argResults.wasParsed(Constants.silentFlag)) {
       silent = _argResults[Constants.silentFlag];
+    }
+  }
+
+  void _setRelative() {
+    if (_biConfig != null && _biConfig![Constants.relativeFlag] != null) {
+      relative = _biConfig![Constants.relativeFlag];
+    }
+
+    if (_argResults.wasParsed(Constants.relativeFlag)) {
+      relative = _argResults[Constants.relativeFlag];
     }
   }
 

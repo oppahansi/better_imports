@@ -30,7 +30,7 @@
                 "better_imports_test"
             
             ],
-            "program": "bin/sort.dart",
+            "program": "bin/better_imports.dart",
         }
     ]
 }

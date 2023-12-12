@@ -5,7 +5,7 @@ import 'package:tint/tint.dart';
 // Project Imports
 import 'package:better_imports/collectors/collectors.dart';
 import 'package:better_imports/config/config.dart';
-import 'package:better_imports/imports/imports.dart';
+import 'package:better_imports/sorters/sorters.dart';
 import 'package:better_imports/utils/print.dart';
 
 class SortCmd {

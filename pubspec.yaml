@@ -37,6 +37,9 @@ better_imports:
   # Flag to disable results output in console
   silent: false
 
+  # Flag to use relative imports in the project
+  relative: false
+
   # Folder names used for collecting dart files
   folders:
     - lib

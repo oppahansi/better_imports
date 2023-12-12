@@ -30,6 +30,8 @@ class Constants {
   static const silentFlag = "silent";
   static const silentFlagAbbr = "s";
 
+  static const relativeFlag = "relative";
+
   static const foldersOption = "folders";
   static const ignoreFoldersOption = "ignore-folders";
 
