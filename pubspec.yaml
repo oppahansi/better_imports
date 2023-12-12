@@ -40,9 +40,6 @@ better_imports:
   # Flag to use relative imports in the project
   relative: false
 
-  # Flag to ignore barrel files
-  ignore_barrel_files: true
-
   # Folder names used for collecting dart files
   folders:
     - lib
@@ -68,10 +65,3 @@ better_imports:
     - .*\.g\.dart
     - .*\.gr\.dart
     - .*\.freezed\.dart
-  
-  # Barrel file names
-  # By default it will check for files named after their folder.
-  # e.g. ../test/test.dart
-  # If you have another convention for barrel files, list their names below.
-  barrel_files:
-    - index
