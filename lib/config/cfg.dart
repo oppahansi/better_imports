@@ -33,43 +33,6 @@ class Cfg {
     _init();
   }
 
-  void _init() {
-    configPath = '$sortPath${Platform.pathSeparator}pubspec.yaml';
-
-    _config = _loadConfig();
-
-    if (_config == null) {
-      Printer.warning("Could not find config file Config path:"
-          "\n$configPath");
-    }
-
-    _biConfig = _config![Constants.betterImports];
-    if (_biConfig == null) {
-      Printer.warning(
-          "Could not find config section in the config file. Config path:"
-          "\n$configPath");
-    }
-
-    if (_config == null || _biConfig == null) {
-      Printer.warning(
-          "Default values will be used if no cli arguments are passed in.");
-    }
-
-    _setProjectName();
-
-    _setRecursive();
-    _setComments();
-    _setSilent();
-    _setRelative();
-
-    _setFolders();
-    _setIgnoredFolders();
-
-    _setFiles();
-    _setFilesLike();
-    _setIgnoredFilesLike();
-  }
-
   void _setDefaults() {
     sortPath = Directory.current.path;
     projectName = Directory.current.name;
@@ -99,6 +62,41 @@ class Cfg {
       r".*\.freezed\.dart",
       r".*\.g\.dart",
     ];
+  }
+
+  void _init() {
+    configPath = '$sortPath${Platform.pathSeparator}pubspec.yaml';
+
+    _setConfig();
+    _setBiConfig();
+
+    if (_config == null || _biConfig == null) {
+      Printer.warning(
+          "Default values will be used if no cli arguments are passed in.");
+    }
+
+    _setProjectName();
+
+    _setRecursive();
+    _setComments();
+    _setSilent();
+    _setRelative();
+
+    _setFolders();
+    _setIgnoredFolders();
+
+    _setFiles();
+    _setFilesLike();
+    _setIgnoredFilesLike();
+  }
+
+  void _setConfig() {
+    _config = _loadConfig();
+
+    if (_config == null) {
+      Printer.warning("Could not find config file Config path:"
+          "\n$configPath");
+    }
   }
 
   Map<dynamic, dynamic> _loadConfig() {
@@ -138,6 +136,15 @@ class Cfg {
     }
 
     return loadYaml(configFile.readAsStringSync()) as Map;
+  }
+
+  void _setBiConfig() {
+    _biConfig = _config![Constants.betterImports];
+    if (_biConfig == null) {
+      Printer.warning(
+          "Could not find config section in the config file. Config path:"
+          "\n$configPath");
+    }
   }
 
   void _setProjectName() {

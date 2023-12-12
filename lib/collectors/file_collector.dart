@@ -69,7 +69,7 @@ class Collector {
     }
 
     for (var file in collectedFileEntities) {
-      if (file.existsSync() && file is File && file.name.endsWith(".dart")) {
+      if (file.existsSync() && file.isFile && file.name.endsWith(".dart")) {
         var newFilePath = file.path;
 
         if (!results.contains(newFilePath)) {
@@ -86,7 +86,7 @@ class Collector {
     var projectFolders = <String>[];
 
     for (var entity in projectEntities) {
-      if (entity is Directory) {
+      if (entity.isDirectory) {
         projectFolders.add(entity.name);
       }
     }
@@ -106,7 +106,7 @@ class Collector {
     }
 
     for (var file in collectedFileEntities) {
-      if (file.existsSync() && file is File && file.name.endsWith(".dart")) {
+      if (file.existsSync() && file.isFile && file.name.endsWith(".dart")) {
         var newFilePath = file.path;
 
         if (!results.contains(newFilePath)) {
