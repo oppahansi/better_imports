@@ -8,7 +8,6 @@ import "package:args/args.dart";
 import "package:better_imports/lib.dart";
 
 void main(List<String> args) {
-  final argParser = Parser.setupParser();
   final ArgResults argResults;
 
   try {

@@ -8,11 +8,9 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 void main() {
-  final parser = Parser.setupParser();
-
   group("Cfg Tests.", () {
     test("default config", () {
-      var argResult = parser.parse([]);
+      var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
       expect(cfg.sortPath, Directory.current.path);
@@ -43,7 +41,7 @@ void main() {
     });
 
     test("cfg arg provided. loading external", () {
-      var argResult = parser.parse(
+      var argResult = argParser.parse(
         [
           "--cfg",
           r"D:\dev\workspace\dart\better_imports\res\external_cfg.yaml"
@@ -56,7 +54,7 @@ void main() {
     });
 
     test("cli args passed in", () {
-      var argResult = parser.parse([
+      var argResult = argParser.parse([
         "-r",
         "--no-comments",
         "--no-recursive",

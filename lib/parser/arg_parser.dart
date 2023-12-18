@@ -4,74 +4,66 @@ import 'package:args/args.dart';
 // Project Imports
 import "package:better_imports/lib.dart";
 
-class Parser {
-  static final _parser = ArgParser();
-
-  static ArgParser setupParser() {
-    _parser.addFlag(
-      Constants.helpFlag,
-      abbr: Constants.helpFlagAbbr,
-      negatable: false,
-    );
-    _parser.addFlag(
-      Constants.recursiveFlag,
-      abbr: Constants.recursiveFlagAbbr,
-      defaultsTo: true,
-      negatable: true,
-    );
-    _parser.addFlag(
-      Constants.commentsFlag,
-      abbr: Constants.commentsFlagAbbr,
-      defaultsTo: true,
-      negatable: true,
-    );
-    _parser.addFlag(
-      Constants.silentFlag,
-      abbr: Constants.silentFlagAbbr,
-      defaultsTo: false,
-      negatable: false,
-    );
-    _parser.addFlag(
-      Constants.relativeFlag,
-      defaultsTo: false,
-      negatable: false,
-    );
-
-    _parser.addOption(
-      Constants.cfgPathOption,
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.projectNameOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.foldersOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.filesOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.ignoreFilesOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.filesLikeOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-    _parser.addOption(
-      Constants.ignoreFilesLikeOption,
-      defaultsTo: "",
-      mandatory: false,
-    );
-
-    return _parser;
-  }
-}
+final argParser = ArgParser()
+  ..addFlag(
+    Constants.helpFlag,
+    abbr: Constants.helpFlagAbbr,
+    negatable: false,
+  )
+  ..addFlag(
+    Constants.recursiveFlag,
+    abbr: Constants.recursiveFlagAbbr,
+    defaultsTo: true,
+    negatable: true,
+  )
+  ..addFlag(
+    Constants.commentsFlag,
+    abbr: Constants.commentsFlagAbbr,
+    defaultsTo: true,
+    negatable: true,
+  )
+  ..addFlag(
+    Constants.silentFlag,
+    abbr: Constants.silentFlagAbbr,
+    defaultsTo: false,
+    negatable: false,
+  )
+  ..addFlag(
+    Constants.relativeFlag,
+    defaultsTo: false,
+    negatable: false,
+  )
+  ..addOption(
+    Constants.cfgPathOption,
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.projectNameOption,
+    defaultsTo: "",
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.foldersOption,
+    defaultsTo: "",
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.filesOption,
+    defaultsTo: "",
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.ignoreFilesOption,
+    defaultsTo: "",
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.filesLikeOption,
+    defaultsTo: "",
+    mandatory: false,
+  )
+  ..addOption(
+    Constants.ignoreFilesLikeOption,
+    defaultsTo: "",
+    mandatory: false,
+  );
