@@ -6,7 +6,7 @@ import 'package:better_imports/lib.dart';
 
 void main() {
   final parser = Parser.setupParser();
-  final filesInProject = 20;
+  final filesInProject = 19;
 
   group("Collector Tests. Test amount of collected files.", () {
     test("Default config.", () {
@@ -93,7 +93,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, 5);
+      expect(collected.length, 4);
     });
   });
 }
