@@ -20,30 +20,34 @@ enum ImportType {
 class Sorter {
   final _formatter = DartFormatter();
 
-  final List<String> _paths;
+  final List<String> _unsortedFilePaths;
   final Cfg _cfg;
 
-  final _original = <String>[];
-  final _importTypeToDirectives = <ImportType, Map<String, List<String>>>{};
+  final _originalLines = <String>[];
+  final _sortedLines = <String>[];
+  final _importTypeToImportAndComments =
+      <ImportType, Map<String, List<String>>>{};
 
   var _emptyLinesInImports = 0;
-  var _positionInFile = 0;
+  var _currentPositionInImports = 0;
 
   Sorter({required List<String> paths, required Cfg cfg})
       : _cfg = cfg,
-        _paths = paths;
+        _unsortedFilePaths = paths;
 
   List<SortedResult> sort() {
     var results = <SortedResult>[];
 
-    for (var path in _paths) {
-      var result = _sortFile(path);
+    for (var path in _unsortedFilePaths) {
+      var sortedResult = _sortFile(path);
 
-      if (result.changed) {
-        result.file.writeAsStringSync(result.sorted);
+      print(sortedResult.formattedContent);
+
+      if (sortedResult.changed) {
+        sortedResult.file.writeAsStringSync(sortedResult.formattedContent);
       }
 
-      results.add(result);
+      results.add(sortedResult);
     }
 
     return results;
@@ -54,69 +58,81 @@ class Sorter {
     _initInputTypeMap();
 
     var file = File(path);
-    _original.addAll(file.readAsLinesSync());
+    _originalLines.addAll(file.readAsLinesSync());
+    _sortedLines.addAll(_originalLines);
 
     var parseResult = parseString(content: file.readAsStringSync());
     var unit = parseResult.unit;
 
-    _extractImports(unit);
-
-    var sorted = _getSorted();
-    sorted.add("");
+    _buildImportTypeToImportAndCommentsMap(unit);
+    _sort();
 
     var originalString =
-        _formatter.format(_original.join(Platform.lineTerminator));
-    var sortedString = _formatter.format(sorted.join(Platform.lineTerminator));
+        _formatter.format(_originalLines.join(Platform.lineTerminator));
+
+    if (_areImportsEmpty) {
+      return SortedResult(
+        file: file,
+        formattedContent: originalString,
+        changed: false,
+      );
+    }
+
+    var sortedString =
+        _formatter.format(_sortedLines.join(Platform.lineTerminator));
 
     return SortedResult(
       file: file,
-      sorted: sortedString,
+      formattedContent: sortedString,
       changed: originalString != sortedString,
     );
   }
 
   void _reset() {
+    _sortedLines.clear();
+    _originalLines.clear();
     _emptyLinesInImports = 0;
-    _positionInFile = 0;
-    _original.clear();
-    _importTypeToDirectives.clear();
+    _currentPositionInImports = 0;
+    _importTypeToImportAndComments.clear();
   }
 
   void _initInputTypeMap() {
-    _importTypeToDirectives.putIfAbsent(ImportType.dart, () => {});
-    _importTypeToDirectives.putIfAbsent(ImportType.flutter, () => {});
-    _importTypeToDirectives.putIfAbsent(ImportType.package, () => {});
-    _importTypeToDirectives.putIfAbsent(ImportType.project, () => {});
+    _importTypeToImportAndComments.putIfAbsent(ImportType.dart, () => {});
+    _importTypeToImportAndComments.putIfAbsent(ImportType.flutter, () => {});
+    _importTypeToImportAndComments.putIfAbsent(ImportType.package, () => {});
+    _importTypeToImportAndComments.putIfAbsent(ImportType.project, () => {});
   }
 
-  void _extractImports(CompilationUnit unit) {
+  void _buildImportTypeToImportAndCommentsMap(CompilationUnit unit) {
     for (var directive in unit.directives) {
       if (directive is! ImportDirective) {
         continue;
       }
 
-      var importType = _getImportType(directive.toString());
-      var inputTypeEntry = _importTypeToDirectives[importType];
+      var importType = _getImportTypeByDirective(directive.toString());
+      var importToComments = _importTypeToImportAndComments[importType];
 
-      inputTypeEntry!.putIfAbsent(directive.toString(), () => <String>[]);
+      importToComments!.putIfAbsent(directive.toString(), () => <String>[]);
 
-      dynamic beginToken = directive.beginToken;
+      Token? beginToken = directive.beginToken;
 
-      _positionInFile = _original.indexWhere(
-          (element) => element.contains("import"), _positionInFile);
+      _currentPositionInImports = _originalLines.indexWhere(
+        (element) => element.contains("import"),
+        _currentPositionInImports,
+      );
 
       if (beginToken.lexeme.startsWith("///")) {
-        _extractDocComments(beginToken, inputTypeEntry, directive);
+        _extractDocComments(beginToken, importToComments, directive);
       } else {
-        _extractPrecedingComments(directive, inputTypeEntry);
+        _extractPrecedingComments(directive, importToComments);
       }
 
-      _positionInFile++;
+      _currentPositionInImports++;
       _countFollowingEmptyLines();
     }
   }
 
-  ImportType _getImportType(String importLine) {
+  ImportType _getImportTypeByDirective(String importLine) {
     if (importLine.contains('dart:')) {
       return ImportType.dart;
     } else if (importLine.contains('package:flutter')) {
@@ -130,17 +146,21 @@ class Sorter {
     }
   }
 
-  void _extractDocComments(beginToken, Map<String, List<String>> inputTypeEntry,
-      ImportDirective directive) {
+  void _extractDocComments(
+    Token? beginToken,
+    Map<String, List<String>> inputTypeEntry,
+    ImportDirective directive,
+  ) {
     while (beginToken != null) {
       if (!_isImportComment(beginToken.lexeme)) {
         inputTypeEntry[directive.toString()]!.add(beginToken.lexeme);
       }
 
-      _positionInFile++;
-      while (_positionInFile > 0 && _original[_positionInFile].isEmpty) {
+      _currentPositionInImports++;
+      while (_currentPositionInImports > 0 &&
+          _originalLines[_currentPositionInImports].isEmpty) {
         _emptyLinesInImports++;
-        _positionInFile++;
+        _currentPositionInImports++;
       }
 
       beginToken = beginToken.next;
@@ -148,71 +168,72 @@ class Sorter {
   }
 
   void _extractPrecedingComments(
-      ImportDirective directive, Map<String, List<String>> inputTypeEntry) {
+    ImportDirective directive,
+    Map<String, List<String>> inputTypeEntry,
+  ) {
     dynamic precedingComment = directive.beginToken.precedingComments;
 
-    if (precedingComment != null) {
-      while (precedingComment != null) {
-        if (precedingComment.type == TokenType.MULTI_LINE_COMMENT) {
-          while (!_original[_positionInFile].contains("/*")) {
-            _positionInFile--;
-          }
+    if (precedingComment == null) {
+      return;
+    }
 
-          while (!_original[_positionInFile].contains("*/")) {
-            inputTypeEntry[directive.toString()]!
-                .add(_original[_positionInFile]);
-            _positionInFile++;
-          }
-
-          inputTypeEntry[directive.toString()]!.add(_original[_positionInFile]);
-          precedingComment = precedingComment.next;
-        } else {
-          inputTypeEntry[directive.toString()]!.add(precedingComment.value());
-          precedingComment = precedingComment.next;
+    while (precedingComment != null) {
+      if (precedingComment.type == TokenType.MULTI_LINE_COMMENT) {
+        while (!_originalLines[_currentPositionInImports].contains("/*")) {
+          _currentPositionInImports--;
         }
+
+        while (!_originalLines[_currentPositionInImports].contains("*/")) {
+          inputTypeEntry[directive.toString()]!.add(
+            _originalLines[_currentPositionInImports],
+          );
+
+          _currentPositionInImports++;
+        }
+
+        inputTypeEntry[directive.toString()]!.add(
+          _originalLines[_currentPositionInImports],
+        );
+
+        precedingComment = precedingComment.next;
+      } else {
+        inputTypeEntry[directive.toString()]!.add(precedingComment.value());
+        precedingComment = precedingComment.next;
       }
     }
   }
 
   void _countFollowingEmptyLines() {
-    while (_positionInFile > 0 && _original[_positionInFile].isEmpty) {
+    while (_currentPositionInImports > 0 &&
+        _originalLines[_currentPositionInImports].isEmpty) {
       _emptyLinesInImports++;
-      _positionInFile++;
+      _currentPositionInImports++;
     }
   }
 
-  List<String> _getSorted() {
-    if (_areImportsEmpty) {
-      return _original;
-    }
-
-    var sorted = List<String>.from(_original);
-
-    _removeImportTypeCommentsInDirectives(_importTypeToDirectives);
-    _removeOldImports(sorted);
-    _removeImportTypeComments(sorted);
-    _removeEmptyLines(sorted);
+  void _sort() {
+    _removeImportTypeCommentsInDirectives();
+    _removeOldImports();
+    _removeImportTypeComments();
+    _removeEmptyLines();
     _processProjectImports();
-    _insertOrganizedImports(sorted);
-
-    return sorted;
+    _insertOrganizedImports();
   }
 
-  void _removeImportTypeCommentsInDirectives(
-      Map<ImportType, Map<String, List<String>>> directives) {
-    for (var importType in directives.keys) {
-      var entry = directives[importType];
+  void _removeImportTypeCommentsInDirectives() {
+    for (var importType in _importTypeToImportAndComments.keys) {
+      var importToComments = _importTypeToImportAndComments[importType];
 
-      for (var import in entry!.keys) {
-        var importLines = entry[import]!;
+      for (var comment in importToComments!.keys) {
+        var commentLines = importToComments[comment]!;
 
-        importLines.removeWhere((element) => _isImportComment(element));
+        commentLines.removeWhere((element) => _isImportComment(element));
       }
     }
   }
 
-  void _removeImportTypeComments(List<String> sorted) {
-    sorted.removeWhere((element) => _isImportComment(element));
+  void _removeImportTypeComments() {
+    _sortedLines.removeWhere((element) => _isImportComment(element));
   }
 
   bool _isImportComment(String comment) {
@@ -222,15 +243,17 @@ class Sorter {
         comment == Constants.projectImportsComment;
   }
 
-  void _removeEmptyLines(List<String> sorted) {
+  void _removeEmptyLines() {
     for (var i = 0; i < _emptyLinesInImports; i++) {
-      sorted.removeAt(0);
+      _sortedLines.removeAt(0);
     }
   }
 
-  void _insertOrganizedImports(List<String> sorted) {
-    _importTypeToDirectives.keys.toList().reversed.forEach((importType) {
-      var entry = _importTypeToDirectives[importType];
+  void _insertOrganizedImports() {
+    _sortedLines.insert(0, '');
+
+    _importTypeToImportAndComments.keys.toList().reversed.forEach((importType) {
+      var entry = _importTypeToImportAndComments[importType];
       var importLines = entry!.keys.toList();
       importLines.sort();
       importLines = importLines.reversed.toList();
@@ -249,25 +272,25 @@ class Sorter {
               continue;
             }
 
-            sorted.insert(0, line);
+            _sortedLines.insert(0, line);
           }
 
           var commentList = comments[i].reversed.toList();
           for (var comment in commentList) {
-            sorted.insert(0, comment);
+            _sortedLines.insert(0, comment);
           }
         }
 
         if (_cfg.comments) {
           var comment = _getImportTypeComment(importType);
-          sorted.insert(0, comment);
+          _sortedLines.insert(0, comment);
         }
 
-        sorted.insert(0, '');
+        _sortedLines.insert(0, '');
       }
     });
 
-    sorted.removeAt(0);
+    _sortedLines.removeAt(0);
   }
 
   String _getImportTypeComment(ImportType importType) {
@@ -285,9 +308,9 @@ class Sorter {
     }
   }
 
-  void _removeOldImports(List<String> sorted) {
-    for (var importType in _importTypeToDirectives.keys) {
-      var entry = _importTypeToDirectives[importType];
+  void _removeOldImports() {
+    for (var importType in _importTypeToImportAndComments.keys) {
+      var entry = _importTypeToImportAndComments[importType];
 
       for (var import in entry!.keys) {
         var importLines = entry[import]!;
@@ -299,18 +322,18 @@ class Sorter {
             continue;
           }
 
-          sorted.remove(line);
+          _sortedLines.remove(line);
         }
 
         for (var line in importLines) {
-          sorted.remove(line);
+          _sortedLines.remove(line);
         }
       }
     }
   }
 
   void _processProjectImports() {
-    var projectImports = _importTypeToDirectives[ImportType.project];
+    var projectImports = _importTypeToImportAndComments[ImportType.project];
     var newProjectImports = <String, List<String>>{};
 
     for (var import in projectImports!.keys) {
@@ -335,7 +358,7 @@ class Sorter {
       newProjectImports.putIfAbsent(projectImport, () => newImportLines);
     }
 
-    _importTypeToDirectives[ImportType.project] = newProjectImports;
+    _importTypeToImportAndComments[ImportType.project] = newProjectImports;
   }
 
   String _convertToProjectImport(String importLine) {
@@ -356,8 +379,8 @@ class Sorter {
   }
 
   bool get _areImportsEmpty {
-    for (var importType in _importTypeToDirectives.keys) {
-      var entry = _importTypeToDirectives[importType];
+    for (var importType in _importTypeToImportAndComments.keys) {
+      var entry = _importTypeToImportAndComments[importType];
 
       if (entry!.isNotEmpty) {
         return false;
@@ -370,12 +393,12 @@ class Sorter {
 
 class SortedResult {
   final File file;
-  final String sorted;
+  final String formattedContent;
   final bool changed;
 
   SortedResult({
     required this.file,
-    required this.sorted,
+    required this.formattedContent,
     required this.changed,
   });
 }
