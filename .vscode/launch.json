@@ -9,7 +9,7 @@
             "request": "launch",
             "type": "dart",
             "args": [],
-            "program": "bin/sort.dart",
+            "program": "bin/better_imports.dart",
         },
         {
             "name": "sort -t",
@@ -27,8 +27,8 @@
             "type": "dart",
             "args": [
                 "--files",
-                "better_imports_test"
-            
+                "better_imports_test,better_imports",
+                "--no-comments",
             ],
             "program": "bin/better_imports.dart",
         }

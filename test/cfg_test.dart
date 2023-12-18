@@ -1,7 +1,11 @@
+// Dart Imports
 import 'dart:io';
 
-import 'package:better_imports/lib.dart';
+// Package Imports
 import 'package:test/test.dart';
+
+// Project Imports
+import 'package:better_imports/lib.dart';
 
 void main() {
   final parser = Parser.setupParser();

@@ -1,42 +1,47 @@
 // Dart Imports
 import 'dart:io';
 
+// Package Imports
+import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
+import 'package:dart_style/dart_style.dart';
+
 // Project Imports
 import "package:better_imports/lib.dart";
 
+enum ImportType {
+  dart,
+  flutter,
+  package,
+  project,
+}
+
 class Sorter {
-  final List<String> paths;
-  final Cfg cfg;
+  final List<String> _paths;
+  final Cfg _cfg;
 
-  final dartImports = <ImportLine>[];
-  final flutterImports = <ImportLine>[];
-  final packageImports = <ImportLine>[];
-  final relativeProjectImports = <ImportLine>[];
-  final projectImports = <ImportLine>[];
-  final toBeRemoved = <String>[];
+  final _original = <String>[];
+  final _importTypeToDirectives = <ImportType, Map<String, List<String>>>{};
 
-  final original = <String>[];
+  var _emptyLinesInImports = 0;
+  var _positionInFile = 0;
 
-  var emptyLinesInImports = 0;
-
-  Sorter({required this.paths, required this.cfg});
-
-  bool get _areImportsEmpty {
-    return dartImports.isEmpty &&
-        flutterImports.isEmpty &&
-        packageImports.isEmpty &&
-        projectImports.isEmpty;
-  }
+  Sorter({
+    required List<String> paths,
+    required Cfg cfg,
+  })  : _cfg = cfg,
+        _paths = paths;
 
   List<String> sort() {
     var results = <String>[];
 
-    for (var path in paths) {
+    for (var path in _paths) {
       var result = _sortFile(path);
 
       if (result.changed) {
-        result.file.writeAsStringSync(
-            "${result.sorted.join(Platform.lineTerminator)}${Platform.lineTerminator}");
+        result.file.writeAsStringSync(result.sorted);
 
         results.add(result.file.name);
       }
@@ -45,296 +50,382 @@ class Sorter {
     return results;
   }
 
-  SortedFileEntity _sortFile(String path) {
+  SortedResult _sortFile(String path) {
+    DartFormatter formatter = DartFormatter();
     _reset();
+    _initInputTypeMap();
 
     var file = File(path);
-    original.addAll(file.readAsLinesSync());
+    _original.addAll(file.readAsLinesSync());
 
-    if (cfg.comments) {
-      _addImportComments();
-    }
+    var parseResult = parseString(content: file.readAsStringSync());
+    var unit = parseResult.unit;
 
-    bool inImportSection = true;
-
-    for (var i = 0; i < original.length; i++) {
-      var line = original[i];
-
-      if (!line.startsWith("import") && inImportSection) {
-        if (_startsWithComment(line.toLowerCase())) {
-          continue;
-        }
-
-        if (line.isEmpty) {
-          emptyLinesInImports++;
-          continue;
-        }
-
-        inImportSection = false;
-        continue;
-      }
-
-      if (inImportSection) {
-        var importLine = _extractImport(i, original, path);
-        var importSet = importLine.importLines.toSet();
-
-        if (importSet.first.contains('dart:')) {
-          if (!dartImports.contains(importLine)) {
-            dartImports.add(importLine);
-          }
-        } else if (importSet.first.contains('package:flutter/')) {
-          if (!flutterImports.contains(importLine)) {
-            flutterImports.add(importLine);
-          }
-        } else if (importSet.first.contains('package:${cfg.projectName}/')) {
-          if (!projectImports.contains(importLine)) {
-            projectImports.add(importLine);
-          }
-        } else if (importSet.first.contains('package:')) {
-          if (!packageImports.contains(importLine)) {
-            packageImports.add(importLine);
-          }
-        } else {
-          if (!relativeProjectImports.contains(importLine)) {
-            relativeProjectImports.add(importLine);
-          }
-        }
-
-        i = importLine.endIndex;
-        continue;
-      }
-    }
+    _extractImports(unit);
 
     var sorted = _getSorted();
+    sorted.add("");
 
-    return SortedFileEntity(
+    var originalString =
+        formatter.format(_original.join(Platform.lineTerminator));
+    var sortedString = formatter.format(sorted.join(Platform.lineTerminator));
+
+    return SortedResult(
       file: file,
-      original: original,
-      sorted: sorted,
-      changed: !_listEquals(original, sorted),
+      sorted: sortedString,
+      changed: originalString != sortedString,
     );
   }
 
-  bool _startsWithComment(String line) {
-    return line.trimLeft().startsWith("//");
+  bool get _areImportsEmpty {
+    for (var importType in _importTypeToDirectives.keys) {
+      var entry = _importTypeToDirectives[importType];
+
+      if (entry!.isNotEmpty) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
-  void _addImportComments() {
-    dartImports.add(
-      ImportLine(
-        importLines: [Constants.dartImportsComment],
-        endIndex: 0,
-        path: "",
-      ),
-    );
-    flutterImports.add(
-      ImportLine(
-        importLines: [Constants.flutterImportsComment],
-        endIndex: 0,
-        path: "",
-      ),
-    );
-    packageImports.add(
-      ImportLine(
-        importLines: [Constants.packageImportsComment],
-        endIndex: 0,
-        path: "",
-      ),
-    );
-    projectImports.add(
-      ImportLine(
-        importLines: [Constants.projectImportsComment],
-        endIndex: 0,
-        path: "",
-      ),
-    );
+  List<ImportDirective> _getOriganizdImportDirectives(CompilationUnit unit) {
+    List<ImportDirective> importDirectives = [];
+    for (Directive directive in unit.directives) {
+      if (directive is ImportDirective) {
+        importDirectives.add(directive);
+      }
+    }
+
+    importDirectives.sort((a, b) {
+      ImportType typeA = _determineImportType(a);
+      ImportType typeB = _determineImportType(b);
+
+      int typeComparison = typeA.index.compareTo(typeB.index);
+      if (typeComparison != 0) {
+        return typeComparison;
+      }
+
+      return a.toString().compareTo(b.toString());
+    });
+
+    return importDirectives;
+  }
+
+  List<ExportDirective> _getOriganizdExportDirectives(CompilationUnit unit) {
+    List<ExportDirective> exportDirectives = [];
+
+    for (Directive directive in unit.directives) {
+      if (directive is ExportDirective) {
+        exportDirectives.add(directive);
+      }
+    }
+
+    exportDirectives.sort((a, b) {
+      return a.toString().compareTo(b.toString());
+    });
+
+    return exportDirectives;
+  }
+
+  ImportType _determineImportType(Directive directive) {
+    String importLine = directive.toString().toString();
+
+    if (importLine.contains('dart:')) {
+      return ImportType.dart;
+    } else if (importLine.contains('flutter:')) {
+      return ImportType.flutter;
+    } else if (importLine.contains('package:${_cfg.projectName}') ||
+        !importLine.contains("package:")) {
+      return ImportType.project;
+    } else {
+      return ImportType.package;
+    }
+  }
+
+  void _extractImports(CompilationUnit unit) {
+    for (var directive in unit.directives) {
+      if (directive is! ImportDirective) {
+        continue;
+      }
+
+      var importType = _getImportType(directive.toString());
+      var inputTypeEntry = _importTypeToDirectives[importType];
+
+      inputTypeEntry!.putIfAbsent(directive.toString(), () => <String>[]);
+
+      dynamic beginToken = directive.beginToken;
+
+      _positionInFile = _original.indexWhere(
+          (element) => element.contains("import"), _positionInFile);
+
+      if (beginToken.lexeme.startsWith("///")) {
+        _extractDocComments(beginToken, inputTypeEntry, directive);
+      } else {
+        _extractPrecedingComments(directive, inputTypeEntry);
+      }
+
+      _positionInFile++;
+      _countFollowingEmptyLines();
+    }
+  }
+
+  void _countFollowingEmptyLines() {
+    while (_positionInFile > 0 && _original[_positionInFile].isEmpty) {
+      _emptyLinesInImports++;
+      _positionInFile++;
+    }
+  }
+
+  void _extractPrecedingComments(
+      ImportDirective directive, Map<String, List<String>> inputTypeEntry) {
+    dynamic precedingComment = directive.beginToken.precedingComments;
+
+    if (precedingComment != null) {
+      while (precedingComment != null) {
+        if (precedingComment.type == TokenType.MULTI_LINE_COMMENT) {
+          while (!_original[_positionInFile].contains("/*")) {
+            _positionInFile--;
+          }
+
+          while (!_original[_positionInFile].contains("*/")) {
+            inputTypeEntry[directive.toString()]!
+                .add(_original[_positionInFile]);
+            _positionInFile++;
+          }
+
+          inputTypeEntry[directive.toString()]!.add(_original[_positionInFile]);
+          precedingComment = precedingComment.next;
+        } else {
+          inputTypeEntry[directive.toString()]!.add(precedingComment.value());
+          precedingComment = precedingComment.next;
+        }
+      }
+    }
+  }
+
+  void _extractDocComments(beginToken, Map<String, List<String>> inputTypeEntry,
+      ImportDirective directive) {
+    while (beginToken != null) {
+      if (!_isImportComment(beginToken.lexeme)) {
+        inputTypeEntry[directive.toString()]!.add(beginToken.lexeme);
+      }
+
+      _positionInFile++;
+      while (_positionInFile > 0 && _original[_positionInFile].isEmpty) {
+        _emptyLinesInImports++;
+        _positionInFile++;
+      }
+
+      beginToken = beginToken.next;
+    }
+  }
+
+  void _initInputTypeMap() {
+    _importTypeToDirectives.putIfAbsent(ImportType.dart, () => {});
+    _importTypeToDirectives.putIfAbsent(ImportType.flutter, () => {});
+    _importTypeToDirectives.putIfAbsent(ImportType.package, () => {});
+    _importTypeToDirectives.putIfAbsent(ImportType.project, () => {});
+  }
+
+  ImportType _getImportType(String importLine) {
+    print(importLine);
+
+    if (importLine.contains('dart:')) {
+      return ImportType.dart;
+    } else if (importLine.contains('package:flutter')) {
+      return ImportType.flutter;
+    } else if (importLine.contains('package:${_cfg.projectName}')) {
+      return ImportType.project;
+    } else {
+      return ImportType.package;
+    }
+  }
+
+  bool _isImportComment(String comment) {
+    return comment == Constants.dartImportsComment ||
+        comment == Constants.flutterImportsComment ||
+        comment == Constants.packageImportsComment ||
+        comment == Constants.projectImportsComment;
   }
 
   void _reset() {
-    original.clear();
-    dartImports.clear();
-    flutterImports.clear();
-    packageImports.clear();
-    projectImports.clear();
-    relativeProjectImports.clear();
-    toBeRemoved.clear();
-    emptyLinesInImports = 0;
-  }
-
-  ImportLine _extractImport(
-      int startIndex, List<String> original, String path) {
-    var endIndex = startIndex;
-    var importLines = <String>[];
-
-    for (var i = startIndex;; i++) {
-      importLines.add(original[i]);
-      toBeRemoved.add(original[i]);
-      endIndex = i;
-
-      if (original[i].endsWith(";")) {
-        break;
-      }
-    }
-
-    return ImportLine(
-      importLines: importLines,
-      endIndex: endIndex,
-      path: path,
-    );
+    _emptyLinesInImports = 0;
+    _positionInFile = 0;
+    _original.clear();
+    _importTypeToDirectives.clear();
   }
 
   List<String> _getSorted() {
-    var sorted = List<String>.from(original);
-
-    _mergeRelativeImports();
-    _clearEmptyImports();
-
     if (_areImportsEmpty) {
-      return sorted;
+      return _original;
     }
 
-    _addEmptyLineToImportSections();
-    _removeImports(sorted, toBeRemoved);
-    _removeImportSectionComment(sorted);
+    var sorted = List<String>.from(_original);
+
     _processProjectImports();
-    _insertSortedImports(sorted);
+    _removeImportTypeCommentsInDirectives(_importTypeToDirectives);
+    _removeOldImports(sorted);
+    _removeImportTypeComments(sorted);
+    _removeEmptyLines(sorted);
+    _insertOrganizedImports(sorted);
 
     return sorted;
   }
 
-  void _mergeRelativeImports() {
-    projectImports.addAll(relativeProjectImports);
-  }
+  void _removeImportTypeCommentsInDirectives(
+      Map<ImportType, Map<String, List<String>>> directives) {
+    for (var importType in directives.keys) {
+      var entry = directives[importType];
 
-  void _clearEmptyImports() {
-    if (cfg.comments) {
-      if (dartImports.length == 1) {
-        dartImports.clear();
-      }
-      if (flutterImports.length == 1) {
-        flutterImports.clear();
-      }
-      if (packageImports.length == 1) {
-        packageImports.clear();
-      }
-      if (projectImports.length == 1) {
-        projectImports.clear();
+      for (var import in entry!.keys) {
+        var importLines = entry[import]!;
+
+        importLines.removeWhere((element) =>
+            element == Constants.dartImportsComment ||
+            element == Constants.flutterImportsComment ||
+            element == Constants.packageImportsComment ||
+            element == Constants.projectImportsComment);
       }
     }
   }
 
-  void _addEmptyLineToImportSections() {
-    if (dartImports.isNotEmpty) {
-      dartImports
-          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
-      dartImports.add(
-        ImportLine(importLines: [""], endIndex: 0, path: ""),
-      );
-    }
-    if (flutterImports.isNotEmpty) {
-      flutterImports
-          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
-      flutterImports.add(
-        ImportLine(importLines: [""], endIndex: 0, path: ""),
-      );
-    }
-    if (packageImports.isNotEmpty) {
-      packageImports
-          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
-      packageImports.add(
-        ImportLine(importLines: [""], endIndex: 0, path: ""),
-      );
-    }
-    if (projectImports.isNotEmpty) {
-      projectImports
-          .sort((a, b) => a.importLines.first.compareTo(b.importLines.first));
-      projectImports.add(
-        ImportLine(importLines: [""], endIndex: 0, path: ""),
-      );
+  void _removeImportTypeComments(List<String> sorted) {
+    sorted.removeWhere((element) =>
+        element == Constants.dartImportsComment ||
+        element == Constants.flutterImportsComment ||
+        element == Constants.packageImportsComment ||
+        element == Constants.projectImportsComment);
+  }
+
+  void _removeEmptyLines(List<String> sorted) {
+    for (var i = 0; i < _emptyLinesInImports; i++) {
+      sorted.removeAt(0);
     }
   }
 
-  void _insertSortedImports(List<String> sorted) {
-    _insertImports(sorted, projectImports);
-    _insertImports(sorted, packageImports);
-    _insertImports(sorted, flutterImports);
-    _insertImports(sorted, dartImports);
+  void _insertOrganizedImports(List<String> sorted) {
+    DartFormatter formatter = DartFormatter();
+    sorted.insert(0, '');
+    _importTypeToDirectives.keys.toList().reversed.forEach((importType) {
+      var entry = _importTypeToDirectives[importType];
+      var importLines = entry!.keys.toList().reversed.toList();
+
+      if (importLines.isNotEmpty) {
+        var comments = entry.values.toList().reversed.toList();
+
+        for (var i = 0; i < importLines.length; i++) {
+          var importLine = importLines[i];
+          var formattedImport = formatter.format(importLine);
+
+          var lines = formattedImport.split("\n").reversed.toList();
+
+          for (var line in lines) {
+            if (line.trim().isEmpty) {
+              continue;
+            }
+
+            sorted.insert(0, line);
+          }
+
+          var commentList = comments[i].reversed.toList();
+          for (var comment in commentList) {
+            sorted.insert(0, comment);
+          }
+        }
+
+        if (_cfg.comments) {
+          var comment = _getImportTypeComment(importType);
+          sorted.insert(0, comment);
+        }
+
+        sorted.insert(0, '');
+      }
+    });
+
+    sorted.removeAt(0);
   }
 
-  void _removeImportSectionComment(List<String> sorted) {
-    _removeImportLine(sorted, Constants.dartImportsComment);
-    _removeImportLine(sorted, Constants.flutterImportsComment);
-    _removeImportLine(sorted, Constants.packageImportsComment);
-    _removeImportLine(sorted, Constants.projectImportsComment);
+  String _getImportTypeComment(ImportType importType) {
+    switch (importType) {
+      case ImportType.dart:
+        return Constants.dartImportsComment;
+      case ImportType.flutter:
+        return Constants.flutterImportsComment;
+      case ImportType.package:
+        return Constants.packageImportsComment;
+      case ImportType.project:
+        return Constants.projectImportsComment;
+      default:
+        return '';
+    }
+  }
+
+  void _removeOldImports(List<String> sorted) {
+    for (var importType in _importTypeToDirectives.keys) {
+      var entry = _importTypeToDirectives[importType];
+
+      for (var import in entry!.keys) {
+        var importLines = entry[import]!;
+
+        DartFormatter formatter = DartFormatter();
+
+        var formattedImport = formatter.format(import);
+
+        var lines = formattedImport.split("\n").reversed.toList();
+
+        for (var line in lines) {
+          if (line.trim().isEmpty) {
+            continue;
+          }
+
+          sorted.remove(line);
+        }
+
+        for (var line in importLines) {
+          sorted.remove(line);
+        }
+      }
+    }
   }
 
   void _processProjectImports() {
-    for (var importLine in projectImports) {
-      if (cfg.relative) {
-        _convertToRelativeProjectImport(importLine);
-      } else {
-        _convertToProjectImport(importLine);
+    var projectImports = _importTypeToDirectives[ImportType.project];
+    var newProjectImports = <String, List<String>>{};
+
+    for (var import in projectImports!.keys) {
+      var importLines = projectImports[import]!;
+
+      var newImportLines = <String>[];
+
+      for (var line in importLines) {
+        if (line.contains("import 'package:${_cfg.projectName}")) {
+          newImportLines.add(_convertToProjectImport(line));
+        } else {
+          newImportLines.add(line);
+        }
       }
+
+      newProjectImports.putIfAbsent(import, () => newImportLines);
     }
+
+    _importTypeToDirectives[ImportType.project] = newProjectImports;
   }
 
-  void _convertToProjectImport(ImportLine importLine) {
-    var import = importLine.importLines.first;
-
-    if (!importLine.path.contains("lib")) {
-      import = import.replaceFirst("lib/", "");
+  String _convertToProjectImport(String importLine) {
+    if (importLine.startsWith("import 'package:${_cfg.projectName}")) {
+      return importLine;
     }
 
-    if (import.contains("..")) {
-      importLine.importLines[0] =
-          import.replaceFirst("..", "package:${cfg.projectName}");
+    if (!importLine.contains("lib")) {
+      importLine = importLine.replaceFirst("lib/", "");
+    }
+
+    if (importLine.contains("..")) {
+      return importLine.replaceFirst("..", "package:${_cfg.projectName}");
     } else {
-      if (import.startsWith("import 'package:${cfg.projectName}")) {
-        return;
-      }
-
-      importLine.importLines[0] = import.replaceFirst(
-          "import '", "import 'package:${cfg.projectName}/");
-    }
-  }
-
-  void _convertToRelativeProjectImport(ImportLine importLine) {
-    var import = importLine.importLines.first;
-
-    var relativePath = "..";
-
-    if (!importLine.path.contains("lib")) {
-      relativePath += "/lib";
-    }
-
-    importLine.importLines[0] =
-        import.replaceFirst("package:${cfg.projectName}", relativePath);
-  }
-
-  void _removeImports(List<String> sorted, List<String> toBeRemoved) {
-    for (var removed in toBeRemoved) {
-      for (var line in removed.split(Platform.lineTerminator)) {
-        _removeImportLine(sorted, line);
-      }
-    }
-
-    for (var i = 0; i < emptyLinesInImports; i++) {
-      _removeImportLine(sorted, "");
-    }
-  }
-
-  void _removeImportLine(List<String> sorted, String line) {
-    if (line.isEmpty) {
-      sorted.remove(line);
-    } else {
-      sorted.removeWhere(
-          (element) => element.toLowerCase().contains(line.toLowerCase()));
-    }
-  }
-
-  _insertImports(List<String> sorted, List<ImportLine> importLines) {
-    for (var importLine in importLines.reversed) {
-      sorted.insertAll(0, importLine.importLines);
+      return importLine.replaceFirst(
+          "import '", "import 'package:${_cfg.projectName}/");
     }
   }
 
@@ -357,28 +448,14 @@ class Sorter {
   }
 }
 
-class SortedFileEntity {
+class SortedResult {
   final File file;
-  final List<String> original;
-  final List<String> sorted;
+  final String sorted;
   final bool changed;
 
-  SortedFileEntity({
+  SortedResult({
     required this.file,
-    required this.original,
     required this.sorted,
     required this.changed,
-  });
-}
-
-class ImportLine {
-  final List<String> importLines;
-  final int endIndex;
-  final String path;
-
-  ImportLine({
-    required this.importLines,
-    required this.endIndex,
-    required this.path,
   });
 }

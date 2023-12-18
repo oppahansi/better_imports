@@ -148,7 +148,10 @@ class Cfg {
 
   void _setProjectName() {
     if (_biConfig != null && _biConfig![Constants.projectNameKey] != null) {
-      projectName = _biConfig![Constants.projectNameKey];
+      var cfgValue = _biConfig![Constants.projectNameKey] as String;
+      if (cfgValue.isNotEmpty) {
+        projectName = _biConfig![Constants.projectNameKey];
+      }
     }
 
     if (_argResults.wasParsed(Constants.projectNameOption)) {

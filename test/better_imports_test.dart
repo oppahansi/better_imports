@@ -1,5 +1,42 @@
-import 'package:test/test.dart';
+// Dart Imports
+/*
+  hey test hre
+*/
+import 'dart:async';
+import 'dart:io';
+import 'dart:js';
 
+// Flutter Imports
+// Test shit
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/local_notifications/flutter_local_notifications.dart'
+    hide PendingNotificationRequest;
+import 'package:flutter/material.dart';
+
+/// test comment
+/// second comment
+///  third
+///
+import 'package:flutter/painting.dart' as painting;
+import 'package:flutter/physics.dart';
+
+// Package Imports
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:mdi/mdi.dart';
+import 'anotherFile3.dart';
+
+// Project Imports
+import 'package:better_imports/anotherFile.dart';
+import 'package:better_imports/anotherFile2.dart';
+
+/// asdf
 void main() {
-  test("", () {});
+  var test = ";";
+
+  var more = 1;
+
+  // ahahahs
+
+  var brre = "  ;";
 }

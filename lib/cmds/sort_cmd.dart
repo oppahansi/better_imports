@@ -3,7 +3,7 @@ import 'package:args/args.dart';
 import 'package:tint/tint.dart';
 
 // Project Imports
-import "package:better_imports/lib.dart";
+import 'package:better_imports/lib.dart';
 
 class SortCmd {
   final ArgResults argResults;
