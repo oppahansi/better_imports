@@ -31,14 +31,22 @@ class SortCmd {
     _printResult(stopwatch, sorted, cfg);
   }
 
-  void _printResult(Stopwatch stopwatch, List<String> sorted, Cfg cfg) {
+  void _printResult(Stopwatch stopwatch, List<SortedResult> sorted, Cfg cfg) {
     final success = '✔'.green();
+    final notSorted = '✔'.grey();
 
     for (int i = 0; i < sorted.length; i++) {
-      Printer.print("$success ${sorted[i]}'");
+      if (sorted[i].changed) {
+        Printer.print("$success ${sorted[i].file.name}'");
+      } else {
+        Printer.print("$notSorted ${sorted[i].file.name}'");
+      }
     }
 
-    Printer.print("\n$success Sorted ${sorted.length} files in "
+    int sortedCount = sorted.where((e) => e.changed).length;
+
+    Printer.print(
+        "\n$success Sorted $sortedCount out of ${sorted.length} files in "
         "${stopwatch.elapsed.inMilliseconds} ms\n");
   }
 }

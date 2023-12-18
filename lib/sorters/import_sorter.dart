@@ -2,7 +2,6 @@
 import 'dart:io';
 
 // Package Imports
-import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
@@ -19,6 +18,8 @@ enum ImportType {
 }
 
 class Sorter {
+  final _formatter = DartFormatter();
+
   final List<String> _paths;
   final Cfg _cfg;
 
@@ -34,24 +35,23 @@ class Sorter {
   })  : _cfg = cfg,
         _paths = paths;
 
-  List<String> sort() {
-    var results = <String>[];
+  List<SortedResult> sort() {
+    var results = <SortedResult>[];
 
     for (var path in _paths) {
       var result = _sortFile(path);
 
       if (result.changed) {
         result.file.writeAsStringSync(result.sorted);
-
-        results.add(result.file.name);
       }
+
+      results.add(result);
     }
 
     return results;
   }
 
   SortedResult _sortFile(String path) {
-    DartFormatter formatter = DartFormatter();
     _reset();
     _initInputTypeMap();
 
@@ -67,8 +67,8 @@ class Sorter {
     sorted.add("");
 
     var originalString =
-        formatter.format(_original.join(Platform.lineTerminator));
-    var sortedString = formatter.format(sorted.join(Platform.lineTerminator));
+        _formatter.format(_original.join(Platform.lineTerminator));
+    var sortedString = _formatter.format(sorted.join(Platform.lineTerminator));
 
     return SortedResult(
       file: file,
@@ -229,13 +229,13 @@ class Sorter {
   }
 
   ImportType _getImportType(String importLine) {
-    print(importLine);
-
     if (importLine.contains('dart:')) {
       return ImportType.dart;
     } else if (importLine.contains('package:flutter')) {
       return ImportType.flutter;
     } else if (importLine.contains('package:${_cfg.projectName}')) {
+      return ImportType.project;
+    } else if (!importLine.contains('package:')) {
       return ImportType.project;
     } else {
       return ImportType.package;
@@ -263,11 +263,11 @@ class Sorter {
 
     var sorted = List<String>.from(_original);
 
-    _processProjectImports();
     _removeImportTypeCommentsInDirectives(_importTypeToDirectives);
     _removeOldImports(sorted);
     _removeImportTypeComments(sorted);
     _removeEmptyLines(sorted);
+    _processProjectImports();
     _insertOrganizedImports(sorted);
 
     return sorted;
@@ -305,18 +305,18 @@ class Sorter {
   }
 
   void _insertOrganizedImports(List<String> sorted) {
-    DartFormatter formatter = DartFormatter();
-    sorted.insert(0, '');
     _importTypeToDirectives.keys.toList().reversed.forEach((importType) {
       var entry = _importTypeToDirectives[importType];
-      var importLines = entry!.keys.toList().reversed.toList();
+      var importLines = entry!.keys.toList();
+      importLines.sort();
+      importLines = importLines.reversed.toList();
 
       if (importLines.isNotEmpty) {
         var comments = entry.values.toList().reversed.toList();
 
         for (var i = 0; i < importLines.length; i++) {
           var importLine = importLines[i];
-          var formattedImport = formatter.format(importLine);
+          var formattedImport = _formatter.format(importLine);
 
           var lines = formattedImport.split("\n").reversed.toList();
 
@@ -367,11 +367,7 @@ class Sorter {
 
       for (var import in entry!.keys) {
         var importLines = entry[import]!;
-
-        DartFormatter formatter = DartFormatter();
-
-        var formattedImport = formatter.format(import);
-
+        var formattedImport = _formatter.format(import);
         var lines = formattedImport.split("\n").reversed.toList();
 
         for (var line in lines) {
@@ -399,14 +395,20 @@ class Sorter {
       var newImportLines = <String>[];
 
       for (var line in importLines) {
-        if (line.contains("import 'package:${_cfg.projectName}")) {
+        if (!line.contains("import 'package:${_cfg.projectName}")) {
           newImportLines.add(_convertToProjectImport(line));
         } else {
           newImportLines.add(line);
         }
       }
 
-      newProjectImports.putIfAbsent(import, () => newImportLines);
+      var projectImport = import;
+      if (!projectImport.contains("import 'package:${_cfg.projectName}") ||
+          !projectImport.contains("package:")) {
+        projectImport = _convertToProjectImport(projectImport);
+      }
+
+      newProjectImports.putIfAbsent(projectImport, () => newImportLines);
     }
 
     _importTypeToDirectives[ImportType.project] = newProjectImports;

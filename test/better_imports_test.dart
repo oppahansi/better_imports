@@ -21,14 +21,14 @@ import 'package:flutter/painting.dart' as painting;
 import 'package:flutter/physics.dart';
 
 // Package Imports
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:mdi/mdi.dart';
-import 'anotherFile3.dart';
+import 'package:provider/provider.dart';
 
 // Project Imports
 import 'package:better_imports/anotherFile.dart';
 import 'package:better_imports/anotherFile2.dart';
+import 'package:better_imports/anotherFile3.dart';
 
 /// asdf
 void main() {

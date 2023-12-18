@@ -28,7 +28,6 @@
             "args": [
                 "--files",
                 "better_imports_test,better_imports",
-                "--no-comments",
             ],
             "program": "bin/better_imports.dart",
         }
