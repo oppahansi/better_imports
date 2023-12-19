@@ -6,101 +6,98 @@ import "package:better_imports/lib.dart";
 
 class Collector {
   final Cfg cfg;
+  final _allFilePaths = <String>[];
 
   Collector({required this.cfg});
 
   List<String> collect() {
-    if (cfg.files.isNotEmpty) {
-      return _collectFiles(cfg.files);
-    }
+    _collectInFolders();
+    _filterIgnoredFiles();
+    _processOptions();
 
-    if (cfg.filesLike.isNotEmpty) {
-      return _collectFilesLike();
-    }
-
-    return _collectInFolders(cfg.folders);
+    return _allFilePaths;
   }
 
-  List<String> _collectFiles(List<String> files) {
-    final collectedFiles = _collectInFolders(cfg.folders);
-    final results = <String>[];
+  void _collectInFolders() {
+    log.info("┠ Collecting files in all folders..");
 
-    for (var file in files) {
-      var fileName = file.contains(".dart") ? file : "$file.dart";
+    final allFileEntities = <FileSystemEntity>[];
 
-      var match = collectedFiles.firstWhere(
-        (element) => element.endsWith(fileName),
-        orElse: () => "",
-      );
-
-      if (File(match).existsSync()) {
-        results.add(match);
-      }
+    for (var folder in cfg.folders) {
+      allFileEntities.addAll(_collectInFolder(folder));
     }
 
-    return _filterIgnoredFiles(results);
-  }
+    log.info("┠─ Selecting only dart files..");
+    for (var fileEntity in allFileEntities) {
+      if (fileEntity.existsSync() &&
+          fileEntity.isFile &&
+          fileEntity.name.endsWith(".dart")) {
+        var newFilePath = fileEntity.path;
 
-  List<String> _collectFilesLike() {
-    return _filterFilesLike(_collectInFolders(cfg.folders));
-  }
-
-  List<String> _collectInFolders(List<String> folders) {
-    final results = <String>[];
-    final collectedFileEntities = <FileSystemEntity>[];
-    final emptyFolders = <String>[];
-
-    for (var folder in folders) {
-      final collected = _collectInFolder(folder);
-
-      collectedFileEntities.addAll(collected);
-
-      if (collected.isEmpty) {
-        emptyFolders.add(folder);
-      }
-    }
-
-    for (var file in collectedFileEntities) {
-      if (file.existsSync() && file.isFile && file.name.endsWith(".dart")) {
-        var newFilePath = file.path;
-
-        if (!results.contains(newFilePath)) {
-          results.add(newFilePath);
+        if (!_allFilePaths.contains(newFilePath)) {
+          _allFilePaths.add(newFilePath);
         }
       }
     }
-
-    return _filterIgnoredFiles(results);
   }
 
-  List<FileSystemEntity> _collectInFolder(String folder) {
-    var path = '${cfg.sortPath}${Platform.pathSeparator}$folder';
+  void _filterIgnoredFiles() {
+    log.info("┠ Removing ignored files..");
 
-    if (Directory(path).existsSync()) {
-      return Directory(path).listSync(recursive: cfg.recursive);
+    for (var pattern in cfg.ignoreFilesLike) {
+      log.info("┠─ Removing ignored file like: $pattern");
+      _allFilePaths.removeWhere(
+        (filePath) => RegExp(pattern).hasMatch(filePath),
+      );
+    }
+
+    for (var ignored in cfg.ignoreFiles) {
+      log.info("┠─ Removing ignored file: $ignored");
+      _allFilePaths.removeWhere(
+        (filePath) =>
+            filePath.endsWith("${Platform.pathSeparator}$ignored.dart"),
+      );
+    }
+  }
+
+  void _processOptions() {
+    if (cfg.files.isNotEmpty) {
+      log.info("┠ Files option provided.");
+
+      _retainNamedFiles(cfg.files);
+    } else if (cfg.filesLike.isNotEmpty) {
+      log.info("┠ Files-like option provided.");
+
+      _retainFilesLike();
+    }
+  }
+
+  List<FileSystemEntity> _collectInFolder(String folderName) {
+    log.info("┠─ Collecting files in folder: $folderName");
+
+    var folderPath = '${cfg.sortPath}${Platform.pathSeparator}$folderName';
+
+    if (Directory(folderPath).existsSync()) {
+      return Directory(folderPath).listSync(recursive: cfg.recursive);
     }
 
     return [];
   }
 
-  List<String> _filterIgnoredFiles(List<String> files) {
-    for (var pattern in cfg.ignoreFilesLike) {
-      files.removeWhere((element) => RegExp(pattern).hasMatch(element));
-    }
+  void _retainNamedFiles(List<String> files) {
+    log.info("┠─ Retaining only named files..");
+    _allFilePaths.retainWhere((element) {
+      var fileName = element.split(Platform.pathSeparator).last;
 
-    for (var ignored in cfg.ignoreFiles) {
-      files.removeWhere((element) =>
-          element.endsWith("${Platform.pathSeparator}$ignored.dart"));
-    }
-
-    return files;
+      return files.contains(fileName) ||
+          files.contains(fileName.replaceAll(".dart", ""));
+    });
   }
 
-  List<String> _filterFilesLike(List<String> files) {
-    for (var pattern in cfg.filesLike) {
-      files.removeWhere((element) => !RegExp(pattern).hasMatch(element));
-    }
+  void _retainFilesLike() {
+    log.info("┠─ Retaining only files like: ${cfg.filesLike}");
 
-    return files;
+    _allFilePaths.retainWhere(
+        (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element));
   }
 }

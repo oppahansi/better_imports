@@ -401,4 +401,14 @@ class SortedResult {
     required this.formattedContent,
     required this.changed,
   });
+
+  @override
+  String toString() {
+    return '''
+    SortedResult {
+      file: $file
+      changed: $changed
+    }
+    ''';
+  }
 }

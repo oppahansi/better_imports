@@ -3,12 +3,17 @@ import 'dart:io';
 
 // Package Imports
 import 'package:args/args.dart';
+import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
 // Project Imports
 import "package:better_imports/lib.dart";
 
+var logging = false;
+
 class Cfg {
+  final log = Logger('MyClassName');
+
   late String configPath;
   late String sortPath;
   late String projectName;
@@ -330,5 +335,22 @@ class Cfg {
         ignoreFilesLike.add(argValue.trim());
       }
     }
+  }
+
+  @override
+  String toString() {
+    return '''
+    sortPath: $sortPath
+    projectName: $projectName
+    recursive: $recursive
+    comments: $comments
+    silent: $silent
+    relative: $relative
+    folders: $folders
+    files: $files
+    ignoreFiles: $ignoreFiles
+    filesLike: $filesLike
+    ignoreFilesLike: $ignoreFilesLike
+    ''';
   }
 }

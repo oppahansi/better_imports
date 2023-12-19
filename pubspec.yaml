@@ -11,6 +11,8 @@ dependencies:
   analyzer: ^6.3.0
   args: ^2.4.2
   dart_style: ^2.3.4
+  intl: ^0.19.0
+  logging: ^1.2.0
   tint: ^2.0.1
   yaml: ^3.1.2
 

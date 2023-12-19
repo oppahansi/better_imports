@@ -33,6 +33,12 @@ final argParser = ArgParser()
     defaultsTo: false,
     negatable: false,
   )
+  ..addFlag(
+    Constants.logFlag,
+    abbr: Constants.logFlagAbbr,
+    defaultsTo: false,
+    negatable: false,
+  )
   ..addOption(
     Constants.cfgPathOption,
     mandatory: false,
