@@ -17,6 +17,7 @@ class Cfg {
   late bool recursive;
   late bool comments;
   late bool silent;
+  late bool trace;
   late bool relative;
   late List<String> folders;
   late List<String> files;
@@ -25,22 +26,25 @@ class Cfg {
   late List<String> ignoreFilesLike;
 
   final ArgResults _argResults;
-  late Map<dynamic, dynamic>? _config;
-  late Map<dynamic, dynamic>? _biConfig;
+  late Map<dynamic, dynamic>? _yamlConfig;
+  late Map<dynamic, dynamic>? _biYamlSection;
 
   Cfg(this._argResults) {
     _setDefaults();
 
-    _init();
+    _setProvidedValues();
   }
 
   void _setDefaults() {
+    log.fine("┠ Setting default cfg values..");
+
     sortPath = Directory.current.path;
     projectName = Directory.current.name;
 
     recursive = true;
     comments = true;
     silent = false;
+    trace = false;
     relative = false;
 
     folders = <String>[
@@ -64,14 +68,16 @@ class Cfg {
     ];
   }
 
-  void _init() {
+  void _setProvidedValues() {
+    log.fine("┠ Setting provided cfg values..");
+
     configPath = '$sortPath${Platform.pathSeparator}pubspec.yaml';
 
-    _setConfig();
-    _setBiConfig();
+    _setYamlConfig();
+    _setBetterImportsYaml();
 
-    if (_config == null || _biConfig == null) {
-      Printer.warning(
+    if (_yamlConfig == null || _biYamlSection == null) {
+      log.warning(
           "Default values will be used if no cli arguments are passed in.");
     }
 
@@ -80,6 +86,7 @@ class Cfg {
     _setRecursive();
     _setComments();
     _setSilent();
+    _setTrace();
     _setRelative();
 
     _setFolders();
@@ -90,16 +97,20 @@ class Cfg {
     _setIgnoredFilesLike();
   }
 
-  void _setConfig() {
-    _config = _loadConfig();
+  void _setYamlConfig() {
+    log.fine("┠─ Setting _yamlConfig..");
 
-    if (_config == null) {
-      Printer.warning("Could not find config file Config path:"
+    _yamlConfig = _loadConfig();
+
+    if (_yamlConfig == null) {
+      log.warning("Could not find config file Config path:"
           "\n$configPath");
     }
   }
 
   Map<dynamic, dynamic> _loadConfig() {
+    log.fine("┠── Loading yaml config from file..");
+
     late File configFile;
     late Map<dynamic, dynamic> config;
 
@@ -116,9 +127,10 @@ class Cfg {
       return config;
     }
 
-    _biConfig = config[Constants.betterImports];
+    _biYamlSection = config[Constants.betterImports];
 
-    if (_biConfig![Constants.cfgPathKey] != null) {
+    if (_biYamlSection![Constants.cfgPathKey] != null) {
+      log.fine("┠── External config file path was provided..");
       return _loadExternalConfig();
     }
 
@@ -126,11 +138,13 @@ class Cfg {
   }
 
   Map<dynamic, dynamic> _loadExternalConfig() {
-    configPath = _biConfig![Constants.cfgPathKey];
+    log.fine("┠─── Loading external yaml config from file..");
+
+    configPath = _biYamlSection![Constants.cfgPathKey];
     var configFile = File(configPath);
 
     if (!configFile.existsSync()) {
-      Printer.error("External config file could not be found. Config path:"
+      log.severe("External config file could not be found. Config path:"
           "\n$configPath");
 
       exit(2);
@@ -139,20 +153,25 @@ class Cfg {
     return loadYaml(configFile.readAsStringSync()) as Map;
   }
 
-  void _setBiConfig() {
-    _biConfig = _config![Constants.betterImports];
-    if (_biConfig == null) {
-      Printer.warning(
+  void _setBetterImportsYaml() {
+    log.fine("┠─ Setting _biYamlSection..");
+
+    _biYamlSection = _yamlConfig![Constants.betterImports];
+    if (_biYamlSection == null) {
+      log.warning(
           "Could not find config section in the config file. Config path:"
           "\n$configPath");
     }
   }
 
   void _setProjectName() {
-    if (_biConfig != null && _biConfig![Constants.projectNameKey] != null) {
-      var cfgValue = _biConfig![Constants.projectNameKey] as String;
+    log.fine("┠─ Setting project name..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.projectNameKey] != null) {
+      var cfgValue = _biYamlSection![Constants.projectNameKey] as String;
       if (cfgValue.isNotEmpty) {
-        projectName = _biConfig![Constants.projectNameKey];
+        projectName = _biYamlSection![Constants.projectNameKey];
       }
     }
 
@@ -162,8 +181,11 @@ class Cfg {
   }
 
   void _setRecursive() {
-    if (_biConfig != null && _biConfig![Constants.recursiveFlag] != null) {
-      recursive = _biConfig![Constants.recursiveFlag];
+    log.fine("┠─ Setting recursive..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.recursiveFlag] != null) {
+      recursive = _biYamlSection![Constants.recursiveFlag];
     }
 
     if (_argResults.wasParsed(Constants.recursiveFlag)) {
@@ -172,8 +194,11 @@ class Cfg {
   }
 
   void _setComments() {
-    if (_biConfig != null && _biConfig![Constants.commentsFlag] != null) {
-      comments = _biConfig![Constants.commentsFlag];
+    log.fine("┠─ Setting comments..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.commentsFlag] != null) {
+      comments = _biYamlSection![Constants.commentsFlag];
     }
 
     if (_argResults.wasParsed(Constants.commentsFlag)) {
@@ -182,8 +207,11 @@ class Cfg {
   }
 
   void _setSilent() {
-    if (_biConfig != null && _biConfig![Constants.silentFlag] != null) {
-      silent = _biConfig![Constants.silentFlag];
+    log.fine("┠─ Setting silent..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.silentFlag] != null) {
+      silent = _biYamlSection![Constants.silentFlag];
     }
 
     if (_argResults.wasParsed(Constants.silentFlag)) {
@@ -191,9 +219,29 @@ class Cfg {
     }
   }
 
+  void _setTrace() {
+    log.fine("┠─ Setting trace..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.traceFlag] != null) {
+      trace = _biYamlSection![Constants.traceFlag];
+    }
+
+    if (_argResults.wasParsed(Constants.traceFlag)) {
+      trace = _argResults[Constants.traceFlag];
+    }
+
+    if (trace) {
+      logging = true;
+    }
+  }
+
   void _setRelative() {
-    if (_biConfig != null && _biConfig![Constants.relativeFlag] != null) {
-      relative = _biConfig![Constants.relativeFlag];
+    log.fine("┠─ Setting relative..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.relativeFlag] != null) {
+      relative = _biYamlSection![Constants.relativeFlag];
     }
 
     if (_argResults.wasParsed(Constants.relativeFlag)) {
@@ -202,14 +250,17 @@ class Cfg {
   }
 
   void _setFolders() {
-    if (_biConfig != null && _biConfig![Constants.foldersKey] != null) {
-      var cfgValues = _biConfig![Constants.foldersKey];
+    log.fine("┠─ Setting folders..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.foldersKey] != null) {
+      var cfgValues = _biYamlSection![Constants.foldersKey];
 
       if (cfgValues.isNotEmpty) {
         folders.clear();
       }
 
-      for (var folder in _biConfig![Constants.foldersKey]) {
+      for (var folder in _biYamlSection![Constants.foldersKey]) {
         if (!folders.contains((folder as String).trim())) {
           folders.add((folder).trim());
         }
@@ -229,14 +280,16 @@ class Cfg {
   }
 
   void _setFiles() {
-    if (_biConfig != null && _biConfig![Constants.filesKey] != null) {
-      var cfgValues = _biConfig![Constants.filesKey];
+    log.fine("┠─ Setting files..");
+
+    if (_biYamlSection != null && _biYamlSection![Constants.filesKey] != null) {
+      var cfgValues = _biYamlSection![Constants.filesKey];
 
       if (cfgValues.isNotEmpty) {
         files.clear();
       }
 
-      for (var file in _biConfig![Constants.filesKey]) {
+      for (var file in _biYamlSection![Constants.filesKey]) {
         if (!files.contains((file).trim())) {
           files.add((file).trim());
         }
@@ -255,14 +308,17 @@ class Cfg {
   }
 
   void _setIgnoreFiles() {
-    if (_biConfig != null && _biConfig![Constants.ignoreFilesKey] != null) {
-      var cfgValues = _biConfig![Constants.ignoreFilesKey];
+    log.fine("┠─ Setting ignore files..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.ignoreFilesKey] != null) {
+      var cfgValues = _biYamlSection![Constants.ignoreFilesKey];
 
       if (cfgValues.isNotEmpty) {
         ignoreFiles.clear();
       }
 
-      for (var file in _biConfig![Constants.ignoreFilesKey]) {
+      for (var file in _biYamlSection![Constants.ignoreFilesKey]) {
         if (!files.contains((file).trim())) {
           ignoreFiles.add((file).trim());
         }
@@ -282,14 +338,17 @@ class Cfg {
   }
 
   void _setFilesLike() {
-    if (_biConfig != null && _biConfig![Constants.filesLikeKey] != null) {
-      var cfgValues = _biConfig![Constants.filesLikeKey];
+    log.fine("┠─ Setting files like..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.filesLikeKey] != null) {
+      var cfgValues = _biYamlSection![Constants.filesLikeKey];
 
       if (cfgValues.isNotEmpty) {
         filesLike.clear();
       }
 
-      for (var file in _biConfig![Constants.filesLikeKey]) {
+      for (var file in _biYamlSection![Constants.filesLikeKey]) {
         if (!filesLike.contains((file).trim())) {
           filesLike.add((file).trim());
         }
@@ -309,13 +368,17 @@ class Cfg {
   }
 
   void _setIgnoredFilesLike() {
-    if (_biConfig != null && _biConfig![Constants.ignoreFilesLikeKey] != null) {
-      var cfgValues = _biConfig![Constants.ignoreFilesLikeKey];
+    log.fine("┠─ Setting ignore files like..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.ignoreFilesLikeKey] != null) {
+      var cfgValues = _biYamlSection![Constants.ignoreFilesLikeKey];
 
       if (cfgValues.isNotEmpty) {
         ignoreFilesLike.clear();
       }
-      for (var ignored in _biConfig![Constants.ignoreFilesLikeKey]) {
+
+      for (var ignored in _biYamlSection![Constants.ignoreFilesLikeKey]) {
         if (!ignoreFilesLike.contains((ignored).trim())) {
           ignoreFilesLike.add((ignored).trim());
         }

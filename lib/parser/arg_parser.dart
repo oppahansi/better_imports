@@ -34,8 +34,7 @@ final argParser = ArgParser()
     negatable: false,
   )
   ..addFlag(
-    Constants.logFlag,
-    abbr: Constants.logFlagAbbr,
+    Constants.traceFlag,
     defaultsTo: false,
     negatable: false,
   )

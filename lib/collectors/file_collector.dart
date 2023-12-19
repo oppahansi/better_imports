@@ -19,7 +19,7 @@ class Collector {
   }
 
   void _collectInFolders() {
-    log.info("┠ Collecting files in all folders..");
+    log.fine("┠ Collecting files in all folders..");
 
     final allFileEntities = <FileSystemEntity>[];
 
@@ -27,7 +27,7 @@ class Collector {
       allFileEntities.addAll(_collectInFolder(folder));
     }
 
-    log.info("┠─ Selecting only dart files..");
+    log.fine("┠─ Selecting only dart files..");
     for (var fileEntity in allFileEntities) {
       if (fileEntity.existsSync() &&
           fileEntity.isFile &&
@@ -42,17 +42,17 @@ class Collector {
   }
 
   void _filterIgnoredFiles() {
-    log.info("┠ Removing ignored files..");
+    log.fine("┠ Removing ignored files..");
 
     for (var pattern in cfg.ignoreFilesLike) {
-      log.info("┠─ Removing ignored file like: $pattern");
+      log.fine("┠─ Removing ignored file like: $pattern");
       _allFilePaths.removeWhere(
         (filePath) => RegExp(pattern).hasMatch(filePath),
       );
     }
 
     for (var ignored in cfg.ignoreFiles) {
-      log.info("┠─ Removing ignored file: $ignored");
+      log.fine("┠─ Removing ignored file: $ignored");
       _allFilePaths.removeWhere(
         (filePath) =>
             filePath.endsWith("${Platform.pathSeparator}$ignored.dart"),
@@ -62,18 +62,18 @@ class Collector {
 
   void _processOptions() {
     if (cfg.files.isNotEmpty) {
-      log.info("┠ Files option provided.");
+      log.fine("┠ Files option provided.");
 
       _retainNamedFiles(cfg.files);
     } else if (cfg.filesLike.isNotEmpty) {
-      log.info("┠ Files-like option provided.");
+      log.fine("┠ Files-like option provided.");
 
       _retainFilesLike();
     }
   }
 
   List<FileSystemEntity> _collectInFolder(String folderName) {
-    log.info("┠─ Collecting files in folder: $folderName");
+    log.fine("┠─ Collecting files in folder: $folderName");
 
     var folderPath = '${cfg.sortPath}${Platform.pathSeparator}$folderName';
 
@@ -85,7 +85,7 @@ class Collector {
   }
 
   void _retainNamedFiles(List<String> files) {
-    log.info("┠─ Retaining only named files..");
+    log.fine("┠─ Retaining only named files..");
     _allFilePaths.retainWhere((element) {
       var fileName = element.split(Platform.pathSeparator).last;
 
@@ -95,7 +95,7 @@ class Collector {
   }
 
   void _retainFilesLike() {
-    log.info("┠─ Retaining only files like: ${cfg.filesLike}");
+    log.fine("┠─ Retaining only files like: ${cfg.filesLike}");
 
     _allFilePaths.retainWhere(
         (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element));

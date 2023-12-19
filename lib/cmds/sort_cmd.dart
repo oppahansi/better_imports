@@ -12,64 +12,58 @@ class SortCmd {
   SortCmd({required this.argResults});
 
   void run() {
-    log.info("Running sort command..");
+    log.fine("Running sort command..");
 
-    log.info("Starting stopwatch..");
+    log.fine("Starting stopwatch..");
     stopwatch.start();
 
-    log.info("Creating config..");
+    log.fine("Creating config..");
     final cfg = Cfg(argResults);
-    log.info("Created config with values: $cfg");
+    log.fine("Created config with values: $cfg");
 
-    log.info("Creating collector..");
+    log.fine("Creating collector..");
     final collector = Collector(cfg: cfg);
-    log.info("Created collector.");
+    log.fine("Created collector.");
 
-    log.info("Collecting files..");
+    log.fine("Collecting files..");
     final files = collector.collect();
-    log.info("Collected files:\n$files");
+    log.fine("Collected files:\n$files");
 
-    log.info("Creating sorter..");
+    log.fine("Creating sorter..");
     final sorter = Sorter(paths: files, cfg: cfg);
-    log.info("Created sorter.");
+    log.fine("Created sorter.");
 
-    log.info("Sorting..");
+    log.fine("Sorting..");
     final sorted = sorter.sort();
-    log.info("Sorted completed. Sorted items:\n$sorted");
+    log.fine("Sorted completed. Sorted items:\n$sorted");
 
-    log.info("Stopping stopwatch..");
+    log.fine("Stopping stopwatch..");
     stopwatch.stop();
-
-    if (cfg.silent) {
-      log.info("Silent flag was set. Exiting.");
-      return;
-    }
 
     _printResults(stopwatch, sorted, cfg);
 
-    log.info("Finished sort command.");
+    log.fine("Finished sort command.");
   }
 
   void _printResults(Stopwatch stopwatch, List<SortedResult> sorted, Cfg cfg) {
     log.info("Printing results..");
 
     final success = '✔'.green();
-    final notSorted = '✔'.grey();
+    final notSorted = '✖'.grey();
 
     for (int i = 0; i < sorted.length; i++) {
       if (sorted[i].changed) {
-        Printer.print("$success ${sorted[i].file.name}'");
+        log.info("$success ${sorted[i].file.name}'");
       } else {
-        Printer.print("$notSorted ${sorted[i].file.name}'");
+        log.info("$notSorted ${sorted[i].file.name}' (not changed)");
       }
     }
 
     int sortedCount = sorted.where((e) => e.changed).length;
 
-    Printer.print(
-        "\n$success Sorted $sortedCount out of ${sorted.length} files in "
-        "${stopwatch.elapsed.inMilliseconds} ms\n");
+    log.info(
+        "$success Sorted $sortedCount out of ${sorted.length} files in ${stopwatch.elapsed.inMilliseconds} ms\n");
 
-    log.info("Printed results.");
+    log.fine("Printed results.");
   }
 }
