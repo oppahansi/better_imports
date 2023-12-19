@@ -41,8 +41,6 @@ class Sorter {
     for (var path in _unsortedFilePaths) {
       var sortedResult = _sortFile(path);
 
-      print(sortedResult.formattedContent);
-
       if (sortedResult.changed) {
         sortedResult.file.writeAsStringSync(sortedResult.formattedContent);
       }
