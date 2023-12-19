@@ -5,8 +5,8 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 void main() {
-  final expectedFilesInProject = 20;
-  final expectedFilesInProjectNoRecursive = 5;
+  final expectedFilesInProject = 21;
+  final expectedFilesInProjectNoRecursive = 6;
 
   group("Collector Tests. Test amount of collected files.", () {
     test("Default config.", () {

@@ -19,6 +19,7 @@ void main() {
       expect(cfg.comments, true);
       expect(cfg.silent, false);
       expect(cfg.relative, false);
+      expect(cfg.trace, false);
       expect(cfg.folders, [
         "lib",
         "bin",
@@ -61,6 +62,7 @@ void main() {
         "--no-recursive",
         "-s",
         "--relative",
+        "--trace",
         "--project-name",
         "argsProjectName",
         "--folders",
@@ -82,6 +84,7 @@ void main() {
       expect(cfg.comments, false);
       expect(cfg.silent, true);
       expect(cfg.relative, true);
+      expect(cfg.trace, true);
       expect(cfg.folders, [
         "lib/cmds",
         "lib/collectors",
