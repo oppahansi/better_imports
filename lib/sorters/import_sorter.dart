@@ -249,7 +249,7 @@ class Sorter {
           }
 
           _sortedLines.removeWhere((line) =>
-              line.isNotEmpty && _stringsContentEqual(line, importLine));
+              line.isNotEmpty && line.contains(importLine.trimRight()));
         }
 
         for (var comment in commentLines) {
@@ -257,26 +257,11 @@ class Sorter {
             continue;
           }
 
-          _sortedLines.removeWhere(
-              (line) => line.isNotEmpty && _stringsContentEqual(line, comment));
+          _sortedLines
+              .removeWhere((line) => line.isNotEmpty && line.contains(comment));
         }
       }
     }
-  }
-
-  /*
-    This is a workaround for the fact that String.conatains method sometimes
-    returns false even though the string contains the substring.
-    Happens when used in an executable or ran with dart run in another project.
-  */
-  bool _stringsContentEqual(String a, String b) {
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   bool _isImportComment(String comment) {
@@ -310,7 +295,7 @@ class Sorter {
 
         for (var i = 0; i < importLines.length; i++) {
           var importLine = importLines[i];
-          var formattedImport = _formatter.format(importLine);
+          var formattedImport = _formatter.format(importLine).trimRight();
 
           var lines = formattedImport.split("\n").reversed.toList();
 
@@ -319,7 +304,7 @@ class Sorter {
               continue;
             }
 
-            _sortedLines.insert(0, line);
+            _sortedLines.insert(0, line.trimRight());
           }
 
           var commentList = comments[i].reversed.toList();
