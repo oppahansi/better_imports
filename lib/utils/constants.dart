@@ -31,8 +31,7 @@ class Constants {
 
   static const relativeFlag = "relative";
 
-  static const traceFlag = "log";
-  static const logFlagAbbr = "l";
+  static const traceFlag = "trace";
 
   static const foldersOption = "folders";
 
