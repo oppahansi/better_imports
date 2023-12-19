@@ -111,6 +111,14 @@ class Sorter {
       var import = directive.toString();
       var importType = _getImportTypeByDirective(import);
       var importToComments = _importTypeToImportAndComments[importType];
+      var formattedImport = _formatter.format(import);
+      var formattedImportLines = formattedImport.split("\n");
+
+      formattedImportLines.removeWhere((element) => element.trim().isEmpty);
+
+      if (formattedImportLines.length > 1) {
+        _currentPositionInImports += formattedImportLines.length - 1;
+      }
 
       importToComments!.putIfAbsent(import, () => <String>[]);
 
@@ -241,25 +249,27 @@ class Sorter {
         var formattedImportLines =
             _formatter.format(import).split("\n").reversed.toList();
 
+        formattedImportLines.removeWhere((element) => element.trim().isEmpty);
+
         var commentLines = importToComments[import]!;
 
-        for (var importLine in formattedImportLines) {
-          if (importLine.trim().isEmpty) {
-            continue;
+        _sortedLines.retainWhere((line) {
+          if (line.isNotEmpty) {
+            for (var importLine in formattedImportLines) {
+              if (importLine.trim().isEmpty) {
+                continue;
+              }
+
+              if (line.contains(importLine.trimRight())) {
+                return false;
+              }
+            }
           }
 
-          _sortedLines.removeWhere((line) =>
-              line.isNotEmpty && line.contains(importLine.trimRight()));
-        }
+          return true;
+        });
 
-        for (var comment in commentLines) {
-          if (comment.trim().isEmpty) {
-            continue;
-          }
-
-          _sortedLines
-              .removeWhere((line) => line.isNotEmpty && line.contains(comment));
-        }
+        _sortedLines.retainWhere((line) => !commentLines.contains(line));
       }
     }
   }
@@ -282,8 +292,6 @@ class Sorter {
   }
 
   void _insertOrganizedImports() {
-    _sortedLines.insert(0, '');
-
     _importTypeToImportAndComments.keys.toList().reversed.forEach((importType) {
       var entry = _importTypeToImportAndComments[importType];
       var importLines = entry!.keys.toList();
