@@ -28,7 +28,6 @@ class Sorter {
   final _importTypeToImportAndComments =
       <ImportType, Map<String, List<String>>>{};
 
-  var _emptyLinesInImports = 0;
   var _currentPositionInImports = 0;
 
   Sorter({required List<String> paths, required Cfg cfg})
@@ -94,7 +93,6 @@ class Sorter {
 
     _sortedLines.clear();
     _originalLines.clear();
-    _emptyLinesInImports = 0;
     _currentPositionInImports = 0;
     _importTypeToImportAndComments.clear();
   }
@@ -178,7 +176,6 @@ class Sorter {
       _currentPositionInImports++;
       while (_currentPositionInImports > 0 &&
           _originalLines[_currentPositionInImports].isEmpty) {
-        _emptyLinesInImports++;
         _currentPositionInImports++;
       }
 
@@ -229,7 +226,6 @@ class Sorter {
 
     while (_currentPositionInImports > 0 &&
         _originalLines[_currentPositionInImports].isEmpty) {
-      _emptyLinesInImports++;
       _currentPositionInImports++;
     }
   }
@@ -310,8 +306,14 @@ class Sorter {
   void _removeEmptyLines() {
     log.fine("┠── Removing empty lines..");
 
-    for (var i = 0; i < _emptyLinesInImports; i++) {
-      _sortedLines.removeAt(0);
+    for (var i = 0; i < _sortedLines.length; i++) {
+      var currentLine = _sortedLines[i];
+
+      if (currentLine.trim().isNotEmpty) {
+        return;
+      }
+
+      _sortedLines.removeAt(i);
     }
   }
 

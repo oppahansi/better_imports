@@ -14,7 +14,7 @@ class Printer {
   }
 
   static void warning(String message) {
-    stderr.writeln("\x1B[33m$message\x1B[0m");
+    stdout.writeln("\x1B[33m$message\x1B[0m");
   }
 
   static void error(String message) {

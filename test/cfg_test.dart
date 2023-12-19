@@ -9,7 +9,7 @@ import 'package:better_imports/lib.dart';
 
 void main() {
   group("Cfg Tests.", () {
-    test("default config", () {
+    test("Default config", () {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
