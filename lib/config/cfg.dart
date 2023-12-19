@@ -12,8 +12,6 @@ import "package:better_imports/lib.dart";
 var logging = false;
 
 class Cfg {
-  final log = Logger('MyClassName');
-
   late String configPath;
   late String sortPath;
   late String projectName;
