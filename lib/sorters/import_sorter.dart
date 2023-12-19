@@ -109,10 +109,11 @@ class Sorter {
         continue;
       }
 
-      var importType = _getImportTypeByDirective(directive.toString());
+      var import = directive.toString();
+      var importType = _getImportTypeByDirective(import);
       var importToComments = _importTypeToImportAndComments[importType];
 
-      importToComments!.putIfAbsent(directive.toString(), () => <String>[]);
+      importToComments!.putIfAbsent(import, () => <String>[]);
 
       Token? beginToken = directive.beginToken;
 
@@ -122,7 +123,7 @@ class Sorter {
       );
 
       if (beginToken.lexeme.startsWith("///")) {
-        _extractDocComments(beginToken, importToComments, directive);
+        _extractDocComments(directive, importToComments);
       } else {
         _extractPrecedingComments(directive, importToComments);
       }
@@ -147,10 +148,11 @@ class Sorter {
   }
 
   void _extractDocComments(
-    Token? beginToken,
-    Map<String, List<String>> inputTypeEntry,
     ImportDirective directive,
+    Map<String, List<String>> inputTypeEntry,
   ) {
+    Token? beginToken = directive.beginToken;
+
     while (beginToken != null) {
       if (!_isImportComment(beginToken.lexeme)) {
         inputTypeEntry[directive.toString()]!.add(beginToken.lexeme);

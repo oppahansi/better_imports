@@ -5,7 +5,8 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 void main() {
-  final filesInProject = 19;
+  final expectedFilesInProject = 20;
+  final expectedFilesInProjectNoRecursive = 5;
 
   group("Collector Tests. Test amount of collected files.", () {
     test("Default config.", () {
@@ -15,7 +16,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, filesInProject);
+      expect(collected.length, expectedFilesInProject);
     });
 
     test("files arg provided", () {
@@ -37,7 +38,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, filesInProject);
+      expect(collected.length, expectedFilesInProject);
     });
 
     test("folders arg provided", () {
@@ -59,7 +60,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, filesInProject - 2);
+      expect(collected.length, expectedFilesInProject - 2);
     });
 
     test("ignore-files-like arg provided, ignore all dart files", () {
@@ -81,7 +82,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, filesInProject - 1);
+      expect(collected.length, expectedFilesInProject - 1);
     });
 
     test("recursive arg provided, recursive false", () {
@@ -92,7 +93,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, 4);
+      expect(collected.length, expectedFilesInProjectNoRecursive);
     });
   });
 }

@@ -27,7 +27,7 @@
             "type": "dart",
             "args": [
                 "--files",
-                "better_imports_test,better_imports",
+                "unsorted_file",
             ],
             "program": "bin/better_imports.dart",
         }

@@ -22,6 +22,7 @@ void main() {
       expect(cfg.folders, [
         "lib",
         "bin",
+        "res",
         "example",
         "test",
         "tests",

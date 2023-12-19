@@ -45,6 +45,7 @@ better_imports:
   folders:
     - lib
     - bin
+    - res
     - example
     - test
     - tests
