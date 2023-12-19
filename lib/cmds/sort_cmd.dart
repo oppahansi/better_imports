@@ -33,7 +33,7 @@ class SortCmd {
     final sorter = Sorter(paths: files, cfg: cfg);
     log.fine("Created sorter.");
 
-    log.fine("Sorting..");
+    log.fine("Sorting files..");
     final sorted = sorter.sort();
     log.fine("Sorted completed. Sorted items:\n$sorted");
 

@@ -52,6 +52,8 @@ class Sorter {
   }
 
   SortedResult _sortFile(String path) {
+    log.fine("┠─ Sorting file: $path");
+
     _reset();
     _initInputTypeMap();
 
@@ -62,9 +64,9 @@ class Sorter {
     var parseResult = parseString(content: file.readAsStringSync());
     var unit = parseResult.unit;
 
-    _buildImportTypeToImportAndCommentsMap(unit);
+    _fillingImportTypeToImportAndCommentsMap(unit);
 
-    _sort();
+    _rebuildSortedLines();
 
     var originalString =
         _formatter.format(_originalLines.join(Platform.lineTerminator));
@@ -88,6 +90,8 @@ class Sorter {
   }
 
   void _reset() {
+    log.fine("┠─ Resetting sorter..");
+
     _sortedLines.clear();
     _originalLines.clear();
     _emptyLinesInImports = 0;
@@ -96,13 +100,17 @@ class Sorter {
   }
 
   void _initInputTypeMap() {
+    log.fine("┠─ Initializing import types map..");
+
     _importTypeToImportAndComments.putIfAbsent(ImportType.dart, () => {});
     _importTypeToImportAndComments.putIfAbsent(ImportType.flutter, () => {});
     _importTypeToImportAndComments.putIfAbsent(ImportType.package, () => {});
     _importTypeToImportAndComments.putIfAbsent(ImportType.project, () => {});
   }
 
-  void _buildImportTypeToImportAndCommentsMap(CompilationUnit unit) {
+  void _fillingImportTypeToImportAndCommentsMap(CompilationUnit unit) {
+    log.fine("┠─ Filling import types map..");
+
     for (var directive in unit.directives) {
       if (directive is! ImportDirective) {
         continue;
@@ -158,6 +166,8 @@ class Sorter {
     ImportDirective directive,
     Map<String, List<String>> inputTypeEntry,
   ) {
+    log.fine("┠── Extracting doc comments..");
+
     Token? beginToken = directive.beginToken;
 
     while (beginToken != null) {
@@ -180,6 +190,8 @@ class Sorter {
     ImportDirective directive,
     Map<String, List<String>> inputTypeEntry,
   ) {
+    log.fine("┠── Extracting preceding comments..");
+
     dynamic precedingComment = directive.beginToken.precedingComments;
 
     if (precedingComment == null) {
@@ -213,6 +225,8 @@ class Sorter {
   }
 
   void _countFollowingEmptyLines() {
+    log.fine("┠── Counting following empty lines..");
+
     while (_currentPositionInImports > 0 &&
         _originalLines[_currentPositionInImports].isEmpty) {
       _emptyLinesInImports++;
@@ -220,16 +234,20 @@ class Sorter {
     }
   }
 
-  void _sort() {
+  void _rebuildSortedLines() {
+    log.fine("┠─ Rebuilding sorted lines..");
+
     _removeImportTypeCommentsInDirectives();
     _removeOldImports();
     _removeImportTypeComments();
     _removeEmptyLines();
     _processProjectImports();
-    _insertOrganizedImports();
+    _insertSortedImports();
   }
 
   void _removeImportTypeCommentsInDirectives() {
+    log.fine("┠── Removing import type comments in directives..");
+
     for (var importType in _importTypeToImportAndComments.keys) {
       var importToComments = _importTypeToImportAndComments[importType];
 
@@ -242,6 +260,8 @@ class Sorter {
   }
 
   void _removeOldImports() {
+    log.fine("┠── Removing old imports..");
+
     for (var importType in _importTypeToImportAndComments.keys) {
       var importToComments = _importTypeToImportAndComments[importType];
 
@@ -282,16 +302,22 @@ class Sorter {
   }
 
   void _removeImportTypeComments() {
+    log.fine("┠── Removing import type comments..");
+
     _sortedLines.retainWhere((element) => !_isImportComment(element));
   }
 
   void _removeEmptyLines() {
+    log.fine("┠── Removing empty lines..");
+
     for (var i = 0; i < _emptyLinesInImports; i++) {
       _sortedLines.removeAt(0);
     }
   }
 
-  void _insertOrganizedImports() {
+  void _insertSortedImports() {
+    log.fine("┠── Inserting sorted imports..");
+
     _importTypeToImportAndComments.keys.toList().reversed.forEach((importType) {
       var entry = _importTypeToImportAndComments[importType];
       var importLines = entry!.keys.toList();
@@ -349,6 +375,8 @@ class Sorter {
   }
 
   void _processProjectImports() {
+    log.fine("┠── Processing project imports..");
+
     var projectImports = _importTypeToImportAndComments[ImportType.project];
     var newProjectImports = <String, List<String>>{};
 
@@ -378,6 +406,8 @@ class Sorter {
   }
 
   String _convertToProjectImport(String importLine) {
+    log.fine("┠─── Converting to project import..");
+
     if (importLine.startsWith("import 'package:${_cfg.projectName}")) {
       return importLine;
     }
