@@ -318,6 +318,8 @@ class Sorter {
   void _insertSortedImports() {
     log.fine("┠── Inserting sorted imports..");
 
+    _sortedLines.insert(0, '');
+
     _importTypeToImportAndComments.keys.toList().reversed.forEach((importType) {
       var entry = _importTypeToImportAndComments[importType];
       var importLines = entry!.keys.toList();
