@@ -232,8 +232,28 @@ class Sorter {
     }
   }
 
-  void _removeImportTypeComments() {
-    _sortedLines.removeWhere((element) => _isImportComment(element));
+  void _removeOldImports() {
+    for (var importType in _importTypeToImportAndComments.keys) {
+      var entry = _importTypeToImportAndComments[importType];
+
+      for (var import in entry!.keys) {
+        var importLines = entry[import]!;
+        var formattedImport = _formatter.format(import);
+        var lines = formattedImport.split("\n").reversed.toList();
+
+        for (var line in lines) {
+          if (line.trim().isEmpty) {
+            continue;
+          }
+
+          _sortedLines.remove(line);
+        }
+
+        for (var line in importLines) {
+          _sortedLines.remove(line);
+        }
+      }
+    }
   }
 
   bool _isImportComment(String comment) {
@@ -241,6 +261,10 @@ class Sorter {
         comment == Constants.flutterImportsComment ||
         comment == Constants.packageImportsComment ||
         comment == Constants.projectImportsComment;
+  }
+
+  void _removeImportTypeComments() {
+    _sortedLines.removeWhere((element) => _isImportComment(element));
   }
 
   void _removeEmptyLines() {
@@ -305,30 +329,6 @@ class Sorter {
         return Constants.projectImportsComment;
       default:
         return '';
-    }
-  }
-
-  void _removeOldImports() {
-    for (var importType in _importTypeToImportAndComments.keys) {
-      var entry = _importTypeToImportAndComments[importType];
-
-      for (var import in entry!.keys) {
-        var importLines = entry[import]!;
-        var formattedImport = _formatter.format(import);
-        var lines = formattedImport.split("\n").reversed.toList();
-
-        for (var line in lines) {
-          if (line.trim().isEmpty) {
-            continue;
-          }
-
-          _sortedLines.remove(line);
-        }
-
-        for (var line in importLines) {
-          _sortedLines.remove(line);
-        }
-      }
     }
   }
 
