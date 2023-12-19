@@ -57,12 +57,13 @@ class Sorter {
 
     var file = File(path);
     _originalLines.addAll(file.readAsLinesSync());
-    _sortedLines.addAll(_originalLines);
+    _sortedLines.addAll(List.from(_originalLines));
 
     var parseResult = parseString(content: file.readAsStringSync());
     var unit = parseResult.unit;
 
     _buildImportTypeToImportAndCommentsMap(unit);
+
     _sort();
 
     var originalString =
@@ -234,26 +235,48 @@ class Sorter {
 
   void _removeOldImports() {
     for (var importType in _importTypeToImportAndComments.keys) {
-      var entry = _importTypeToImportAndComments[importType];
+      var importToComments = _importTypeToImportAndComments[importType];
 
-      for (var import in entry!.keys) {
-        var importLines = entry[import]!;
-        var formattedImport = _formatter.format(import);
-        var lines = formattedImport.split("\n").reversed.toList();
+      for (var import in importToComments!.keys) {
+        var formattedImportLines =
+            _formatter.format(import).split("\n").reversed.toList();
 
-        for (var line in lines) {
-          if (line.trim().isEmpty) {
+        var commentLines = importToComments[import]!;
+
+        for (var importLine in formattedImportLines) {
+          if (importLine.trim().isEmpty) {
             continue;
           }
 
-          _sortedLines.remove(line);
+          _sortedLines.removeWhere((line) =>
+              line.isNotEmpty && _stringsContentEqual(line, importLine));
         }
 
-        for (var line in importLines) {
-          _sortedLines.remove(line);
+        for (var comment in commentLines) {
+          if (comment.trim().isEmpty) {
+            continue;
+          }
+
+          _sortedLines.removeWhere(
+              (line) => line.isNotEmpty && _stringsContentEqual(line, comment));
         }
       }
     }
+  }
+
+  /*
+    This is a workaround for the fact that String.conatains method sometimes
+    returns false even though the string contains the substring.
+    Happens when used in an executable or ran with dart run in another project.
+  */
+  bool _stringsContentEqual(String a, String b) {
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   bool _isImportComment(String comment) {
@@ -264,7 +287,7 @@ class Sorter {
   }
 
   void _removeImportTypeComments() {
-    _sortedLines.removeWhere((element) => _isImportComment(element));
+    _sortedLines.retainWhere((element) => !_isImportComment(element));
   }
 
   void _removeEmptyLines() {
