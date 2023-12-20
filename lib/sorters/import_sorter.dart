@@ -57,6 +57,7 @@ class Sorter {
     _initInputTypeMap();
 
     var file = File(path);
+
     _originalLines.addAll(file.readAsLinesSync());
     _sortedLines.addAll(List.from(_originalLines));
 
@@ -67,8 +68,7 @@ class Sorter {
 
     _rebuildSortedLines();
 
-    var originalString =
-        _formatter.format(_originalLines.join(Platform.lineTerminator));
+    var originalString = _formatter.format(_originalLines.join("\n"));
 
     if (_areImportsEmpty) {
       return SortedResult(
@@ -78,8 +78,7 @@ class Sorter {
       );
     }
 
-    var sortedString =
-        _formatter.format(_sortedLines.join(Platform.lineTerminator));
+    var sortedString = _formatter.format(_sortedLines.join("\n"));
 
     return SortedResult(
       file: file,
