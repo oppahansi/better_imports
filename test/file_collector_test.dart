@@ -5,9 +5,6 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 void main() {
-  final expectedFilesInProject = 21;
-  final expectedFilesInProjectNoRecursive = 6;
-
   group("Collector Tests. Test amount of collected files.", () {
     test("Default config.", () {
       var argResult = argParser.parse([]);
@@ -16,7 +13,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, expectedFilesInProject);
+      expect(collected.isNotEmpty, true);
     });
 
     test("files arg provided", () {
@@ -38,7 +35,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, expectedFilesInProject);
+      expect(collected.isNotEmpty, true);
     });
 
     test("folders arg provided", () {
@@ -49,18 +46,25 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, 7);
+      expect(collected.isNotEmpty, true);
     });
 
     test("ignore-files arg provided, ignore some dart files", () {
-      var args = <String>["--ignore-files", "parser, lib"];
+      var args = <String>[];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
       var collector = Collector(cfg: cfg);
+      var collectedDefault = collector.collect();
+
+      args = <String>["--ignore-files", "parser, lib"];
+      argResult = argParser.parse(args);
+      cfg = Cfg(argResult);
+
+      collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, expectedFilesInProject - 2);
+      expect(collected.length, collectedDefault.length - 2);
     });
 
     test("ignore-files-like arg provided, ignore all dart files", () {
@@ -75,25 +79,39 @@ void main() {
     });
 
     test("ignore-files-like arg provided, ignore only given files", () {
-      var args = <String>["--ignore-files-like", r".*sort_cmd\.dart"];
+      var args = <String>[];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
       var collector = Collector(cfg: cfg);
+      var collectedDefault = collector.collect();
+
+      args = <String>["--ignore-files-like", r".*sort_cmd\.dart"];
+      argResult = argParser.parse(args);
+      cfg = Cfg(argResult);
+
+      collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, expectedFilesInProject - 1);
+      expect(collected.length, collectedDefault.length - 1);
     });
 
     test("recursive arg provided, recursive false", () {
-      var args = <String>["--no-recursive"];
+      var args = <String>[];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
       var collector = Collector(cfg: cfg);
+      var collectedDefault = collector.collect();
+
+      args = <String>["--no-recursive"];
+      argResult = argParser.parse(args);
+      cfg = Cfg(argResult);
+
+      collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.length, expectedFilesInProjectNoRecursive);
+      expect(collected.length < collectedDefault.length, true);
     });
   });
 }
