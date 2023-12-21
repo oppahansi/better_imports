@@ -45,7 +45,7 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      cfg.folders = ["test", "res"];
+      cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
 
       var collector = Collector(cfg: cfg);
@@ -67,7 +67,7 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      cfg.folders = ["test", "res"];
+      cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
       cfg.comments = false;
 
@@ -79,11 +79,28 @@ void main() {
 
       expect(sorted.length, collected.filteredPaths.length);
 
-      print(sortedFileWithComments);
-      print(sorted.first.formattedContent);
-
       expect(sorted.first.formattedContent,
           formatter.format(sortedFileNoComments));
+    });
+
+    test("Sorting file. No comments.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+      cfg.relative = true;
+
+      var collector = Collector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorter = Sorter(collectorResult: collected, cfg: cfg);
+      var sorted = sorter.sort();
+
+      expect(sorted.length, collected.filteredPaths.length);
+
+      expect(sorted.first.formattedContent,
+          formatter.format(sortedFileWithCommentsRelative));
     });
   });
 }

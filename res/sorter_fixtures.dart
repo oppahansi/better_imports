@@ -1,131 +1,72 @@
 const unsortedFile = r"""
-// ignore_for_file: depend_on_referenced_packages
-/*
-  hey test hre
-*/
-import 'dart:async';
-import 'package:better_imports/anotherFile3.dart';
-import 'package:better_imports/anotherFile2.dart';
-import 'dart:js';
-
-// Test shit
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/local_notifications/flutter_local_notifications.dart'
-    hide PendingNotificationRequest;
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:better_imports/lib.dart';
+import 'cfg_test.dart';
+import 'package:dart_style/dart_style.dart';
+import '../res/sorter_fixtures.dart';
+import 'package:test/test.dart';
 
-/// test comment
-/// second comment
-///  third
-///
-import 'package:flutter/painting.dart' as painting;
-import 'package:flutter/physics.dart';
-
-import 'package:intl/intl.dart';
-import 'package:better_imports/anotherFile.dart';
-import 'package:mdi/mdi.dart';
-import 'package:provider/provider.dart';
-
-/// asdf
 void main() {
-  var test = ";";
-
-  var more = 1;
-
-  // ahahahs
-
-  var brre = "  ;";
+  final formatter = DartFormatter();
 }
 
 """;
 
 const sortedFileWithComments = r"""
 // Dart Imports
-// ignore_for_file: depend_on_referenced_packages
-/*
-  hey test hre
-*/
-import 'dart:async';
 import 'dart:io';
-import 'dart:js';
-
-// Flutter Imports
-// Test shit
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/local_notifications/flutter_local_notifications.dart'
-    hide PendingNotificationRequest;
-import 'package:flutter/material.dart';
-
-/// test comment
-/// second comment
-///  third
-///
-import 'package:flutter/painting.dart' as painting;
-import 'package:flutter/physics.dart';
 
 // Package Imports
-import 'package:intl/intl.dart';
-import 'package:mdi/mdi.dart';
-import 'package:provider/provider.dart';
+import 'package:dart_style/dart_style.dart';
+import 'package:test/test.dart';
 
 // Project Imports
-import 'package:better_imports/anotherFile.dart';
-import 'package:better_imports/anotherFile2.dart';
-import 'package:better_imports/anotherFile3.dart';
+import 'package:better_imports/lib.dart';
 
-/// asdf
+// Relative Project Imports
+import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
+
 void main() {
-  var test = ";";
+  final formatter = DartFormatter();
+}
 
-  var more = 1;
+""";
 
-  // ahahahs
+const sortedFileWithCommentsRelative = r"""
+// Dart Imports
+import 'dart:io';
 
-  var brre = "  ;";
+// Package Imports
+import 'package:dart_style/dart_style.dart';
+import 'package:test/test.dart';
+
+// Project Imports
+import '../lib/lib.dart';
+
+// Relative Project Imports
+import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
+
+void main() {
+  final formatter = DartFormatter();
 }
 
 """;
 
 const sortedFileNoComments = r"""
-// ignore_for_file: depend_on_referenced_packages
-/*
-  hey test hre
-*/
-import 'dart:async';
 import 'dart:io';
-import 'dart:js';
 
-// Test shit
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/local_notifications/flutter_local_notifications.dart'
-    hide PendingNotificationRequest;
-import 'package:flutter/material.dart';
+import 'package:dart_style/dart_style.dart';
+import 'package:test/test.dart';
 
-/// test comment
-/// second comment
-///  third
-///
-import 'package:flutter/painting.dart' as painting;
-import 'package:flutter/physics.dart';
+import 'package:better_imports/lib.dart';
 
-import 'package:intl/intl.dart';
-import 'package:mdi/mdi.dart';
-import 'package:provider/provider.dart';
+import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
 
-import 'package:better_imports/anotherFile.dart';
-import 'package:better_imports/anotherFile2.dart';
-import 'package:better_imports/anotherFile3.dart';
-
-/// asdf
 void main() {
-  var test = ";";
-
-  var more = 1;
-
-  // ahahahs
-
-  var brre = "  ;";
+  final formatter = DartFormatter();
 }
 
 """;

@@ -19,9 +19,9 @@ enum ImportType {
 }
 
 class Sorter {
-  final CollectorResult _collectorResult;
   final _formatter = DartFormatter();
 
+  final CollectorResult _collectorResult;
   final Cfg _cfg;
 
   final _originalLines = <String>[];
@@ -30,6 +30,7 @@ class Sorter {
       <ImportType, Map<String, List<String>>>{};
 
   var _currentPositionInImports = 0;
+  var _currentFilePath = "";
 
   Sorter({required CollectorResult collectorResult, required Cfg cfg})
       : _collectorResult = collectorResult,
@@ -53,6 +54,8 @@ class Sorter {
 
   SortedResult _sortFile(String path) {
     log.fine("┠─ Sorting file: $path");
+
+    _currentFilePath = path;
 
     _reset();
     _initInputTypeMap();
@@ -412,16 +415,17 @@ class Sorter {
       var newImportLines = <String>[];
 
       for (var line in importLines) {
-        if (line.startsWith("import 'package:${_cfg.projectName}")) {
-          newImportLines.add(_convertToPackageProjectImport(line));
+        if (_cfg.relative) {
+          newImportLines.add(_convertToRelativeProjectImport(line));
         } else {
-          newImportLines.add(line);
+          newImportLines.add(_convertToPackageProjectImport(line));
         }
       }
 
       var projectImport = import;
-      if (!projectImport.contains("import 'package:${_cfg.projectName}") ||
-          !projectImport.contains("package:")) {
+      if (_cfg.relative) {
+        projectImport = _convertToRelativeProjectImport(projectImport);
+      } else {
         projectImport = _convertToPackageProjectImport(projectImport);
       }
 
@@ -433,6 +437,10 @@ class Sorter {
 
   String _convertToPackageProjectImport(String importLine) {
     log.fine("┠─── Converting to project import..");
+
+    if (!importLine.startsWith("import")) {
+      return importLine;
+    }
 
     if (importLine.startsWith("import 'package:${_cfg.projectName}")) {
       return importLine;
@@ -448,6 +456,31 @@ class Sorter {
       return importLine.replaceFirst(
           "import '", "import 'package:${_cfg.projectName}/");
     }
+  }
+
+  String _convertToRelativeProjectImport(String importLine) {
+    log.fine("┠─── Converting to relative project import..");
+    if (!importLine.startsWith("import")) {
+      return importLine;
+    }
+
+    if (importLine.contains("..")) {
+      return importLine;
+    }
+
+    if (importLine.contains("'package:${_cfg.projectName}")) {
+      var fileName = _extractFileName(importLine);
+      var filePath = _collectorResult.allPaths
+          .firstWhere((path) => path.contains(fileName));
+
+      if (!_currentFilePath.contains("lib")) {
+        return importLine.replaceFirst("package:${_cfg.projectName}", "../lib");
+      } else {
+        return importLine.replaceFirst("package:${_cfg.projectName}", "..");
+      }
+    }
+
+    return importLine;
   }
 
   bool get _areImportsEmpty {
