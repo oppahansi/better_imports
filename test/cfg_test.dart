@@ -45,10 +45,11 @@ void main() {
     });
 
     test("cfg arg provided. loading external", () {
+      var projectDir = Directory.current.path;
       var argResult = argParser.parse(
         [
           "--cfg",
-          r"D:\dev\workspace\dart\better_imports\res\external_cfg.yaml"
+          "$projectDir${Platform.pathSeparator}res${Platform.pathSeparator}external_cfg.yaml"
         ],
       );
       var cfg = Cfg(argResult);

@@ -66,8 +66,8 @@ void main() {
       collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.filteredPaths.length,
-          collectorResult.filteredPaths.length - 1);
+      expect(
+          collected.filteredPaths.length, collectorResult.allPaths.length - 1);
     });
 
     test("ignore-files-like arg provided, ignore all dart files", () {
