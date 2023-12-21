@@ -15,11 +15,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            output-name: hello-linux
+            output-name: bi-linux
           - os: macOS-latest
-            output-name: hello-mac
+            output-name: bi-mac
           - os: windows-latest
-            output-name: hello-windows.exe
+            output-name: bi-windows.exe
 
     steps:
       - uses: actions/checkout@v1
