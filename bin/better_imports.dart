@@ -18,7 +18,7 @@ void main(List<String> args) {
     argResults = argParser.parse(args);
   } catch (e) {
     if (e is ArgParserException) {
-      Printer.error(e.message);
+      log.severe(e.message);
     }
 
     stdout.writeln("\x1B[36m${Constants.title}\x1B[0m");
