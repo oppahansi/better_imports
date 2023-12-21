@@ -70,19 +70,21 @@ class Constants {
   static final usage = r"""
   FLAGS
 
-  Name           Abbr  Args                   Description
+  Name           Abbr  Args                         Description
 
-  --help         -h                           Prints this screen.
-  --recursive    -r                           Include subfolders? Default is true.
-                                              Negateable by:
-                                                --no-recursive
-  --silent       -s                           Disables results output in console. Default is false.
-  --relative                                  Converts all project package imports to relative project imports.
-                                              Default is false.
+  --help         -h                                 Prints this screen.
+  --recursive    -r                                 Include subfolders? Default is true.
+                                                    Negateable by:
+                                                      --no-recursive
+  --silent       -s                                 Disables results output in console. Default is false.
+  --relative                                        Converts all project package imports to relative project imports.
+                                                    Default is false.
+  --comments     -c                                 Adds comments to imports. Default is true.
+  --trace                                           Prints all logging messages to console. Default is false.
 
   OPTIONS
 
-  Name           Abbr   Args                    Description
+  Name           Abbr   Args                        Description
 
   --cfg                 "path/to/cfg"               Path to an external yaml config. "" are optional.
                                                     If path contains spaces, then "" is required.

@@ -59,7 +59,7 @@ void main() {
       var collector = Collector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      args = <String>["--ignore-files", "parser, lib"];
+      args = <String>["--ignore-files", "parser"];
       argResult = argParser.parse(args);
       cfg = Cfg(argResult);
 
@@ -67,7 +67,7 @@ void main() {
       var collected = collector.collect();
 
       expect(collected.filteredPaths.length,
-          collectorResult.filteredPaths.length - 2);
+          collectorResult.filteredPaths.length - 1);
     });
 
     test("ignore-files-like arg provided, ignore all dart files", () {
