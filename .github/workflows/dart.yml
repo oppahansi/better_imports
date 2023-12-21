@@ -13,8 +13,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            output-name: bi-linux
+          - os: macOS-latest
+            output-name: bi-mac
+          - os: windows-latest
+            output-name: bi-windows.exe
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -40,3 +51,16 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: dart test
+
+      - uses: DanTup/gh-actions/setup-dart@master
+      
+      # Build executables
+      - name: Build executables  
+      - run: mkdir build
+      - run: dart2native bin/main.dart -v -o build/${{ matrix.output-name }}
+
+      # Upload artifacts
+      - uses: actions/upload-artifact@v1
+        with:
+          name: native-executables
+          path: build
