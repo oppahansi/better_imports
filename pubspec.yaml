@@ -4,7 +4,7 @@ version: 1.0.0
 repository: https://github.com/oppahansi/better_imports
 
 environment:
-  sdk: '>=3.2.2'
+  sdk: '>=3.2.3'
 
 # Add regular dependencies here.
 dependencies:
