@@ -83,7 +83,7 @@ void main() {
           formatter.format(sortedFileNoComments));
     });
 
-    test("Sorting file. No comments.", () {
+    test("Sorting file. Relative Imports.", () {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 

@@ -469,10 +469,6 @@ class Sorter {
     }
 
     if (importLine.contains("'package:${_cfg.projectName}")) {
-      var fileName = _extractFileName(importLine);
-      var filePath = _collectorResult.allPaths
-          .firstWhere((path) => path.contains(fileName));
-
       if (!_currentFilePath.contains("lib")) {
         return importLine.replaceFirst("package:${_cfg.projectName}", "../lib");
       } else {
