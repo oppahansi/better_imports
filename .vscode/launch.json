@@ -27,8 +27,7 @@
             "type": "dart",
             "args": [
                 "--files",
-                "unsorted_file",
-                "--trace"
+                "sorter_test",
             ],
             "program": "bin/better_imports.dart",
         }

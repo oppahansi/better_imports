@@ -15,12 +15,13 @@ enum ImportType {
   flutter,
   package,
   project,
+  relative,
 }
 
 class Sorter {
+  final CollectorResult _collectorResult;
   final _formatter = DartFormatter();
 
-  final List<String> _unsortedFilePaths;
   final Cfg _cfg;
 
   final _originalLines = <String>[];
@@ -30,14 +31,14 @@ class Sorter {
 
   var _currentPositionInImports = 0;
 
-  Sorter({required List<String> paths, required Cfg cfg})
-      : _cfg = cfg,
-        _unsortedFilePaths = paths;
+  Sorter({required CollectorResult collectorResult, required Cfg cfg})
+      : _collectorResult = collectorResult,
+        _cfg = cfg;
 
   List<SortedResult> sort() {
     var results = <SortedResult>[];
 
-    for (var path in _unsortedFilePaths) {
+    for (var path in _collectorResult.filteredPaths) {
       var sortedResult = _sortFile(path);
 
       if (sortedResult.changed) {
@@ -103,6 +104,7 @@ class Sorter {
     _importTypeToImportAndComments.putIfAbsent(ImportType.flutter, () => {});
     _importTypeToImportAndComments.putIfAbsent(ImportType.package, () => {});
     _importTypeToImportAndComments.putIfAbsent(ImportType.project, () => {});
+    _importTypeToImportAndComments.putIfAbsent(ImportType.relative, () => {});
   }
 
   void _fillingImportTypeToImportAndCommentsMap(CompilationUnit unit) {
@@ -153,10 +155,28 @@ class Sorter {
     } else if (importLine.contains('package:${_cfg.projectName}')) {
       return ImportType.project;
     } else if (!importLine.contains('package:')) {
-      return ImportType.project;
+      var fileName = _extractFileName(importLine);
+      var filePath = _collectorResult.allPaths
+          .firstWhere((element) => element.contains(fileName));
+
+      if (filePath.contains("lib/")) {
+        return ImportType.project;
+      } else {
+        return ImportType.relative;
+      }
     } else {
       return ImportType.package;
     }
+  }
+
+  String _extractFileName(String import) {
+    Uri uri = Uri.parse(_extractPathFromImport(import));
+    return uri.pathSegments.last;
+  }
+
+  String _extractPathFromImport(String importStatement) {
+    var matches = RegExp(r"'([^']*)'").allMatches(importStatement);
+    return matches.first.group(1) ?? '';
   }
 
   void _extractDocComments(
@@ -293,7 +313,8 @@ class Sorter {
     return comment == Constants.dartImportsComment ||
         comment == Constants.flutterImportsComment ||
         comment == Constants.packageImportsComment ||
-        comment == Constants.projectImportsComment;
+        comment == Constants.projectImportsComment ||
+        comment == Constants.relativeProjectImportsComment;
   }
 
   void _removeImportTypeComments() {
@@ -372,6 +393,8 @@ class Sorter {
         return Constants.packageImportsComment;
       case ImportType.project:
         return Constants.projectImportsComment;
+      case ImportType.relative:
+        return Constants.relativeProjectImportsComment;
       default:
         return '';
     }

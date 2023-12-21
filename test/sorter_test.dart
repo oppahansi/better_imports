@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 // Project Imports
 import 'package:better_imports/lib.dart';
 
+// Relative Project Imports
 import '../res/sorter_fixtures.dart';
 
 void main() {
@@ -26,13 +27,13 @@ void main() {
       var cfg = Cfg(argResult);
 
       var collector = Collector(cfg: cfg);
-      var collected = collector.collect();
+      var collectedResult = collector.collect();
 
-      var sorter = Sorter(paths: collected, cfg: cfg);
+      var sorter = Sorter(collectorResult: collectedResult, cfg: cfg);
       var sorted = sorter.sort();
 
       expect(
-        collected.length,
+        collectedResult.filteredPaths.length,
         sorted.length,
       );
     });
@@ -41,15 +42,16 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      cfg.folders = ["res"];
+      cfg.folders = ["test, res"];
+      cfg.files = ["sorter_test.dart"];
 
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
 
-      var sorter = Sorter(paths: collected, cfg: cfg);
+      var sorter = Sorter(collectorResult: collected, cfg: cfg);
       var sorted = sorter.sort();
 
-      expect(sorted.length, collected.length);
+      expect(sorted.length, collected.filteredPaths.length);
       expect(sorted.first.formattedContent, sortedFileWithComments);
     });
   });

@@ -26,11 +26,11 @@ class SortCmd {
     log.fine("Created collector.");
 
     log.fine("Collecting files..");
-    final files = collector.collect();
-    log.fine("Collected files:\n$files");
+    final collectorResult = collector.collect();
+    log.fine("Collected files:\n$collectorResult");
 
     log.fine("Creating sorter..");
-    final sorter = Sorter(paths: files, cfg: cfg);
+    final sorter = Sorter(collectorResult: collectorResult, cfg: cfg);
     log.fine("Created sorter.");
 
     log.fine("Sorting files..");
