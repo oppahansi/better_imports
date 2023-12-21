@@ -2,6 +2,7 @@
 import 'dart:io';
 
 // Package Imports
+import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
 
 // Project Imports
@@ -11,6 +12,8 @@ import 'package:better_imports/lib.dart';
 import '../res/sorter_fixtures.dart';
 
 void main() {
+  final formatter = DartFormatter();
+
   group("Sorter Tests.", () {
     setUp(() {
       File("res/unsorted.dart").writeAsStringSync(unsortedFile);
@@ -42,8 +45,8 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      cfg.folders = ["test, res"];
-      cfg.files = ["sorter_test.dart"];
+      cfg.folders = ["test", "res"];
+      cfg.files = ["unsorted.dart"];
 
       var collector = Collector(cfg: cfg);
       var collected = collector.collect();
@@ -52,7 +55,12 @@ void main() {
       var sorted = sorter.sort();
 
       expect(sorted.length, collected.filteredPaths.length);
-      expect(sorted.first.formattedContent, sortedFileWithComments);
+
+      print(sortedFileWithComments);
+      print(sorted.first.formattedContent);
+
+      expect(sorted.first.formattedContent,
+          formatter.format(sortedFileWithComments));
     });
   });
 }

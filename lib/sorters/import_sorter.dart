@@ -121,7 +121,7 @@ class Sorter {
       var formattedImport = _formatter.format(import);
       var formattedImportLines = formattedImport.split("\n");
 
-      formattedImportLines.removeWhere((element) => element.trim().isEmpty);
+      formattedImportLines.removeWhere((line) => line.trim().isEmpty);
 
       if (formattedImportLines.length > 1) {
         _currentPositionInImports += formattedImportLines.length - 1;
@@ -157,7 +157,7 @@ class Sorter {
     } else if (!importLine.contains('package:')) {
       var fileName = _extractFileName(importLine);
       var filePath = _collectorResult.allPaths
-          .firstWhere((element) => element.contains(fileName));
+          .firstWhere((path) => path.contains(fileName));
 
       if (filePath.contains("lib/")) {
         return ImportType.project;
@@ -412,8 +412,8 @@ class Sorter {
       var newImportLines = <String>[];
 
       for (var line in importLines) {
-        if (!line.contains("import 'package:${_cfg.projectName}")) {
-          newImportLines.add(_convertToProjectImport(line));
+        if (line.startsWith("import 'package:${_cfg.projectName}")) {
+          newImportLines.add(_convertToPackageProjectImport(line));
         } else {
           newImportLines.add(line);
         }
@@ -422,7 +422,7 @@ class Sorter {
       var projectImport = import;
       if (!projectImport.contains("import 'package:${_cfg.projectName}") ||
           !projectImport.contains("package:")) {
-        projectImport = _convertToProjectImport(projectImport);
+        projectImport = _convertToPackageProjectImport(projectImport);
       }
 
       newProjectImports.putIfAbsent(projectImport, () => newImportLines);
@@ -431,7 +431,7 @@ class Sorter {
     _importTypeToImportAndComments[ImportType.project] = newProjectImports;
   }
 
-  String _convertToProjectImport(String importLine) {
+  String _convertToPackageProjectImport(String importLine) {
     log.fine("┠─── Converting to project import..");
 
     if (importLine.startsWith("import 'package:${_cfg.projectName}")) {

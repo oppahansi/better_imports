@@ -4,11 +4,15 @@ const unsortedFile = r"""
   hey test hre
 */
 import 'dart:async';
+import 'package:better_imports/anotherFile3.dart';
+import 'package:better_imports/anotherFile2.dart';
+import 'dart:js';
 
 // Test shit
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/local_notifications/flutter_local_notifications.dart'
     hide PendingNotificationRequest;
-import 'package:better_imports/anotherFile.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 /// test comment
@@ -17,13 +21,11 @@ import 'package:flutter/material.dart';
 ///
 import 'package:flutter/painting.dart' as painting;
 import 'package:flutter/physics.dart';
+
 import 'package:intl/intl.dart';
-import 'package:better_imports/anotherFile3.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:js';
-import 'package:provider/provider.dart';
+import 'package:better_imports/anotherFile.dart';
 import 'package:mdi/mdi.dart';
-import 'package:better_imports/anotherFile2.dart';
+import 'package:provider/provider.dart';
 
 /// asdf
 void main() {
