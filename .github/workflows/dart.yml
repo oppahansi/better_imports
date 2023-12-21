@@ -42,9 +42,8 @@ jobs:
         run: dart test
 
       # Compile executables
-      - uses: DanTup/gh-actions/setup-dart@master
       - run: mkdir build
-      - run: dart2native bin/better_imports.dart -v -o build/${{ matrix.output-name }}
+      - run: dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }}
       - uses: actions/upload-artifact@v1
         with:
           name: native-executables
