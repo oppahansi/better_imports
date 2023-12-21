@@ -21,7 +21,8 @@ void main(List<String> args) {
       Printer.error(e.message);
     }
 
-    Printer.usage();
+    stdout.writeln("\x1B[36m${Constants.title}\x1B[0m");
+    stdout.writeln(Constants.usage);
     exit(2);
   }
 
@@ -43,23 +44,23 @@ void _setupLogging() {
   Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     if (record.level >= Level.INFO) {
-      Printer.info(
+      stdout.writeln(
           '${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}');
       return;
     }
     if (record.level >= Level.WARNING) {
-      Printer.warning(
-          '${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}');
+      stdout.writeln(
+          '\x1B[33m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
       return;
     }
     if (record.level >= Level.FINE) {
-      Printer.fine(
-          '${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}');
+      stdout.writeln(
+          '\u001b[36m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
       return;
     }
     if (record.level >= Level.SEVERE) {
-      Printer.error(
-          '${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}');
+      stdout.writeln(
+          '\x1B[31m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
       return;
     }
   });
@@ -71,7 +72,8 @@ void _processOptions(ArgResults argResults) {
   if (argResults.wasParsed(Constants.helpFlag)) {
     log.fine("  Help flag was set. Printing usage and exiting.");
 
-    Printer.usage();
+    stdout.writeln("\x1B[36m${Constants.title}\x1B[0m");
+    stdout.writeln(Constants.usage);
     return;
   }
 
