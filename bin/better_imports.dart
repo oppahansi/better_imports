@@ -42,28 +42,32 @@ void main(List<String> args) {
 
 void _setupLogging() {
   Logger.root.level = Level.INFO;
-  Logger.root.onRecord.listen((record) {
-    if (record.level >= Level.INFO) {
-      stdout.writeln(
-          '${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}');
-      return;
-    }
-    if (record.level >= Level.WARNING) {
-      stdout.writeln(
-          '\x1B[33m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
-      return;
-    }
-    if (record.level >= Level.FINE) {
-      stdout.writeln(
-          '\u001b[36m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
-      return;
-    }
-    if (record.level >= Level.SEVERE) {
-      stdout.writeln(
-          '\x1B[31m${record.level.name}: ${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: ${record.message}\x1B[0m');
-      return;
-    }
-  });
+  Logger.root.onRecord.listen(
+    (record) {
+      switch (record.level) {
+        case Level.INFO:
+          stdout.writeln('${record.level.name}: '
+              '${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: '
+              '${record.message}');
+          break;
+        case Level.WARNING:
+          stdout.writeln('\x1B[33m${record.level.name}: '
+              '${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: '
+              '${record.message}\x1B[0m');
+          break;
+        case Level.FINE:
+          stdout.writeln('\u001b[36m${record.level.name}: '
+              '${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: '
+              '${record.message}\x1B[0m');
+          break;
+        case Level.SEVERE:
+          stdout.writeln('\x1B[31m${record.level.name}: '
+              '${DateFormat("yyyy-MM-dd hh:mm:ss").format(record.time)}: '
+              '${record.message}\x1B[0m');
+          break;
+      }
+    },
+  );
 }
 
 void _processOptions(ArgResults argResults) {
