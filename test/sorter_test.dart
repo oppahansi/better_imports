@@ -62,5 +62,28 @@ void main() {
       expect(sorted.first.formattedContent,
           formatter.format(sortedFileWithComments));
     });
+
+    test("Sorting file. No comments.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res"];
+      cfg.files = ["unsorted.dart"];
+      cfg.comments = false;
+
+      var collector = Collector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorter = Sorter(collectorResult: collected, cfg: cfg);
+      var sorted = sorter.sort();
+
+      expect(sorted.length, collected.filteredPaths.length);
+
+      print(sortedFileWithComments);
+      print(sorted.first.formattedContent);
+
+      expect(sorted.first.formattedContent,
+          formatter.format(sortedFileNoComments));
+    });
   });
 }

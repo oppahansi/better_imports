@@ -93,6 +93,7 @@ const sortedFileNoComments = r"""
   hey test hre
 */
 import 'dart:async';
+import 'dart:io';
 import 'dart:js';
 
 // Test shit
