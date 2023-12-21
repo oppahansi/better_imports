@@ -2,7 +2,8 @@
 import 'dart:io';
 
 // Project Imports
-import "package:better_imports/lib.dart";
+import 'package:better_imports/config/config.dart';
+import 'package:better_imports/utils/utils.dart';
 
 class Collector {
   final Cfg cfg;

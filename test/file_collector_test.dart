@@ -2,7 +2,9 @@
 import 'package:test/test.dart';
 
 // Project Imports
-import 'package:better_imports/lib.dart';
+import 'package:better_imports/collectors/collectors.dart';
+import 'package:better_imports/config/config.dart';
+import 'package:better_imports/parser/parser.dart';
 
 void main() {
   group("Collector Tests. Test amount of collected files.", () {

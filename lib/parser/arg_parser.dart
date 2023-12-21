@@ -1,8 +1,8 @@
 // Package Imports
 import 'package:args/args.dart';
 
-// Project Imports
-import "package:better_imports/lib.dart";
+// Relative Project Imports
+import '../utils/utils.dart';
 
 final argParser = ArgParser()
   ..addFlag(

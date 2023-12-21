@@ -7,7 +7,9 @@ import "package:intl/intl.dart";
 import "package:logging/logging.dart";
 
 // Project Imports
-import "package:better_imports/lib.dart";
+import "package:better_imports/cmds/cmds.dart";
+import "package:better_imports/parser/parser.dart";
+import "package:better_imports/utils/utils.dart";
 
 void main(List<String> args) {
   _setupLogging();
