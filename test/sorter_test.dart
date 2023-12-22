@@ -58,10 +58,6 @@ void main() {
       var sorted = sorter.sort();
 
       expect(sorted.length, collected.filteredPaths.length);
-
-      print(sortedFileWithComments);
-      print(sorted.first.formattedContent);
-
       expect(sorted.first.formattedContent,
           formatter.format(sortedFileWithComments));
     });
