@@ -15,9 +15,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            output-name: better_imports
+            output-name: better_imports_linux
           - os: macOS-latest
-            output-name: better_imports
+            output-name: better_imports_mac
           - os: windows-latest
             output-name: better_imports.exe
 
