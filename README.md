@@ -4,9 +4,7 @@
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/oppahansi/better_imports">
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/oppahansi/better_imports">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/oppahansi/better_imports">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+    <img alt="all-contributors" src="https://img.shields.io/github/all-contributors/oppahansi/better_imports?color=ee8449&style=flat-square">
 </p>
 
 # better_imports
