@@ -5,7 +5,7 @@
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/oppahansi/better_imports">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/oppahansi/better_imports">
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-    <img alt="all-contributors" src="https://img.shields.io/github/all-contributors/oppahansi/better_imports?color=ee8449&style=flat-square">
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 </p>
 
@@ -245,6 +245,13 @@ better_imports:
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oppahansi"><img src="https://avatars.githubusercontent.com/u/3140621?v=4?s=100" width="100px;" alt="Alexander Schellenberg"/><br /><sub><b>Alexander Schellenberg</b></sub></a><br /><a href="https://github.com/oppahansi/better_imports/commits?author=oppahansi" title="Code">💻</a> <a href="https://github.com/oppahansi/better_imports/commits?author=oppahansi" title="Tests">⚠️</a> <a href="#infra-oppahansi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-oppahansi" title="Maintenance">🚧</a> <a href="https://github.com/oppahansi/better_imports/pulls?q=is%3Apr+reviewed-by%3Aoppahansi" title="Reviewed Pull Requests">👀</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
