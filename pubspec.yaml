@@ -46,6 +46,9 @@ better_imports:
   # Flag to use relative imports in the project
   relative: false
 
+  # Flag to use to log everything happening to console
+  trace: false
+
   # Folder names used for collecting dart files
   folders:
     - lib
@@ -58,13 +61,16 @@ better_imports:
     - integration_tests
     - test_driver
 
-  # Files which should be sorted
+  # File names which should be sorted
   files:
 
-  # RegEx for files which should be collected
+  # File names which should be excluded
+  ignore_files:
+
+  # RegEx pattern for files which should be collected
   files_like:
 
-  # RegEx for files which should be excluded
+  # RegEx pattern for files which should be excluded
   ignore_files_like:
     - .*generated_plugin_registrant\.dart
     - .*\.g\.dart
