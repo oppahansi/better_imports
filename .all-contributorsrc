@@ -12,7 +12,11 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/3140621?v=4",
       "profile": "https://github.com/oppahansi",
       "contributions": [
-        "code"
+        "code",
+        "test",
+        "infra",
+        "maintenance",
+        "review"
       ]
     }
   ],
@@ -21,5 +25,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "projectName": "better_imports",
-  "projectOwner": "oppahansi"
+  "projectOwner": "oppahansi",
+  "commitType": "docs"
 }
