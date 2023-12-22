@@ -70,17 +70,14 @@ class Constants {
   static final usage = r"""
   FLAGS
 
-  Name           Abbr  Args                         Description
+  Name             Abbr                              Description
 
-  --help         -h                                 Prints this screen.
-  --recursive    -r                                 Include subfolders? Default is true.
-                                                    Negateable by:
-                                                      --no-recursive
-  --silent       -s                                 Disables results output in console. Default is false.
-  --relative                                        Converts all project package imports to relative project imports.
-                                                    Default is false.
-  --comments     -c                                 Adds comments to imports. Default is true.
-  --trace                                           Prints all logging messages to console. Default is false.
+  --help            -h                                Prints this screen.
+  --no-recursive                                      Performs a non recursive search when collecting .dart files.
+  --silent          -s                                Disables results output in console.
+  --relative                                          Converts all project package imports to relative project imports.
+  --no-comments                                       Removes comments from import types / sections. 
+  --trace 
 
   OPTIONS
 
