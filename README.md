@@ -92,6 +92,23 @@ void main() {
   * OR in flutter:
   * `flutter pub run better_imports:better_imports`
 
+## On Save Action in VSCode
+- Install [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) extension
+- Add the following config to your settings.json
+
+```json
+
+"emeraldwalk.runonsave": {
+    "commands": [
+        {
+            "match": "\\.dart$",
+            "cmd": "better_imports --files ${fileBasename} -s"
+        }
+    ]
+}
+
+```
+
 ## CLI Flags and Options
 
 <details>
