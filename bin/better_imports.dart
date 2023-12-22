@@ -7,10 +7,10 @@ import "package:intl/intl.dart";
 import "package:logging/logging.dart";
 
 // Project Imports
-import "package:better_imports/arg_parser.dart";
-import "package:better_imports/constants.dart";
-import "package:better_imports/log.dart";
-import "package:better_imports/sort_cmd.dart";
+import "package:better_imports/src/arg_parser.dart";
+import "package:better_imports/src/constants.dart";
+import "package:better_imports/src/log.dart";
+import "package:better_imports/src/sort_cmd.dart";
 
 void main(List<String> args) {
   _setupLogging();

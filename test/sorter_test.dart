@@ -6,10 +6,10 @@ import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
 
 // Project Imports
-import 'package:better_imports/arg_parser.dart';
-import 'package:better_imports/cfg.dart';
-import 'package:better_imports/file_collector.dart';
-import 'package:better_imports/import_sorter.dart';
+import 'package:better_imports/src/arg_parser.dart';
+import 'package:better_imports/src/cfg.dart';
+import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/import_sorter.dart';
 
 // Relative Project Imports
 import '../res/sorter_fixtures.dart';

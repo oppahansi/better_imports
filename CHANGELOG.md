@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Moved all files in src folder to hide them from importing.
+
 ## 1.0.2
 
 - Dropped all barrel files to not export anything.

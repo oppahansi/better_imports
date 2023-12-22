@@ -8,10 +8,10 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:dart_style/dart_style.dart';
 
 // Project Imports
-import 'package:better_imports/cfg.dart';
-import 'package:better_imports/constants.dart';
-import 'package:better_imports/file_collector.dart';
-import 'package:better_imports/log.dart';
+import 'package:better_imports/src/cfg.dart';
+import 'package:better_imports/src/constants.dart';
+import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/log.dart';
 
 enum ImportType {
   dart,

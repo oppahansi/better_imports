@@ -3,11 +3,11 @@ import 'package:args/args.dart';
 import 'package:tint/tint.dart';
 
 // Project Imports
-import 'package:better_imports/cfg.dart';
-import 'package:better_imports/file_collector.dart';
-import 'package:better_imports/file_extension.dart';
-import 'package:better_imports/import_sorter.dart';
-import 'package:better_imports/log.dart';
+import 'package:better_imports/src/cfg.dart';
+import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/file_extension.dart';
+import 'package:better_imports/src/import_sorter.dart';
+import 'package:better_imports/src/log.dart';
 
 class SortCmd {
   final ArgResults argResults;
