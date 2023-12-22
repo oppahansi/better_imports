@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:test/test.dart';
 
 // Project Imports
-import 'package:better_imports/config/config.dart';
-import 'package:better_imports/extensions/extensions.dart';
-import 'package:better_imports/parser/parser.dart';
+import 'package:better_imports/arg_parser.dart';
+import 'package:better_imports/cfg.dart';
+import 'package:better_imports/file_extension.dart';
 
 void main() {
   group("Cfg Tests.", () {

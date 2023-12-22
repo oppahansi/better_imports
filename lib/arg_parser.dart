@@ -2,7 +2,7 @@
 import 'package:args/args.dart';
 
 // Project Imports
-import 'package:better_imports/utils/utils.dart';
+import 'package:better_imports/constants.dart';
 
 final argParser = ArgParser()
   ..addFlag(

@@ -2,8 +2,8 @@
 import 'dart:io';
 
 // Project Imports
-import 'package:better_imports/config/config.dart';
-import 'package:better_imports/utils/utils.dart';
+import 'package:better_imports/cfg.dart';
+import 'package:better_imports/log.dart';
 
 class Collector {
   final Cfg cfg;
@@ -49,6 +49,7 @@ class Collector {
 
     for (var pattern in cfg.ignoreFilesLike) {
       log.fine("┠─ Removing ignored file like: $pattern");
+
       _filteredFilePaths.removeWhere(
         (filePath) => RegExp(pattern).hasMatch(filePath),
       );
@@ -56,6 +57,7 @@ class Collector {
 
     for (var ignored in cfg.ignoreFiles) {
       log.fine("┠─ Removing ignored file: $ignored");
+
       _filteredFilePaths.removeWhere(
         (filePath) =>
             filePath.endsWith("${Platform.pathSeparator}$ignored.dart"),
@@ -77,6 +79,7 @@ class Collector {
 
   void _retainNamedFiles(List<String> files) {
     log.fine("┠─ Retaining only named files..");
+
     _filteredFilePaths.retainWhere((element) {
       var fileName = element.split(Platform.pathSeparator).last;
 

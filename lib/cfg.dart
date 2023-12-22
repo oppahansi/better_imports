@@ -6,8 +6,9 @@ import 'package:args/args.dart';
 import 'package:yaml/yaml.dart';
 
 // Project Imports
-import 'package:better_imports/extensions/extensions.dart';
-import 'package:better_imports/utils/utils.dart';
+import 'package:better_imports/constants.dart';
+import 'package:better_imports/file_extension.dart';
+import 'package:better_imports/log.dart';
 
 var logging = false;
 
