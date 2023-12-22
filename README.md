@@ -1,6 +1,6 @@
 <p align="middle">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/oppahansi/better_imports/dart.yml">
-    <img alt="GitHub" src="https://img.shields.io/github/license/oppahansi/better_imports">
+    <img alt="GitHub license" src="https://img.shields.io/github/license/oppahansi/better_imports">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/oppahansi/better_imports">
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/oppahansi/better_imports">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/oppahansi/better_imports">
