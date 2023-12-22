@@ -1,4 +1,4 @@
-## 1.0.1
+## 1.0.2
 
 - Dropped all barrel files to not export anything.
 
