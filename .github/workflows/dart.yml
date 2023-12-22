@@ -17,7 +17,7 @@ jobs:
           - os: ubuntu-latest
             output-name: better_imports_linux
           - os: macOS-latest
-            output-name: better_imports_mac
+            output-name: better_imports_macos
           - os: windows-latest
             output-name: better_imports.exe
 

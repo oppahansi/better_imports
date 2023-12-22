@@ -77,6 +77,7 @@ void main() {
   * Inside your project, root directory:
   * `dart compile exe .\bin\better_imports.dart`
 - Extract the downloaded archive / move the compiled executeable in to a folder of your choosing
+  * If needed rename the executeable for your OS to `better_imports`
 - Add the chosen folder / executeable to your PATH environment variable
   - Win: [How to Add to Windows PATH Environment Variable](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/)
   - Mac: [How to Set the PATH Variable in macOS](https://techpp.com/2021/09/08/set-path-variable-in-macos-guide/)
