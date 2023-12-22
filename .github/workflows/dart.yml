@@ -15,11 +15,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            output-name: hello-linux
+            output-name: bi-linux
           - os: macOS-latest
-            output-name: hello-mac
+            output-name: bi-mac
           - os: windows-latest
-            output-name: hello-windows.exe
+            output-name: bi-windows.exe
 
     steps:
       - uses: actions/checkout@v1
@@ -43,7 +43,7 @@ jobs:
 
       # Compile executables
       - run: mkdir build
-      - run: dart2native bin/better_imports.dart -v -o build/${{ matrix.output-name }}
+      - run: dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }}
       - uses: actions/upload-artifact@v1
         with:
           name: native-executables
