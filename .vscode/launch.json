@@ -12,14 +12,14 @@
             "program": "bin/better_imports.dart",
         },
         {
-            "name": "sort -t",
+            "name": "sort -f",
             "request": "launch",
             "type": "dart",
             "args": [
                 "-f",
-                "tset/here"
+                "sorter_test"
             ],
-            "program": "bin/sort.dart",
+            "program": "bin/better_imports.dart",
         },
         {
             "name": "sort files",
@@ -27,7 +27,7 @@
             "type": "dart",
             "args": [
                 "--files",
-                "sorter_test",
+                "sorter_test, cfg_test, file_collector_test",
             ],
             "program": "bin/better_imports.dart",
         }
