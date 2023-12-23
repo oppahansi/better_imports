@@ -32,6 +32,7 @@ Users can customize the import sorting behavior using various flags and options.
 ### Before
 ```dart
 
+library better_imports;
 import 'dart:io';
 import 'package:better_imports/lib.dart';
 import 'cfg_test.dart';
@@ -47,6 +48,8 @@ void main() {
 
 ### After (default config)
 ```dart
+
+library better_imports;
 
 // Dart Imports
 import 'dart:io';
@@ -122,7 +125,8 @@ Name              Abbr                              Description
 --silent          -s                                Disables results output in console.
 --relative                                          Converts all project package imports to relative project imports.
 --no-comments                                       Removes comments from import types / sections. 
---trace                                             Prints all logging messages to console. Default is false.
+--trace                                             Prints extended logs to console.
+--dry-run                                           Prints the results of the run without writing it to the file.
 ```
 
 </details>

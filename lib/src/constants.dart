@@ -82,7 +82,7 @@ class Constants {
   --relative                                          Converts all project package imports to relative project imports.
   --no-comments                                       Removes comments from import types / sections. 
   --trace                                             Prints extended logs to console.
-  --dry-run                                           Prints the result of the sort without writing it to the file.
+  --dry-run                                           Prints the results of the run without writing it to the file.
 
   OPTIONS
 

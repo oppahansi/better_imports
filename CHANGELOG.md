@@ -1,3 +1,8 @@
+## 1.0.4
+
+- Added dry run support
+- Added support for library directives
+
 ## 1.0.3
 
 - Moved all files in src folder to hide them from importing.
