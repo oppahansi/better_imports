@@ -1,4 +1,5 @@
 const unsortedFile = r"""
+library better_imports;
 import 'dart:io';
 import 'package:better_imports/lib.dart';
 import 'cfg_test.dart';
@@ -13,6 +14,8 @@ void main() {
 """;
 
 const sortedFileWithComments = r"""
+library better_imports;
+
 // Dart Imports
 import 'dart:io';
 
@@ -34,6 +37,8 @@ void main() {
 """;
 
 const sortedFileWithCommentsRelative = r"""
+library better_imports;
+
 // Dart Imports
 import 'dart:io';
 
@@ -55,6 +60,8 @@ void main() {
 """;
 
 const sortedFileNoComments = r"""
+library better_imports;
+
 import 'dart:io';
 
 import 'package:dart_style/dart_style.dart';

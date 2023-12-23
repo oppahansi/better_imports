@@ -346,11 +346,16 @@ class Sorter {
   void _insertSortedImports() {
     log.fine("┠── Inserting sorted imports..");
 
-    _sortedLines.insert(0, '');
+    var libraryIndex =
+        _sortedLines.indexWhere((line) => line.startsWith("library"));
+    var insertIndex = libraryIndex == -1 ? 0 : libraryIndex + 1;
+
+    _sortedLines.insert(insertIndex, '');
 
     _importTypeToImportAndComments.keys.toList().reversed.forEach((importType) {
       var entry = _importTypeToImportAndComments[importType];
       var importLines = entry!.keys.toList();
+
       importLines.sort();
       importLines = importLines.reversed.toList();
 
@@ -368,25 +373,25 @@ class Sorter {
               continue;
             }
 
-            _sortedLines.insert(0, line.trimRight());
+            _sortedLines.insert(insertIndex, line.trimRight());
           }
 
           var commentList = comments[i].reversed.toList();
           for (var comment in commentList) {
-            _sortedLines.insert(0, comment);
+            _sortedLines.insert(insertIndex, comment);
           }
         }
 
         if (_cfg.comments) {
           var comment = _getImportTypeComment(importType);
-          _sortedLines.insert(0, comment);
+          _sortedLines.insert(insertIndex, comment);
         }
 
-        _sortedLines.insert(0, '');
+        _sortedLines.insert(insertIndex, '');
       }
     });
 
-    _sortedLines.removeAt(0);
+    _sortedLines.removeAt(insertIndex);
   }
 
   String _getImportTypeComment(ImportType importType) {
