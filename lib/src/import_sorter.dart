@@ -45,7 +45,7 @@ class Sorter {
     for (var path in _collectorResult.filteredPaths) {
       var sortedResult = _sortFile(path);
 
-      if (sortedResult.changed) {
+      if (sortedResult.changed && !_cfg.dryRun) {
         sortedResult.file.writeAsStringSync(sortedResult.formattedContent);
       }
 

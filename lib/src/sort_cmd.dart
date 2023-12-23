@@ -69,5 +69,9 @@ class SortCmd {
         "$success Sorted $sortedCount out of ${sorted.length} files in ${stopwatch.elapsed.inMilliseconds} ms\n");
 
     log.fine("Printed results.");
+
+    if (cfg.dryRun) {
+      log.info("Dry run. No files were changed.");
+    }
   }
 }

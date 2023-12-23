@@ -48,6 +48,9 @@ better_imports:
   # Flag to use to log everything happening to console
   trace: false
 
+  # Flag to use to run a dry run without changing files
+  dry_run: false
+
   # Folder names used for collecting dart files
   folders:
     - lib

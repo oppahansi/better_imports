@@ -17,6 +17,8 @@ class Constants {
 
   static const betterImports = "better_imports";
 
+  static const dryRunKey = "dry_run";
+
   static const helpFlag = "help";
   static const helpFlagAbbr = "h";
 
@@ -32,6 +34,8 @@ class Constants {
   static const relativeFlag = "relative";
 
   static const traceFlag = "trace";
+
+  static const dryRunFlag = "dry-run";
 
   static const foldersOption = "folders";
 
@@ -77,7 +81,8 @@ class Constants {
   --silent          -s                                Disables results output in console.
   --relative                                          Converts all project package imports to relative project imports.
   --no-comments                                       Removes comments from import types / sections. 
-  --trace 
+  --trace                                             Prints extended logs to console.
+  --dry-run                                           Prints the result of the sort without writing it to the file.
 
   OPTIONS
 

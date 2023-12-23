@@ -21,6 +21,7 @@ class Cfg {
   late bool silent;
   late bool trace;
   late bool relative;
+  late bool dryRun;
   late List<String> folders;
   late List<String> files;
   late List<String> ignoreFiles;
@@ -48,6 +49,7 @@ class Cfg {
     silent = false;
     trace = false;
     relative = false;
+    dryRun = false;
 
     folders = <String>[
       "lib",
@@ -90,6 +92,7 @@ class Cfg {
     _setSilent();
     _setTrace();
     _setRelative();
+    _setDryRun();
 
     _setFolders();
 
@@ -248,6 +251,19 @@ class Cfg {
 
     if (_argResults.wasParsed(Constants.relativeFlag)) {
       relative = _argResults[Constants.relativeFlag];
+    }
+  }
+
+  void _setDryRun() {
+    log.fine("┠─ Setting dry run..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.dryRunKey] != null) {
+      dryRun = _biYamlSection![Constants.dryRunKey];
+    }
+
+    if (_argResults.wasParsed(Constants.dryRunFlag)) {
+      dryRun = _argResults[Constants.dryRunFlag];
     }
   }
 
