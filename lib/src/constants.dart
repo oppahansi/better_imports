@@ -85,7 +85,8 @@ class Constants {
   --no-comments                                       Removes comments from import types / sections. 
   --trace                                             Prints extended logs to console.
   --dry-run                                           Prints the results of the run without writing it to the file.
-  --no-dart-fmt                                       Disables dartfmt formatting besides sorting imports.
+  --dart-fmt                                          Formats the file after sorting imports. Default is true.
+                                                      Can be disabled by using --no-dart-fmt
 
   OPTIONS
 
