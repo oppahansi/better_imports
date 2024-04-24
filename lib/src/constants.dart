@@ -37,7 +37,7 @@ class Constants {
 
   static const dryRunFlag = "dry-run";
 
-  static const noDartFmt = "no-dart-fmt";
+  static const dartFmt = "dart-fmt";
 
   static const foldersOption = "folders";
 

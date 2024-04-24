@@ -107,12 +107,8 @@ void _processOptions(ArgResults argResults) {
   final collectorResult = collector.collect();
   log.fine("Collected files:\n$collectorResult");
 
-  log.fine("Creating sorter..");
-  final sorter = Sorter(collectorResult: collectorResult, cfg: cfg);
-  log.fine("Created sorter.");
-
   log.fine("Sorting files..");
-  final sorted = sorter.sort();
+  final sorted = sort(collectorResult, cfg);
   log.fine("Sorted completed. Sorted items:\n$sorted");
 
   log.fine("Stopping stopwatch..");

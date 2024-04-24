@@ -2,7 +2,6 @@
 import 'dart:io';
 
 // Package Imports
-import 'package:dart_style/dart_style.dart';
 import 'package:test/test.dart';
 
 // Project Imports
@@ -15,8 +14,6 @@ import 'package:better_imports/src/import_sorter.dart';
 import '../res/sorter_fixtures.dart';
 
 void main() {
-  final formatter = DartFormatter();
-
   group("Sorter Tests.", () {
     setUp(() {
       File("res/unsorted.dart").writeAsStringSync(unsortedFile);
@@ -33,13 +30,12 @@ void main() {
       var cfg = Cfg(argResult);
 
       var collector = FilePathsCollector(cfg: cfg);
-      var collectedResult = collector.collect();
+      var collected = collector.collect();
 
-      var sorter = Sorter(collectorResult: collectedResult, cfg: cfg);
-      var sorted = sorter.sort();
+      var sorted = sort(collected, cfg);
 
       expect(
-        collectedResult.filteredPaths.length,
+        collected.filteredPaths.length,
         sorted.length,
       );
     });
@@ -54,12 +50,27 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      var sorter = Sorter(collectorResult: collected, cfg: cfg);
-      var sorted = sorter.sort();
+      var sorted = sort(collected, cfg);
 
       expect(sorted.length, collected.filteredPaths.length);
-      expect(
-          sorted.first.sortedContent, formatter.format(sortedFileWithComments));
+      expect(sorted.first.sortedContent, sortedFileWithComments);
+    });
+
+    test("Sorting file. With comments. No Dart Fmt", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+      cfg.dartFmt = false;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filteredPaths.length);
+      expect(sorted.first.sortedContent, sortedFileWithCommentsNoDartFmt);
     });
 
     test("Sorting file. No comments.", () {
@@ -73,13 +84,30 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      var sorter = Sorter(collectorResult: collected, cfg: cfg);
-      var sorted = sorter.sort();
+      var sorted = sort(collected, cfg);
 
       expect(sorted.length, collected.filteredPaths.length);
 
-      expect(
-          sorted.first.sortedContent, formatter.format(sortedFileNoComments));
+      expect(sorted.first.sortedContent, sortedFileNoComments);
+    });
+
+    test("Sorting file. No comments. No Dart Fmt", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+      cfg.comments = false;
+      cfg.dartFmt = false;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filteredPaths.length);
+
+      expect(sorted.first.sortedContent, sortedFileNoCommentsNoDartFmt);
     });
 
     test("Sorting file. Relative Imports.", () {
@@ -93,13 +121,31 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      var sorter = Sorter(collectorResult: collected, cfg: cfg);
-      var sorted = sorter.sort();
+      var sorted = sort(collected, cfg);
 
       expect(sorted.length, collected.filteredPaths.length);
 
-      expect(sorted.first.sortedContent,
-          formatter.format(sortedFileWithCommentsRelative));
+      expect(sorted.first.sortedContent, sortedFileWithCommentsRelative);
+    });
+
+    test("Sorting file. Relative Imports. No Dart Fmt", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+      cfg.relative = true;
+      cfg.dartFmt = false;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filteredPaths.length);
+
+      expect(
+          sorted.first.sortedContent, sortedFileWithCommentsRelativeNoDartFmt);
     });
   });
 }
