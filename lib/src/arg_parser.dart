@@ -43,6 +43,11 @@ final argParser = ArgParser()
     defaultsTo: false,
     negatable: false,
   )
+  ..addFlag(
+    Constants.noDartFmt,
+    defaultsTo: false,
+    negatable: false,
+  )
   ..addOption(
     Constants.cfgPathOption,
     mandatory: false,

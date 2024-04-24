@@ -22,6 +22,7 @@ class Cfg {
   late bool trace;
   late bool relative;
   late bool dryRun;
+  late bool noDartFmt;
   late List<String> folders;
   late List<String> files;
   late List<String> ignoreFiles;
@@ -50,6 +51,7 @@ class Cfg {
     trace = false;
     relative = false;
     dryRun = false;
+    noDartFmt = false;
 
     folders = <String>[
       "lib",
@@ -93,6 +95,7 @@ class Cfg {
     _setTrace();
     _setRelative();
     _setDryRun();
+    _setNoDartFmt();
 
     _setFolders();
 
@@ -264,6 +267,19 @@ class Cfg {
 
     if (_argResults.wasParsed(Constants.dryRunFlag)) {
       dryRun = _argResults[Constants.dryRunFlag];
+    }
+  }
+
+  void _setNoDartFmt() {
+    log.fine("┠─ Setting no dart fmt..");
+
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.noDartFmt] != null) {
+      noDartFmt = _biYamlSection![Constants.noDartFmt];
+    }
+
+    if (_argResults.wasParsed(Constants.noDartFmt)) {
+      noDartFmt = _argResults[Constants.noDartFmt];
     }
   }
 
