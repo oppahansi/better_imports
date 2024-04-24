@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 // Project Imports
 import 'package:better_imports/src/arg_parser.dart';
 import 'package:better_imports/src/cfg.dart';
-import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/file_path_collector.dart';
 
 void main() {
   group("Collector Tests. Test amount of collected files.", () {
@@ -12,7 +12,7 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
       expect(collectorResult.filteredPaths.isNotEmpty, true);
@@ -23,7 +23,7 @@ void main() {
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
       expect(collectorResult.filteredPaths.length, 2);
@@ -34,7 +34,7 @@ void main() {
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
       expect(collectorResult.filteredPaths.isNotEmpty, true);
@@ -45,18 +45,18 @@ void main() {
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
       expect(collectorResult.filteredPaths.isNotEmpty, true);
     });
 
     test("ignore-files arg provided, ignore some dart files", () {
-      var args = <String>["--ignore-files", "sort_cmd"];
+      var args = <String>["--ignore-files", "sorted_result"];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       expect(collected.filteredPaths.length, collected.allPaths.length - 1);
@@ -67,18 +67,18 @@ void main() {
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
       expect(collectorResult.filteredPaths.length, 0);
     });
 
     test("ignore-files-like arg provided, ignore only given files", () {
-      var args = <String>["--ignore-files-like", r".*sort_cmd\.dart"];
+      var args = <String>["--ignore-files-like", r".*sorted_result\.dart"];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       expect(collected.filteredPaths.length, collected.allPaths.length - 1);
@@ -89,7 +89,7 @@ void main() {
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       expect(collected.filteredPaths.length == collected.allPaths.length, true);

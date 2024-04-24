@@ -10,21 +10,15 @@ import 'package:dart_style/dart_style.dart';
 // Project Imports
 import 'package:better_imports/src/cfg.dart';
 import 'package:better_imports/src/constants.dart';
-import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/file_path_collector_result.dart';
+import 'package:better_imports/src/import_type.dart';
 import 'package:better_imports/src/log.dart';
-
-enum ImportType {
-  dart,
-  flutter,
-  package,
-  project,
-  relative,
-}
+import 'package:better_imports/src/sorted_result.dart';
 
 class Sorter {
   final _formatter = DartFormatter();
 
-  final CollectorResult _collectorResult;
+  final FilePathCollectorResult _collectorResult;
   final Cfg _cfg;
 
   final _originalLines = <String>[];
@@ -35,7 +29,7 @@ class Sorter {
   var _currentPositionInImports = 0;
   var _currentFilePath = "";
 
-  Sorter({required CollectorResult collectorResult, required Cfg cfg})
+  Sorter({required FilePathCollectorResult collectorResult, required Cfg cfg})
       : _collectorResult = collectorResult,
         _cfg = cfg;
 
@@ -46,7 +40,7 @@ class Sorter {
       var sortedResult = _sortFile(path);
 
       if (sortedResult.changed && !_cfg.dryRun) {
-        sortedResult.file.writeAsStringSync(sortedResult.formattedContent);
+        sortedResult.file.writeAsStringSync(sortedResult.sortedContent);
       }
 
       results.add(sortedResult);
@@ -80,7 +74,7 @@ class Sorter {
     if (_areImportsEmpty) {
       return SortedResult(
         file: file,
-        formattedContent: originalString,
+        sortedContent: originalString,
         changed: false,
       );
     }
@@ -89,7 +83,7 @@ class Sorter {
 
     return SortedResult(
       file: file,
-      formattedContent: sortedString,
+      sortedContent: sortedString,
       changed: originalString != sortedString,
     );
   }
@@ -497,27 +491,5 @@ class Sorter {
     }
 
     return true;
-  }
-}
-
-class SortedResult {
-  final File file;
-  final String formattedContent;
-  final bool changed;
-
-  SortedResult({
-    required this.file,
-    required this.formattedContent,
-    required this.changed,
-  });
-
-  @override
-  String toString() {
-    return '''
-    SortedResult {
-      file: $file
-      changed: $changed
-    }
-    ''';
   }
 }

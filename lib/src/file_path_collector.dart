@@ -3,25 +3,27 @@ import 'dart:io';
 
 // Project Imports
 import 'package:better_imports/src/cfg.dart';
+import 'package:better_imports/src/file_path_collector_result.dart';
 import 'package:better_imports/src/log.dart';
 
-class Collector {
+class FilePathsCollector {
   final Cfg cfg;
   final _allFilePaths = <String>[];
   final _filteredFilePaths = <String>[];
 
-  Collector({required this.cfg});
+  FilePathsCollector({required this.cfg});
 
-  CollectorResult collect() {
+  FilePathCollectorResult collect() {
     _collectInFolders();
 
     _filteredFilePaths.addAll(List.from(_allFilePaths));
 
-    _filterIgnoredFiles();
-    _processOptions();
+    _filterFilePaths();
 
-    return CollectorResult(
-        allPaths: _allFilePaths, filteredPaths: _filteredFilePaths);
+    return FilePathCollectorResult(
+      allPaths: _allFilePaths,
+      filteredPaths: _filteredFilePaths,
+    );
   }
 
   void _collectInFolders() {
@@ -44,9 +46,24 @@ class Collector {
     }
   }
 
-  void _filterIgnoredFiles() {
+  void _filterFilePaths() {
     log.fine("┠ Removing ignored files..");
 
+    _filterIgnoreFilesLike();
+    _filterIgnoreFiles();
+
+    if (cfg.files.isNotEmpty) {
+      log.fine("┠ Files option provided.");
+
+      _filterByNamedFiles(cfg.files);
+    } else if (cfg.filesLike.isNotEmpty) {
+      log.fine("┠ Files-like option provided.");
+
+      _filterByFilesLike();
+    }
+  }
+
+  void _filterIgnoreFilesLike() {
     for (var pattern in cfg.ignoreFilesLike) {
       log.fine("┠─ Removing ignored file like: $pattern");
 
@@ -54,7 +71,9 @@ class Collector {
         (filePath) => RegExp(pattern).hasMatch(filePath),
       );
     }
+  }
 
+  void _filterIgnoreFiles() {
     for (var ignored in cfg.ignoreFiles) {
       log.fine("┠─ Removing ignored file: $ignored");
 
@@ -65,19 +84,7 @@ class Collector {
     }
   }
 
-  void _processOptions() {
-    if (cfg.files.isNotEmpty) {
-      log.fine("┠ Files option provided.");
-
-      _retainNamedFiles(cfg.files);
-    } else if (cfg.filesLike.isNotEmpty) {
-      log.fine("┠ Files-like option provided.");
-
-      _retainFilesLike();
-    }
-  }
-
-  void _retainNamedFiles(List<String> files) {
+  void _filterByNamedFiles(List<String> files) {
     log.fine("┠─ Retaining only named files..");
 
     _filteredFilePaths.retainWhere((element) {
@@ -88,17 +95,10 @@ class Collector {
     });
   }
 
-  void _retainFilesLike() {
+  void _filterByFilesLike() {
     log.fine("┠─ Retaining only files like: ${cfg.filesLike}");
 
     _filteredFilePaths.retainWhere(
         (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element));
   }
-}
-
-class CollectorResult {
-  final List<String> allPaths;
-  final List<String> filteredPaths;
-
-  CollectorResult({required this.allPaths, required this.filteredPaths});
 }

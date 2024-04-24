@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 // Project Imports
 import 'package:better_imports/src/arg_parser.dart';
 import 'package:better_imports/src/cfg.dart';
-import 'package:better_imports/src/file_collector.dart';
+import 'package:better_imports/src/file_path_collector.dart';
 import 'package:better_imports/src/import_sorter.dart';
 
 // Relative Project Imports
@@ -32,7 +32,7 @@ void main() {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collectedResult = collector.collect();
 
       var sorter = Sorter(collectorResult: collectedResult, cfg: cfg);
@@ -51,15 +51,15 @@ void main() {
       cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       var sorter = Sorter(collectorResult: collected, cfg: cfg);
       var sorted = sorter.sort();
 
       expect(sorted.length, collected.filteredPaths.length);
-      expect(sorted.first.formattedContent,
-          formatter.format(sortedFileWithComments));
+      expect(
+          sorted.first.sortedContent, formatter.format(sortedFileWithComments));
     });
 
     test("Sorting file. No comments.", () {
@@ -70,7 +70,7 @@ void main() {
       cfg.files = ["unsorted.dart"];
       cfg.comments = false;
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       var sorter = Sorter(collectorResult: collected, cfg: cfg);
@@ -78,8 +78,8 @@ void main() {
 
       expect(sorted.length, collected.filteredPaths.length);
 
-      expect(sorted.first.formattedContent,
-          formatter.format(sortedFileNoComments));
+      expect(
+          sorted.first.sortedContent, formatter.format(sortedFileNoComments));
     });
 
     test("Sorting file. Relative Imports.", () {
@@ -90,7 +90,7 @@ void main() {
       cfg.files = ["unsorted.dart"];
       cfg.relative = true;
 
-      var collector = Collector(cfg: cfg);
+      var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
       var sorter = Sorter(collectorResult: collected, cfg: cfg);
@@ -98,7 +98,7 @@ void main() {
 
       expect(sorted.length, collected.filteredPaths.length);
 
-      expect(sorted.first.formattedContent,
+      expect(sorted.first.sortedContent,
           formatter.format(sortedFileWithCommentsRelative));
     });
   });
