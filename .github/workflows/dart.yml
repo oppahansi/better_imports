@@ -46,5 +46,5 @@ jobs:
       - run: dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }}
       - uses: actions/upload-artifact@v4
         with:
-          name: native-executables
+          name: better_imports-${{ matrix.runs-on }}
           path: build
