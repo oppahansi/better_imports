@@ -1,3 +1,7 @@
+## 1.1.1
+
+- Optimizations and Refactoring of String operations
+
 ## 1.1.0
 
 - Added an option to disable dart formatter

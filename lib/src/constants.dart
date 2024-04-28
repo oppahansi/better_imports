@@ -51,11 +51,11 @@ class Constants {
 
   static const projectNameOption = "project-name";
 
-  static const dartImportsComment = "// Dart Imports";
-  static const flutterImportsComment = "// Flutter Imports";
-  static const packageImportsComment = "// Package Imports";
-  static const projectImportsComment = "// Project Imports";
-  static const relativeProjectImportsComment = "// Relative Project Imports";
+  static const dartComment = "// Dart Imports";
+  static const flutterComment = "// Flutter Imports";
+  static const packageComment = "// Package Imports";
+  static const projectComment = "// Project Imports";
+  static const relativeComment = "// Relative Project Imports";
 
   static final title = """
     _          _   _                     

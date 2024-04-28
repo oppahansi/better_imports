@@ -95,7 +95,7 @@ class Cfg {
     _setTrace();
     _setRelative();
     _setDryRun();
-    _setNoDartFmt();
+    _setDartFmt();
 
     _setFolders();
 
@@ -270,7 +270,7 @@ class Cfg {
     }
   }
 
-  void _setNoDartFmt() {
+  void _setDartFmt() {
     log.fine("┠─ Setting dart fmt..");
 
     if (_biYamlSection != null && _biYamlSection![Constants.dartFmt] != null) {

@@ -12,8 +12,8 @@ import "package:better_imports/src/arg_parser.dart";
 import "package:better_imports/src/cfg.dart";
 import "package:better_imports/src/constants.dart";
 import "package:better_imports/src/file_extension.dart";
-import "package:better_imports/src/file_path_collector.dart";
-import "package:better_imports/src/import_sorter.dart";
+import "package:better_imports/src/file_paths_collector.dart";
+import "package:better_imports/src/files_sorter.dart";
 import "package:better_imports/src/log.dart";
 import "package:better_imports/src/sorted_result.dart";
 
