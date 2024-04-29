@@ -1,6 +1,6 @@
 class FilePaths {
-  final List<String> allPaths;
-  final List<String> filteredPaths;
+  final List<String> all;
+  final List<String> filtered;
 
-  FilePaths({required this.allPaths, required this.filteredPaths});
+  FilePaths({required this.all, required this.filtered});
 }

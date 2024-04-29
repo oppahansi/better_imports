@@ -3,12 +3,12 @@ import 'dart:io';
 
 class SortedResult {
   final File file;
-  final String sortedContent;
+  final String sorted;
   final bool changed;
 
   SortedResult({
     required this.file,
-    required this.sortedContent,
+    required this.sorted,
     required this.changed,
   });
 

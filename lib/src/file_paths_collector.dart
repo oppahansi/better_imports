@@ -21,8 +21,8 @@ class FilePathsCollector {
     _filterFilePaths();
 
     return FilePaths(
-      allPaths: _allFilePaths,
-      filteredPaths: _filteredFilePaths,
+      all: _allFilePaths,
+      filtered: _filteredFilePaths,
     );
   }
 

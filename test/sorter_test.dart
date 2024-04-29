@@ -36,7 +36,7 @@ void main() {
       var sorted = sort(collected, cfg);
 
       expect(
-        collected.filteredPaths.length,
+        collected.filtered.length,
         sorted.length,
       );
     });
@@ -53,8 +53,8 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
-      expect(sorted.first.sortedContent, sortedFileWithComments);
+      expect(sorted.length, collected.filtered.length);
+      expect(sorted.first.sorted, sortedFileWithComments);
     });
 
     test("Sorting file. With comments. No Dart Fmt", () {
@@ -70,8 +70,8 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
-      expect(sorted.first.sortedContent, sortedFileWithCommentsNoDartFmt);
+      expect(sorted.length, collected.filtered.length);
+      expect(sorted.first.sorted, sortedFileWithCommentsNoDartFmt);
     });
 
     test("Sorting file. No comments.", () {
@@ -87,9 +87,9 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
+      expect(sorted.length, collected.filtered.length);
 
-      expect(sorted.first.sortedContent, sortedFileNoComments);
+      expect(sorted.first.sorted, sortedFileNoComments);
     });
 
     test("Sorting file. No comments. No Dart Fmt", () {
@@ -106,9 +106,9 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
+      expect(sorted.length, collected.filtered.length);
 
-      expect(sorted.first.sortedContent, sortedFileNoCommentsNoDartFmt);
+      expect(sorted.first.sorted, sortedFileNoCommentsNoDartFmt);
     });
 
     test("Sorting file. Relative Imports.", () {
@@ -124,9 +124,9 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
+      expect(sorted.length, collected.filtered.length);
 
-      expect(sorted.first.sortedContent, sortedFileWithCommentsRelative);
+      expect(sorted.first.sorted, sortedFileWithCommentsRelative);
     });
 
     test("Sorting file. Relative Imports. No Dart Fmt", () {
@@ -143,10 +143,9 @@ void main() {
 
       var sorted = sort(collected, cfg);
 
-      expect(sorted.length, collected.filteredPaths.length);
+      expect(sorted.length, collected.filtered.length);
 
-      expect(
-          sorted.first.sortedContent, sortedFileWithCommentsRelativeNoDartFmt);
+      expect(sorted.first.sorted, sortedFileWithCommentsRelativeNoDartFmt);
     });
   });
 }

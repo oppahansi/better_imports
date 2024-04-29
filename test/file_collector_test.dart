@@ -15,7 +15,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      expect(collectorResult.filteredPaths.isNotEmpty, true);
+      expect(collectorResult.filtered.isNotEmpty, true);
     });
 
     test("files arg provided", () {
@@ -26,7 +26,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      expect(collectorResult.filteredPaths.length, 2);
+      expect(collectorResult.filtered.length, 2);
     });
 
     test("files-like arg provided", () {
@@ -37,7 +37,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      expect(collectorResult.filteredPaths.isNotEmpty, true);
+      expect(collectorResult.filtered.isNotEmpty, true);
     });
 
     test("folders arg provided", () {
@@ -48,7 +48,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      expect(collectorResult.filteredPaths.isNotEmpty, true);
+      expect(collectorResult.filtered.isNotEmpty, true);
     });
 
     test("ignore-files arg provided, ignore some dart files", () {
@@ -59,7 +59,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.filteredPaths.length, collected.allPaths.length - 1);
+      expect(collected.filtered.length, collected.all.length - 1);
     });
 
     test("ignore-files-like arg provided, ignore all dart files", () {
@@ -70,7 +70,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collectorResult = collector.collect();
 
-      expect(collectorResult.filteredPaths.length, 0);
+      expect(collectorResult.filtered.length, 0);
     });
 
     test("ignore-files-like arg provided, ignore only given files", () {
@@ -81,7 +81,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.filteredPaths.length, collected.allPaths.length - 1);
+      expect(collected.filtered.length, collected.all.length - 1);
     });
 
     test("recursive arg provided, recursive false", () {
@@ -92,7 +92,7 @@ void main() {
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
 
-      expect(collected.filteredPaths.length == collected.allPaths.length, true);
+      expect(collected.filtered.length == collected.all.length, true);
     });
   });
 }
