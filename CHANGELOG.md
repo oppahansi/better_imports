@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Fixed reading dart fmt flag from config
+
 ## 1.1.1
 
 - Optimizations and Refactoring of String operations

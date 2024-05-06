@@ -19,6 +19,8 @@ class Constants {
 
   static const dryRunKey = "dry_run";
 
+  static const dartFmtKey = "dart_fmt";
+
   static const helpFlag = "help";
   static const helpFlagAbbr = "h";
 

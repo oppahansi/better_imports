@@ -273,8 +273,9 @@ class Cfg {
   void _setDartFmt() {
     log.fine("┠─ Setting dart fmt..");
 
-    if (_biYamlSection != null && _biYamlSection![Constants.dartFmt] != null) {
-      dartFmt = _biYamlSection![Constants.dartFmt];
+    if (_biYamlSection != null &&
+        _biYamlSection![Constants.dartFmtKey] != null) {
+      dartFmt = _biYamlSection![Constants.dartFmtKey];
     }
 
     if (_argResults.wasParsed(Constants.dartFmt)) {
