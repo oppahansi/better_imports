@@ -1,26 +1,26 @@
 name: better_imports
 description: A better imports sorter for your .dart files.
-version: 1.1.2
+version: 1.2.0
 repository: https://github.com/oppahansi/better_imports
 
 executables:
   better_imports: better_imports
 
 environment:
-  sdk: '>=3.2.3 <4.0.0' 
+  sdk: '>=3.5.0 <4.0.0' 
 
 dependencies:
-  analyzer: ^6.3.0
-  args: ^2.4.2
-  dart_style: ^2.3.4
+  analyzer: ^6.8.0
+  args: ^2.5.0
+  dart_style: ^2.3.6
   intl: ^0.19.0
   logging: ^1.2.0
   tint: ^2.0.1
   yaml: ^3.1.2
 
 dev_dependencies:
-  lints: ^3.0.0
-  test: ^1.24.0
+  lints: ^4.0.0
+  test: ^1.25.8
 
 # Better Imports default config
 # Default config is overwritten when settings are passed in as arguments in the cli
