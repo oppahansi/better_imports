@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Upped dart version and dependencies
+
 ## 1.1.2
 
 - Fixed reading dart fmt flag from config
