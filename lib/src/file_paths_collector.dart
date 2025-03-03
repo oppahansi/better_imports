@@ -79,7 +79,8 @@ class FilePathsCollector {
 
       _filteredFilePaths.removeWhere(
         (filePath) =>
-            filePath.endsWith("${Platform.pathSeparator}$ignored.dart"),
+            filePath.endsWith("${Platform.pathSeparator}$ignored.dart") ||
+            filePath.endsWith("${Platform.pathSeparator}$ignored"),
       );
     }
   }
