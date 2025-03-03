@@ -1,3 +1,8 @@
+## 1.3.0
+
+- Enhance file path filtering and update DartFormatter usage
+- Update version to 1.3.0 and enhance file path filtering in documentation
+
 ## 1.2.1
 
   - Added better linux instructions

@@ -19,7 +19,7 @@ void main() {
     });
 
     test("files arg provided", () {
-      var args = <String>["--files", "cfg, cmds, arg_parser"];
+      var args = <String>["--files", "cfg, cmds.dart, arg_parser"];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);
 

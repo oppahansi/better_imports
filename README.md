@@ -152,10 +152,10 @@ Name                  Args                        Description
                                                   If folders are not in the project root, then provide a path relative
                                                   to project root. Example:
                                                   "lib/sub folder/folder1, bin/subfolder/folder2"
---files               "file1,file2"               Sorts only the given Files. "" are optional.
+--files               "file1.dart,file2"          Sorts only the given Files. "" are optional.
                                                   If file names contain spaces, then "" is required.
                                                   Must be seperated by ','
---ignore-files        "file1,file2"               Files to be ignored when sorting imports. "" are optional.
+--ignore-files        "file1,file2.dart"          Files to be ignored when sorting imports. "" are optional.
                                                   If file names contain spaces, then "" is required.
                                                   Must be seperated by ','
 --files-like          ".*\.g\.dart,.*\.g\.dart"   Regex used to filter files which should be sorted. "" are optional.
