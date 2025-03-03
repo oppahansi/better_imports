@@ -4,6 +4,7 @@ import 'dart:io';
 // Package Imports
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 // Project Imports
 import 'package:better_imports/src/cfg.dart';
@@ -44,20 +45,25 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     );
   }
 
-  var last = compiled.directives.last.toString();
-  var endIndex = code.indexOf(last) + last.length;
+  var formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
 
-  var directivesCode = code.substring(0, endIndex);
+  var last = compiled.directives.last.toString();
+  var lastIndex = last.length > formatter.pageWidth
+      ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
+      : code.indexOf(last);
+  var lastDirectiveEndIndex = code.indexOf(';', lastIndex) + 1;
+
+  var directivesCode = code.substring(0, lastDirectiveEndIndex);
   var compiledDirectives = parseString(content: directivesCode).unit;
 
-  var remainingCode = code.substring(endIndex);
+  var remainingCode = code.substring(lastDirectiveEndIndex);
 
   var directivesWithComments =
       extractor.extract(compiledDirectives, filePaths, cfg);
 
   var sortedDirectives = sorter.sort(path, directivesWithComments, cfg);
 
-  var formatter = DartFormatter();
+  formatter.pageWidth == 80;
 
   var sortedCode = formatter.format(sortedDirectives) +
       remainingCode.substring(1, remainingCode.length);
