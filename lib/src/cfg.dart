@@ -33,6 +33,8 @@ class Cfg {
   late Map<dynamic, dynamic>? _yamlConfig;
   late Map<dynamic, dynamic>? _biYamlSection;
 
+  String sdkVersionForParsing = "3.7.0";
+
   Cfg(this._argResults) {
     _setDefaults();
 
@@ -84,7 +86,8 @@ class Cfg {
 
     if (_yamlConfig == null || _biYamlSection == null) {
       log.warning(
-          "Default values will be used if no cli arguments are passed in.");
+        "Default values will be used if no cli arguments are passed in.",
+      );
     }
 
     _setProjectName();
@@ -111,8 +114,10 @@ class Cfg {
     _yamlConfig = _loadConfig();
 
     if (_yamlConfig == null) {
-      log.warning("Could not find config file Config path:"
-          "\n$configPath");
+      log.warning(
+        "Could not find config file Config path:"
+        "\n$configPath",
+      );
     }
   }
 
@@ -152,8 +157,10 @@ class Cfg {
     var configFile = File(configPath);
 
     if (!configFile.existsSync()) {
-      log.severe("External config file could not be found. Config path:"
-          "\n$configPath");
+      log.severe(
+        "External config file could not be found. Config path:"
+        "\n$configPath",
+      );
 
       exit(2);
     }
@@ -167,8 +174,9 @@ class Cfg {
     _biYamlSection = _yamlConfig![Constants.betterImports];
     if (_biYamlSection == null) {
       log.warning(
-          "Could not find config section in the config file. Config path:"
-          "\n$configPath");
+        "Could not find config section in the config file. Config path:"
+        "\n$configPath",
+      );
     }
   }
 
@@ -304,8 +312,9 @@ class Cfg {
     if (_argResults.wasParsed(Constants.foldersOption)) {
       folders.clear();
 
-      var argValues =
-          (_argResults[Constants.foldersOption] as String).split(",");
+      var argValues = (_argResults[Constants.foldersOption] as String).split(
+        ",",
+      );
 
       for (var argValue in argValues) {
         folders.add(argValue.trim());
@@ -362,8 +371,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
       ignoreFiles.clear();
 
-      var argValues =
-          (_argResults[Constants.ignoreFilesOption] as String).split(",");
+      var argValues = (_argResults[Constants.ignoreFilesOption] as String)
+          .split(",");
 
       for (var argValue in argValues) {
         ignoreFiles.add(argValue.trim());
@@ -392,8 +401,9 @@ class Cfg {
     if (_argResults.wasParsed(Constants.filesLikeOption)) {
       filesLike.clear();
 
-      var argValues =
-          (_argResults[Constants.filesLikeOption] as String).split(",");
+      var argValues = (_argResults[Constants.filesLikeOption] as String).split(
+        ",",
+      );
 
       for (var argValue in argValues) {
         filesLike.add(argValue.trim());
@@ -422,8 +432,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
       ignoreFilesLike.clear();
 
-      var argValues =
-          (_argResults[Constants.ignoreFilesLikeOption] as String).split(",");
+      var argValues = (_argResults[Constants.ignoreFilesLikeOption] as String)
+          .split(",");
 
       for (var argValue in argValues) {
         ignoreFilesLike.add(argValue.trim());

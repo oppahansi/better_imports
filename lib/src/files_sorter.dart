@@ -38,19 +38,17 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
   var compiled = parseString(content: code).unit;
 
   if (compiled.directives.isEmpty) {
-    return SortedResult(
-      file: File(path),
-      sorted: code,
-      changed: false,
-    );
+    return SortedResult(file: File(path), sorted: code, changed: false);
   }
 
-  var formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
-
+  var formatter = DartFormatter(
+    languageVersion: Version.parse(cfg.sdkVersionForParsing),
+  );
   var last = compiled.directives.last.toString();
-  var lastIndex = last.length > formatter.pageWidth
-      ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
-      : code.indexOf(last);
+  var lastIndex =
+      last.length > formatter.pageWidth
+          ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
+          : code.indexOf(last);
   var lastDirectiveEndIndex = code.indexOf(';', lastIndex) + 1;
 
   var directivesCode = code.substring(0, lastDirectiveEndIndex);
@@ -58,22 +56,22 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   var remainingCode = code.substring(lastDirectiveEndIndex);
 
-  var directivesWithComments =
-      extractor.extract(compiledDirectives, filePaths, cfg);
+  var directivesWithComments = extractor.extract(
+    compiledDirectives,
+    filePaths,
+    cfg,
+  );
 
   var sortedDirectives = sorter.sort(path, directivesWithComments, cfg);
 
   formatter.pageWidth == 80;
 
-  var sortedCode = formatter.format(sortedDirectives) +
+  var sortedCode =
+      formatter.format(sortedDirectives) +
       remainingCode.substring(1, remainingCode.length);
 
   if (_areImportsEmpty(directivesWithComments)) {
-    return SortedResult(
-      file: File(path),
-      sorted: code,
-      changed: false,
-    );
+    return SortedResult(file: File(path), sorted: code, changed: false);
   }
 
   if (cfg.dartFmt) {
@@ -88,7 +86,8 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 }
 
 bool _areImportsEmpty(
-    Map<DirectiveType, Map<String, List<String>>> directives) {
+  Map<DirectiveType, Map<String, List<String>>> directives,
+) {
   for (var importType in directives.keys) {
     var entry = directives[importType];
 
