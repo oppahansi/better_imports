@@ -1,3 +1,7 @@
+## 1.3.1
+
+- Update SDK version when using DartFormatter to a newer Version
+
 ## 1.3.0
 
 - Enhance file path filtering and update DartFormatter usage
