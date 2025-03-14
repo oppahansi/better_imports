@@ -48,12 +48,10 @@ void main() {
 
     test("cfg arg provided. loading external", () {
       var projectDir = Directory.current.path;
-      var argResult = argParser.parse(
-        [
-          "--cfg",
-          "$projectDir${Platform.pathSeparator}res${Platform.pathSeparator}external_cfg.yaml"
-        ],
-      );
+      var argResult = argParser.parse([
+        "--cfg",
+        "$projectDir${Platform.pathSeparator}res${Platform.pathSeparator}external_cfg.yaml",
+      ]);
       var cfg = Cfg(argResult);
 
       expect(cfg.projectName, "external_cfg");
@@ -94,16 +92,8 @@ void main() {
       expect(cfg.trace, true);
       expect(cfg.dryRun, true);
       expect(cfg.dartFmt, false);
-      expect(cfg.folders, [
-        "lib/cmds",
-        "lib/collectors",
-        "lib/utils",
-      ]);
-      expect(cfg.files, [
-        "cfg",
-        "cmds",
-        "parser",
-      ]);
+      expect(cfg.folders, ["lib/cmds", "lib/collectors", "lib/utils"]);
+      expect(cfg.files, ["cfg", "cmds", "parser"]);
       expect(cfg.ignoreFiles, ["parser"]);
       expect(cfg.filesLike, [r".*\.dart"]);
       expect(cfg.ignoreFilesLike, [r".*\.dart"]);

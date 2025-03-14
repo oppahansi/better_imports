@@ -11,19 +11,38 @@ String sort(
 ) {
   final buffer = StringBuffer();
   var projectDirectives = directivesWithComments[DirectiveType.project]!;
-  var convertedProjectDirectives =
-      _convertProjectImports(path, projectDirectives, cfg);
+  var convertedProjectDirectives = _convertProjectImports(
+    path,
+    projectDirectives,
+    cfg,
+  );
 
   _add(buffer, directivesWithComments[DirectiveType.library]!, "", cfg);
-  _add(buffer, directivesWithComments[DirectiveType.dart]!,
-      Constants.dartComment, cfg);
-  _add(buffer, directivesWithComments[DirectiveType.flutter]!,
-      Constants.flutterComment, cfg);
-  _add(buffer, directivesWithComments[DirectiveType.package]!,
-      Constants.packageComment, cfg);
+  _add(
+    buffer,
+    directivesWithComments[DirectiveType.dart]!,
+    Constants.dartComment,
+    cfg,
+  );
+  _add(
+    buffer,
+    directivesWithComments[DirectiveType.flutter]!,
+    Constants.flutterComment,
+    cfg,
+  );
+  _add(
+    buffer,
+    directivesWithComments[DirectiveType.package]!,
+    Constants.packageComment,
+    cfg,
+  );
   _add(buffer, convertedProjectDirectives, Constants.projectComment, cfg);
-  _add(buffer, directivesWithComments[DirectiveType.relative]!,
-      Constants.relativeComment, cfg);
+  _add(
+    buffer,
+    directivesWithComments[DirectiveType.relative]!,
+    Constants.relativeComment,
+    cfg,
+  );
   _add(buffer, directivesWithComments[DirectiveType.part]!, "", cfg);
 
   return buffer.toString();
@@ -42,15 +61,23 @@ Map<String, List<String>> _convertProjectImports(
     var convertedDirectiveValue = "";
 
     if (cfg.relative) {
-      convertedDirectiveValue =
-          _convertToRelativeProjectImport(path, directiveValue, cfg);
+      convertedDirectiveValue = _convertToRelativeProjectImport(
+        path,
+        directiveValue,
+        cfg,
+      );
     } else {
-      convertedDirectiveValue =
-          _convertToPackageProjectImport(path, directiveValue, cfg);
+      convertedDirectiveValue = _convertToPackageProjectImport(
+        path,
+        directiveValue,
+        cfg,
+      );
     }
 
     newProjectImports.putIfAbsent(
-        convertedDirectiveValue, () => projectDirectives[directiveValue]!);
+      convertedDirectiveValue,
+      () => projectDirectives[directiveValue]!,
+    );
   }
 
   return newProjectImports;
@@ -97,7 +124,9 @@ String _convertToPackageProjectImport(
     return directiveValue.replaceFirst("..", "package:${cfg.projectName}");
   } else {
     return directiveValue.replaceFirst(
-        "import '", "import 'package:${cfg.projectName}/");
+      "import '",
+      "import 'package:${cfg.projectName}/",
+    );
   }
 }
 

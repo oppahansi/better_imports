@@ -20,10 +20,7 @@ class FilePathsCollector {
 
     _filterFilePaths();
 
-    return FilePaths(
-      all: _allFilePaths,
-      filtered: _filteredFilePaths,
-    );
+    return FilePaths(all: _allFilePaths, filtered: _filteredFilePaths);
   }
 
   void _collectInFolders() {
@@ -100,6 +97,7 @@ class FilePathsCollector {
     log.fine("┠─ Retaining only files like: ${cfg.filesLike}");
 
     _filteredFilePaths.retainWhere(
-        (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element));
+      (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element),
+    );
   }
 }
