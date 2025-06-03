@@ -20,7 +20,7 @@ dependencies:
   pub_semver: ^2.1.5
 
 dev_dependencies:
-  lints: ^5.1.1
+  lints: ^6.0.0
   test: ^1.25.8
 
 # Better Imports default config

@@ -24,22 +24,20 @@ void main() {
     });
 
     test(
-        "Default config. Make sure collector and sorter return the same amount.",
-        () {
-      var argResult = argParser.parse([]);
-      var cfg = Cfg(argResult);
-      cfg.dryRun = true;
+      "Default config. Make sure collector and sorter return the same amount.",
+      () {
+        var argResult = argParser.parse([]);
+        var cfg = Cfg(argResult);
+        cfg.dryRun = true;
 
-      var collector = FilePathsCollector(cfg: cfg);
-      var collected = collector.collect();
+        var collector = FilePathsCollector(cfg: cfg);
+        var collected = collector.collect();
 
-      var sorted = sort(collected, cfg);
+        var sorted = sort(collected, cfg);
 
-      expect(
-        collected.filtered.length,
-        sorted.length,
-      );
-    });
+        expect(collected.filtered.length, sorted.length);
+      },
+    );
 
     test("Sorting file. With comments.", () {
       var argResult = argParser.parse([]);

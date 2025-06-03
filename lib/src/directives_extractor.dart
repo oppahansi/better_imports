@@ -18,13 +18,18 @@ Map<DirectiveType, Map<String, List<String>>> extract(
 
   _initDirectivesToComments(directivesToComments);
   _fillDirectivesToComments(
-      compiledDirectives, directivesToComments, filePaths, cfg);
+    compiledDirectives,
+    directivesToComments,
+    filePaths,
+    cfg,
+  );
 
   return directivesToComments;
 }
 
 void _initDirectivesToComments(
-    Map<DirectiveType, Map<String, List<String>>> directivesToComments) {
+  Map<DirectiveType, Map<String, List<String>>> directivesToComments,
+) {
   log.fine("┠─ Initializing directives types to directives and comments..");
 
   directivesToComments.putIfAbsent(DirectiveType.library, () => {});
@@ -58,21 +63,27 @@ void _fillDirectivesToComments(
         _extractDocCommentsFromImportDirective(directive, directiveComments);
       } else {
         _extractPrecedingCommentsFromImportDirective(
-            directive, directiveComments);
+          directive,
+          directiveComments,
+        );
       }
     } else if (directive is LibraryDirective) {
       if (beginToken.lexeme.startsWith("///")) {
         _extractDocCommentsFromLibraryDirective(directive, directiveComments);
       } else {
         _extractPrecedingCommentsFromLibraryDirective(
-            directive, directiveComments);
+          directive,
+          directiveComments,
+        );
       }
     } else if (directive is PartDirective) {
       if (beginToken.lexeme.startsWith("///")) {
         _extractDocCommentsFromPartDirective(directive, directiveComments);
       } else {
         _extractPrecedingCommentsFromPartDirective(
-            directive, directiveComments);
+          directive,
+          directiveComments,
+        );
       }
     }
   }
@@ -124,7 +135,10 @@ void _extractDocCommentsFromLibraryDirective(
   log.fine("┠── Extracting doc comments..");
 
   _extractDocComments(
-      directive.toString(), directive.beginToken, directiveComments);
+    directive.toString(),
+    directive.beginToken,
+    directiveComments,
+  );
 }
 
 void _extractDocCommentsFromImportDirective(
@@ -134,7 +148,10 @@ void _extractDocCommentsFromImportDirective(
   log.fine("┠── Extracting doc comments..");
 
   _extractDocComments(
-      directive.toString(), directive.beginToken, directiveComments);
+    directive.toString(),
+    directive.beginToken,
+    directiveComments,
+  );
 }
 
 void _extractDocCommentsFromPartDirective(
@@ -144,7 +161,10 @@ void _extractDocCommentsFromPartDirective(
   log.fine("┠── Extracting doc comments..");
 
   _extractDocComments(
-      directive.toString(), directive.beginToken, directiveComments);
+    directive.toString(),
+    directive.beginToken,
+    directiveComments,
+  );
 }
 
 void _extractDocComments(
@@ -174,7 +194,10 @@ void _extractPrecedingCommentsFromImportDirective(
   }
 
   _extractPrecedingComments(
-      precedingComment, directiveComments, directive.toString());
+    precedingComment,
+    directiveComments,
+    directive.toString(),
+  );
 }
 
 void _extractPrecedingCommentsFromLibraryDirective(
@@ -190,7 +213,10 @@ void _extractPrecedingCommentsFromLibraryDirective(
   }
 
   _extractPrecedingComments(
-      precedingComment, directiveComments, directive.toString());
+    precedingComment,
+    directiveComments,
+    directive.toString(),
+  );
 }
 
 void _extractPrecedingCommentsFromPartDirective(
@@ -206,7 +232,10 @@ void _extractPrecedingCommentsFromPartDirective(
   }
 
   _extractPrecedingComments(
-      precedingComment, directiveComments, directive.toString());
+    precedingComment,
+    directiveComments,
+    directive.toString(),
+  );
 }
 
 void _extractPrecedingComments(

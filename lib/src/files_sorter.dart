@@ -45,9 +45,10 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     languageVersion: Version.parse(cfg.sdkVersionForParsing),
   );
   var last = compiled.directives.last.toString();
-  var lastIndex = last.length > formatter.pageWidth
-      ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
-      : code.indexOf(last);
+  var lastIndex =
+      last.length > formatter.pageWidth
+          ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
+          : code.indexOf(last);
   var lastDirectiveEndIndex = code.indexOf(';', lastIndex) + 1;
 
   var directivesCode = code.substring(0, lastDirectiveEndIndex);
@@ -65,7 +66,8 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   formatter.pageWidth == 80;
 
-  var sortedCode = formatter.format(sortedDirectives) +
+  var sortedCode =
+      formatter.format(sortedDirectives) +
       remainingCode.substring(1, remainingCode.length);
 
   if (_areImportsEmpty(directivesWithComments)) {
