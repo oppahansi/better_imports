@@ -5,11 +5,7 @@ import 'package:args/args.dart';
 import 'package:better_imports/src/constants.dart';
 
 final argParser = ArgParser()
-  ..addFlag(
-    Constants.helpFlag,
-    abbr: Constants.helpFlagAbbr,
-    negatable: false,
-  )
+  ..addFlag(Constants.helpFlag, abbr: Constants.helpFlagAbbr, negatable: false)
   ..addFlag(
     Constants.recursiveFlag,
     abbr: Constants.recursiveFlagAbbr,
