@@ -22,8 +22,6 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter =
-  DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
 
 """;
@@ -61,8 +59,8 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
+
 """;
 
 const sortedFileWithCommentsRelative = r"""
@@ -98,8 +96,8 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
+
 """;
 
 const sortedFileNoComments = r"""
@@ -131,8 +129,8 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
+
 """;
 
 const sortedFileWithCommentsNoDartFmt = r"""
@@ -168,8 +166,6 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter =
-  DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
 
 """;
@@ -207,8 +203,6 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter =
-  DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
 
 """;
@@ -242,8 +236,6 @@ part 'test.g.dart';
 
 // Test Comment after imports
 void main() {
-  final formatter =
-  DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
 
 """;
@@ -259,9 +251,8 @@ import 'package:flutter/foundation.dart'
 
 // Test Comment after imports
 void main() {
-  final formatter =
-  DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
+
 """;
 
 const sortedFileIssue4 = r"""
@@ -276,6 +267,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 
 // Test Comment after imports
 void main() {
-  final formatter = DartFormatter(languageVersion: Version.parse('2.12.0'));
 }
+
 """;

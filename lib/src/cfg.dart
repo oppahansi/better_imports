@@ -22,7 +22,6 @@ class Cfg {
   late bool trace;
   late bool relative;
   late bool dryRun;
-  late bool dartFmt;
   late List<String> folders;
   late List<String> files;
   late List<String> ignoreFiles;
@@ -53,7 +52,6 @@ class Cfg {
     trace = false;
     relative = false;
     dryRun = false;
-    dartFmt = true;
 
     folders = <String>[
       "lib",
@@ -98,7 +96,6 @@ class Cfg {
     _setTrace();
     _setRelative();
     _setDryRun();
-    _setDartFmt();
 
     _setFolders();
 
@@ -278,19 +275,6 @@ class Cfg {
     }
   }
 
-  void _setDartFmt() {
-    log.fine("┠─ Setting dart fmt..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.dartFmtKey] != null) {
-      dartFmt = _biYamlSection![Constants.dartFmtKey];
-    }
-
-    if (_argResults.wasParsed(Constants.dartFmt)) {
-      dartFmt = _argResults[Constants.dartFmt];
-    }
-  }
-
   void _setFolders() {
     log.fine("┠─ Setting folders..");
 
@@ -371,8 +355,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
       ignoreFiles.clear();
 
-      var argValues =
-          (_argResults[Constants.ignoreFilesOption] as String).split(",");
+      var argValues = (_argResults[Constants.ignoreFilesOption] as String)
+          .split(",");
 
       for (var argValue in argValues) {
         ignoreFiles.add(argValue.trim());
@@ -432,8 +416,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
       ignoreFilesLike.clear();
 
-      var argValues =
-          (_argResults[Constants.ignoreFilesLikeOption] as String).split(",");
+      var argValues = (_argResults[Constants.ignoreFilesLikeOption] as String)
+          .split(",");
 
       for (var argValue in argValues) {
         ignoreFilesLike.add(argValue.trim());

@@ -61,7 +61,6 @@ void main() {
 
       cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
-      cfg.dartFmt = false;
 
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
@@ -97,7 +96,6 @@ void main() {
       cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
       cfg.comments = false;
-      cfg.dartFmt = false;
 
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
@@ -134,7 +132,6 @@ void main() {
       cfg.folders = ["test", "res", "lib"];
       cfg.files = ["unsorted.dart"];
       cfg.relative = true;
-      cfg.dartFmt = false;
 
       var collector = FilePathsCollector(cfg: cfg);
       var collected = collector.collect();
