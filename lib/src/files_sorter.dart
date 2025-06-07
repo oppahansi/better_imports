@@ -65,8 +65,7 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   formatter.pageWidth == 80;
 
-  var sortedCode =
-      formatter.format(sortedDirectives) +
+  var sortedCode = formatter.format(sortedDirectives) +
       remainingCode.substring(1, remainingCode.length);
 
   if (_areImportsEmpty(directivesWithComments)) {

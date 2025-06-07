@@ -355,8 +355,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
       ignoreFiles.clear();
 
-      var argValues = (_argResults[Constants.ignoreFilesOption] as String)
-          .split(",");
+      var argValues =
+          (_argResults[Constants.ignoreFilesOption] as String).split(",");
 
       for (var argValue in argValues) {
         ignoreFiles.add(argValue.trim());
@@ -416,8 +416,8 @@ class Cfg {
     if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
       ignoreFilesLike.clear();
 
-      var argValues = (_argResults[Constants.ignoreFilesLikeOption] as String)
-          .split(",");
+      var argValues =
+          (_argResults[Constants.ignoreFilesLikeOption] as String).split(",");
 
       for (var argValue in argValues) {
         ignoreFilesLike.add(argValue.trim());
