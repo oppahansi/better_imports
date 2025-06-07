@@ -1,3 +1,8 @@
+## 1.3.2
+
+- Update some dependencies
+- Drop dart format option due to inconsistensis
+
 ## 1.3.1
 
 - Update SDK version when using DartFormatter to a newer Version
