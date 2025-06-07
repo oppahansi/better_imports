@@ -55,22 +55,6 @@ void main() {
       expect(sorted.first.sorted, sortedFileWithComments);
     });
 
-    test("Sorting file. With comments. No Dart Fmt", () {
-      var argResult = argParser.parse([]);
-      var cfg = Cfg(argResult);
-
-      cfg.folders = ["test", "res", "lib"];
-      cfg.files = ["unsorted.dart"];
-
-      var collector = FilePathsCollector(cfg: cfg);
-      var collected = collector.collect();
-
-      var sorted = sort(collected, cfg);
-
-      expect(sorted.length, collected.filtered.length);
-      expect(sorted.first.sorted, sortedFileWithCommentsNoDartFmt);
-    });
-
     test("Sorting file. No comments.", () {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
@@ -89,24 +73,6 @@ void main() {
       expect(sorted.first.sorted, sortedFileNoComments);
     });
 
-    test("Sorting file. No comments. No Dart Fmt", () {
-      var argResult = argParser.parse([]);
-      var cfg = Cfg(argResult);
-
-      cfg.folders = ["test", "res", "lib"];
-      cfg.files = ["unsorted.dart"];
-      cfg.comments = false;
-
-      var collector = FilePathsCollector(cfg: cfg);
-      var collected = collector.collect();
-
-      var sorted = sort(collected, cfg);
-
-      expect(sorted.length, collected.filtered.length);
-
-      expect(sorted.first.sorted, sortedFileNoCommentsNoDartFmt);
-    });
-
     test("Sorting file. Relative Imports.", () {
       var argResult = argParser.parse([]);
       var cfg = Cfg(argResult);
@@ -123,24 +89,6 @@ void main() {
       expect(sorted.length, collected.filtered.length);
 
       expect(sorted.first.sorted, sortedFileWithCommentsRelative);
-    });
-
-    test("Sorting file. Relative Imports. No Dart Fmt", () {
-      var argResult = argParser.parse([]);
-      var cfg = Cfg(argResult);
-
-      cfg.folders = ["test", "res", "lib"];
-      cfg.files = ["unsorted.dart"];
-      cfg.relative = true;
-
-      var collector = FilePathsCollector(cfg: cfg);
-      var collected = collector.collect();
-
-      var sorted = sort(collected, cfg);
-
-      expect(sorted.length, collected.filtered.length);
-
-      expect(sorted.first.sorted, sortedFileWithCommentsRelativeNoDartFmt);
     });
   });
 
@@ -168,6 +116,60 @@ void main() {
       expect(sorted.length, collected.filtered.length);
 
       expect(sorted.first.sorted, sortedFileIssue4);
+    });
+  });
+
+  group("Sorter Tests. Multilines after directives.", () {
+    setUp(() {
+      File("res/unsorted.dart").writeAsStringSync(unsortedFileMultiline);
+    });
+
+    tearDown(() {
+      File("res/unsorted.dart").delete();
+    });
+
+    test("Sorting file. Multiline with show.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filtered.length);
+
+      expect(sorted.first.sorted, sortedFileMultiline);
+    });
+  });
+
+  group("Sorter Tests. Extra long directives.", () {
+    setUp(() {
+      File("res/unsorted.dart").writeAsStringSync(unsortedFileLongDirectives);
+    });
+
+    tearDown(() {
+      File("res/unsorted.dart").delete();
+    });
+
+    test("Sorting file. Extra long directives.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filtered.length);
+
+      expect(sorted.first.sorted, sortedFileLongDirectives);
     });
   });
 }

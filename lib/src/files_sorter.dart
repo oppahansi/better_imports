@@ -35,26 +35,30 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
   log.fine("┠─ Sorting file: $path");
 
   var code = File(path).readAsStringSync();
-  var compiled = parseString(content: code).unit;
+  var compiledCode = parseString(content: code).unit;
 
-  if (compiled.directives.isEmpty) {
+  if (compiledCode.directives.isEmpty) {
     return SortedResult(file: File(path), sorted: code, changed: false);
   }
 
   var formatter = DartFormatter(
     languageVersion: Version.parse(cfg.sdkVersionForParsing),
   );
-  var last = compiled.directives.last.toString();
-  var lastIndex = last.length > formatter.pageWidth
-      ? code.indexOf(last.substring(0, (formatter.pageWidth / 2).toInt()))
-      : code.indexOf(last);
-  var lastDirectiveEndIndex = code.indexOf(';', lastIndex) + 1;
 
-  var directivesCode = code.substring(0, lastDirectiveEndIndex);
+  var lastDirective = compiledCode.directives.last.toString();
+  int lastDirectiveIndex;
+  if (lastDirective.length > formatter.pageWidth) {
+    var cutOffIndex = (formatter.pageWidth / 2).toInt();
+    var directiveMarkerIndex = lastDirective.substring(0, cutOffIndex);
+
+    lastDirectiveIndex = code.indexOf(directiveMarkerIndex);
+  } else {
+    lastDirectiveIndex = code.indexOf(lastDirective);
+  }
+
+  var directivesEndIndex = code.indexOf(';', lastDirectiveIndex) + 1;
+  var directivesCode = code.substring(0, directivesEndIndex);
   var compiledDirectives = parseString(content: directivesCode).unit;
-
-  var remainingCode = code.substring(lastDirectiveEndIndex);
-
   var directivesWithComments = extractor.extract(
     compiledDirectives,
     filePaths,
@@ -62,11 +66,8 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
   );
 
   var sortedDirectives = sorter.sort(path, directivesWithComments, cfg);
-
-  formatter.pageWidth == 80;
-
-  var sortedCode = formatter.format(sortedDirectives) +
-      remainingCode.substring(1, remainingCode.length);
+  var remainingCode = code.substring(directivesEndIndex + 1);
+  var sortedCode = formatter.format(sortedDirectives) + remainingCode;
 
   if (_areImportsEmpty(directivesWithComments)) {
     return SortedResult(file: File(path), sorted: code, changed: false);

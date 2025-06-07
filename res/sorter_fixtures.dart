@@ -23,7 +23,6 @@ part 'test.g.dart';
 // Test Comment after imports
 void main() {
 }
-
 """;
 
 const sortedFileWithComments = r"""
@@ -60,7 +59,6 @@ part 'test.g.dart';
 // Test Comment after imports
 void main() {
 }
-
 """;
 
 const sortedFileWithCommentsRelative = r"""
@@ -97,7 +95,6 @@ part 'test.g.dart';
 // Test Comment after imports
 void main() {
 }
-
 """;
 
 const sortedFileNoComments = r"""
@@ -130,114 +127,6 @@ part 'test.g.dart';
 // Test Comment after imports
 void main() {
 }
-
-""";
-
-const sortedFileWithCommentsNoDartFmt = r"""
-// Test Comment before file
-// Test Comment for Library
-library better_imports;
-
-// Dart Imports
-import 'dart:io';
-
-// Package Imports
-// Preceding comment one
-// Preceding comment two
-import 'package:dart_style/dart_style.dart'
-    as averylongdartpackagetobeputonanotherline;
-
-/// This is a documentation comment
-/// This is a documentation comment
-import 'package:test/test.dart';
-
-// Project Imports
-/*
- * This is a multiline comment
- */
-import 'package:better_imports/lib.dart';
-
-// Relative Project Imports
-import 'cfg_test.dart';
-import '../res/sorter_fixtures.dart';
-
-part 'test.freezed.dart';
-part 'test.g.dart';
-
-// Test Comment after imports
-void main() {
-}
-
-""";
-
-const sortedFileWithCommentsRelativeNoDartFmt = r"""
-// Test Comment before file
-// Test Comment for Library
-library better_imports;
-
-// Dart Imports
-import 'dart:io';
-
-// Package Imports
-// Preceding comment one
-// Preceding comment two
-import 'package:dart_style/dart_style.dart'
-    as averylongdartpackagetobeputonanotherline;
-
-/// This is a documentation comment
-/// This is a documentation comment
-import 'package:test/test.dart';
-
-// Project Imports
-/*
- * This is a multiline comment
- */
-import '../lib/lib.dart';
-
-// Relative Project Imports
-import 'cfg_test.dart';
-import '../res/sorter_fixtures.dart';
-
-part 'test.freezed.dart';
-part 'test.g.dart';
-
-// Test Comment after imports
-void main() {
-}
-
-""";
-
-const sortedFileNoCommentsNoDartFmt = r"""
-// Test Comment before file
-// Test Comment for Library
-library better_imports;
-
-import 'dart:io';
-
-// Preceding comment one
-// Preceding comment two
-import 'package:dart_style/dart_style.dart'
-    as averylongdartpackagetobeputonanotherline;
-
-/// This is a documentation comment
-/// This is a documentation comment
-import 'package:test/test.dart';
-
-/*
- * This is a multiline comment
- */
-import 'package:better_imports/lib.dart';
-
-import 'cfg_test.dart';
-import '../res/sorter_fixtures.dart';
-
-part 'test.freezed.dart';
-part 'test.g.dart';
-
-// Test Comment after imports
-void main() {
-}
-
 """;
 
 /// Issue #4 reproducer
@@ -252,7 +141,6 @@ import 'package:flutter/foundation.dart'
 // Test Comment after imports
 void main() {
 }
-
 """;
 
 const sortedFileIssue4 = r"""
@@ -268,5 +156,117 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 // Test Comment after imports
 void main() {
 }
+""";
 
+/// Test for multi empty lines after directives
+const unsortedFileMultiline = r"""
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+
+part 'main.g.dart';
+
+
+// We create a "provider", which will store a value (here "Hello world").
+// By using a provider, this allows us to mock/override the value exposed.
+@riverpod
+String helloWorld(Ref ref) {
+  return 'Hello world';
+}
+
+void main() {
+  runApp(
+    // For widgets to be able to read providers, we need to wrap the entire
+    // application in a "ProviderScope" widget.
+    // This is where the state of our providers will be stored.
+    ProviderScope(child: MyApp()),
+  );
+}
+""";
+
+const sortedFileMultiline = r"""
+// Flutter Imports
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Package Imports
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'main.g.dart';
+
+
+// We create a "provider", which will store a value (here "Hello world").
+// By using a provider, this allows us to mock/override the value exposed.
+@riverpod
+String helloWorld(Ref ref) {
+  return 'Hello world';
+}
+
+void main() {
+  runApp(
+    // For widgets to be able to read providers, we need to wrap the entire
+    // application in a "ProviderScope" widget.
+    // This is where the state of our providers will be stored.
+    ProviderScope(child: MyApp()),
+  );
+}
+""";
+
+const unsortedFileLongDirectives = r"""
+// Test Comment before file
+
+// Test Comment for Library
+library better_imports;
+// Dart Imports
+import 'dart:io';
+/*
+ * This is a multiline comment
+ */
+import 'package:better_imports/lib.dart';
+import 'cfg_test.dart';
+// Preceding comment one
+// Preceding comment two
+import 'package:dart_style/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart_style.dart' as averylongdartpackagetobeputonanotherline;
+import '../res/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/sorter_fixtures.dart';
+/// This is a documentation comment
+/// This is a documentation comment
+import 'package:test/test.dart';
+
+// Test Comment after imports
+void main() {
+}
+""";
+
+const sortedFileLongDirectives = r"""
+// Test Comment before file
+// Test Comment for Library
+library better_imports;
+
+// Dart Imports
+import 'dart:io';
+
+// Package Imports
+// Preceding comment one
+// Preceding comment two
+import 'package:dart_style/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart_style.dart'
+    as averylongdartpackagetobeputonanotherline;
+
+/// This is a documentation comment
+/// This is a documentation comment
+import 'package:test/test.dart';
+
+// Project Imports
+/*
+ * This is a multiline comment
+ */
+import 'package:better_imports/lib.dart';
+
+// Relative Project Imports
+import 'cfg_test.dart';
+import '../res/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/sorter_fixtures.dart';
+
+// Test Comment after imports
+void main() {
+}
 """;

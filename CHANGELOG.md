@@ -1,3 +1,7 @@
+## 1.3.4
+
+- Prevent adding new line after imports
+
 ## 1.3.3
 
 - Update some dependencies
