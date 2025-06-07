@@ -1,4 +1,4 @@
-## 1.3.2
+## 1.3.3
 
 - Update some dependencies
 - Drop dart format option due to inconsistensis
