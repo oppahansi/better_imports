@@ -1,5 +1,9 @@
 ## 1.3.4
 
+- Update description in pubspec.yaml for better clarity and add example file
+
+## 1.3.4
+
 - Prevent adding new line after imports
 
 ## 1.3.3
