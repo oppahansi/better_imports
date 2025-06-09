@@ -1,4 +1,4 @@
-## 1.3.4
+## 1.3.5
 
 - Update description in pubspec.yaml for better clarity and add example file
 
