@@ -1,4 +1,4 @@
-## 1.3.7
+## 1.3.8
 
 - Fixed sorting packages that contained "flutter_" being wrongly categorized as flutter imports
 
