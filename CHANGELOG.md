@@ -1,5 +1,9 @@
 ## 1.3.7
 
+- Fixed sorting packages that contained "flutter_" being wrongly categorized as flutter imports
+
+## 1.3.7
+
 - Make --files paths system independent
 
 ## 1.3.6
