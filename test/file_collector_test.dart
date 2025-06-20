@@ -1,5 +1,6 @@
 // Package Imports
 import 'package:test/test.dart';
+import 'package:path/path.dart' as path;
 
 // Project Imports
 import 'package:better_imports/src/arg_parser.dart';
@@ -21,7 +22,7 @@ void main() {
     test("files arg provided", () {
       var args = <String>[
         "--files",
-        "cfg, cmds.dart, E:\\dev\\workspace\\dart\\better_imports\\lib\\src\\arg_parser.dart"
+        "cfg, cmds.dart, ${path.join('lib', 'src', 'arg_parser.dart')}"
       ];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);

@@ -1,6 +1,9 @@
 // Dart Imports
 import 'dart:io';
 
+// Package Imports
+import 'package:path/path.dart' as p;
+
 // Project Imports
 import 'package:better_imports/src/cfg.dart';
 import 'package:better_imports/src/file_paths.dart';
@@ -86,10 +89,10 @@ class FilePathsCollector {
     log.fine("┠─ Retaining only named files..");
 
     _filteredFilePaths.retainWhere((element) {
-      var fileName = element.split(Platform.pathSeparator).last;
+      var fileName = p.basename(element);
 
       return files.any((f) {
-        var name = f.split(Platform.pathSeparator).last;
+        var name = p.basename(p.normalize(f));
         return name == fileName || name == fileName.replaceAll(".dart", "");
       });
     });
