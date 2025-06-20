@@ -1,3 +1,7 @@
+## 1.3.7
+
+- Make --files paths system independent
+
 ## 1.3.6
 
 - Fix --files filtering
