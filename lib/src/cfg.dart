@@ -43,8 +43,8 @@ class Cfg {
   void _setDefaults() {
     log.fine("┠ Setting default cfg values..");
 
-    sortPath = Directory.current.path;
-    projectName = Directory.current.name;
+    sortPath = _findProjectRoot();
+    projectName = Directory(sortPath).name;
 
     recursive = true;
     comments = true;
@@ -72,6 +72,21 @@ class Cfg {
       r".*\.gr\.dart",
       r".*\.freezed\.dart",
     ];
+  }
+
+  String _findProjectRoot() {
+    var dir = Directory.current;
+    while (true) {
+      final pubspec = File('${dir.path}${Platform.pathSeparator}pubspec.yaml');
+      if (pubspec.existsSync()) {
+        return dir.path;
+      }
+      final parent = dir.parent;
+      if (parent.path == dir.path) break; // Reached root
+      dir = parent;
+    }
+    // Fallback to current if not found
+    return Directory.current.path;
   }
 
   void _setProvidedValues() {

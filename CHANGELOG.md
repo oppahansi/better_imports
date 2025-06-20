@@ -1,3 +1,7 @@
+## 1.3.6
+
+- Fix --files filtering
+
 ## 1.3.5
 
 - Update description in pubspec.yaml for better clarity and add example file

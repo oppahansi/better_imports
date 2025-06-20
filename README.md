@@ -112,6 +112,15 @@ void main() {
 
 ```
 
+## File Watcher Plugin in Android / Intellij
+- Install the [File Watchers](https://plugins.jetbrains.com/plugin/7177-file-watchers) plugin 
+- Then in Settings -> Tools -> File Watchers
+  - Add a new Template
+  - Scope: `Project Files`
+  - File Type : `Dart`
+  - Program: `path/to/better_imports_executeable`
+  - Arguments: `--files $FilePath$ -s`
+
 ## CLI Flags and Options
 
 <details>

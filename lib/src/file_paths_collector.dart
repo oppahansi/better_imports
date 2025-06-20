@@ -88,8 +88,10 @@ class FilePathsCollector {
     _filteredFilePaths.retainWhere((element) {
       var fileName = element.split(Platform.pathSeparator).last;
 
-      return files.contains(fileName) ||
-          files.contains(fileName.replaceAll(".dart", ""));
+      return files.any((f) {
+        var name = f.split(Platform.pathSeparator).last;
+        return name == fileName || name == fileName.replaceAll(".dart", "");
+      });
     });
   }
 
