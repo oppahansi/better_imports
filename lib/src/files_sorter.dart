@@ -67,7 +67,8 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   var sortedDirectives = sorter.sort(path, directivesWithComments, cfg);
   var remainingCode = code.substring(directivesEndIndex + 1);
-  var sortedCode = formatter.format(sortedDirectives) + remainingCode;
+  var sortedCode =
+      formatter.format(sortedDirectives).trimLeft() + remainingCode;
 
   if (_areImportsEmpty(directivesWithComments)) {
     return SortedResult(file: File(path), sorted: code, changed: false);
