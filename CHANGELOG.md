@@ -1,3 +1,7 @@
+## 1.3.9
+
+- Possibly prevent adding an additial empty line after imports
+
 ## 1.3.8
 
 - Fixed sorting packages that contained "flutter_" being wrongly categorized as flutter imports
