@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Remove default folders in cfg to enable support for different project structures
+
 ## 1.3.9
 
 - Possibly prevent adding an additial empty line after imports
