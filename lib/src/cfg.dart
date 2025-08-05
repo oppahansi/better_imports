@@ -32,7 +32,7 @@ class Cfg {
   late Map<dynamic, dynamic>? _yamlConfig;
   late Map<dynamic, dynamic>? _biYamlSection;
 
-  String sdkVersionForParsing = "3.8.1";
+  String sdkVersionForParsing = "3.8.2";
 
   Cfg(this._argResults) {
     _setDefaults();
@@ -53,16 +53,7 @@ class Cfg {
     relative = false;
     dryRun = false;
 
-    folders = <String>[
-      "lib",
-      "bin",
-      "example",
-      "test",
-      "tests",
-      "integration_test",
-      "integration_tests",
-      "test_driver",
-    ];
+    folders = <String>[];
     files = <String>[];
     ignoreFiles = <String>[];
     filesLike = <String>[];
@@ -125,7 +116,7 @@ class Cfg {
 
     _yamlConfig = _loadConfig();
 
-    if (_yamlConfig == null) {
+    if (_yamlConfig == null || _yamlConfig!.isEmpty) {
       log.warning(
         "Could not find config file Config path:"
         "\n$configPath",
@@ -146,6 +137,15 @@ class Cfg {
     }
 
     configFile = File(configPath);
+    if (!configFile.existsSync()) {
+      log.warning(
+        "┠── Config file could not be found. Config path:"
+        "\n$configPath",
+      );
+
+      return <dynamic, dynamic>{};
+    }
+
     config = loadYaml(configFile.readAsStringSync()) as Map;
 
     if (config[Constants.betterImports] == null) {
@@ -170,7 +170,7 @@ class Cfg {
 
     if (!configFile.existsSync()) {
       log.severe(
-        "External config file could not be found. Config path:"
+        "┠─── External config file could not be found. Config path:"
         "\n$configPath",
       );
 
@@ -186,7 +186,7 @@ class Cfg {
     _biYamlSection = _yamlConfig![Constants.betterImports];
     if (_biYamlSection == null) {
       log.warning(
-        "Could not find config section in the config file. Config path:"
+        "┠─ Could not find config section in the config file. Config path:"
         "\n$configPath",
       );
     }

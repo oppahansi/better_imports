@@ -242,15 +242,6 @@ better_imports:
 
   # Folder names used for collecting dart files
   folders:
-    - lib
-    - bin
-    - res
-    - example
-    - test
-    - tests
-    - integration_test
-    - integration_tests
-    - test_driver
 
   # File names which should be sorted
   files:

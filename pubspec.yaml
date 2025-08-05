@@ -1,6 +1,6 @@
 name: better_imports
 description: A CLI tool to automatically sort and organize Dart imports in your project files, supporting custom rules, configs, and formatting options.
-version: 1.3.9
+version: 1.4.0
 repository: https://github.com/oppahansi/better_imports
 
 executables:

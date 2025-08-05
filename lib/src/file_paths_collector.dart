@@ -29,6 +29,20 @@ class FilePathsCollector {
   void _collectInFolders() {
     log.fine("┠ Collecting files in all folders..");
 
+    if (cfg.folders.isEmpty) {
+      log.fine("┠ No folders specified, collecting files in root directory..");
+
+      var entities = Directory(cfg.sortPath).listSync(recursive: cfg.recursive);
+
+      for (FileSystemEntity entity in entities) {
+        if (entity is File && entity.path.endsWith('.dart')) {
+          _allFilePaths.add(entity.path);
+        }
+      }
+
+      return;
+    }
+
     for (var folder in cfg.folders) {
       var folderPath = '${cfg.sortPath}${Platform.pathSeparator}$folder';
 
