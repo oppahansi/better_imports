@@ -1,5 +1,9 @@
 ## 1.4.0
 
+- Updated project name from pubspec.yaml if it differs from the currentfolder name
+
+## 1.4.0
+
 - Remove default folders in cfg to enable support for different project structures
 
 ## 1.3.9
