@@ -148,6 +148,14 @@ class Cfg {
 
     config = loadYaml(configFile.readAsStringSync()) as Map;
 
+    var pubSpecName = config[Constants.nameKey] as String;
+    if (pubSpecName != projectName) {
+      log.fine(
+        "┠─── Project name was set to pubspec.yaml name: $pubSpecName",
+      );
+      projectName = pubSpecName;
+    }
+
     if (config[Constants.betterImports] == null) {
       return config;
     }
