@@ -1,4 +1,4 @@
-## 1.4.0
+## 1.4.1
 
 - Updated project name from pubspec.yaml if it differs from the currentfolder name
 
