@@ -32,7 +32,7 @@ class Cfg {
   late Map<dynamic, dynamic>? _yamlConfig;
   late Map<dynamic, dynamic>? _biYamlSection;
 
-  String sdkVersionForParsing = "3.8.2";
+  String sdkVersionForParsing = "3.9.2";
 
   Cfg(this._argResults) {
     _setDefaults();
