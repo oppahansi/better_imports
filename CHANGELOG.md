@@ -1,5 +1,9 @@
 ## 1.4.2
 
+- Bump sdk version for dart formatter to 3.9.2
+
+## 1.4.2
+
 - Updated project name from pubspec.yaml if it differs from the currentfolder name
 
 ## 1.4.0
