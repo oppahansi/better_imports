@@ -12,6 +12,7 @@ import 'package:better_imports/src/log.dart';
 
 var logging = false;
 
+/// Manages configuration by merging defaults, config file values, and command-line arguments.
 class Cfg {
   late String configPath;
   late String sortPath;
@@ -35,9 +36,7 @@ class Cfg {
   String sdkVersionForParsing = "3.9.2";
 
   Cfg(this._argResults) {
-    _setDefaults();
-
-    _setProvidedValues();
+    _initializeConfig();
   }
 
   void _setDefaults() {
@@ -80,28 +79,36 @@ class Cfg {
     return Directory.current.path;
   }
 
-  void _setProvidedValues() {
+  void _initializeConfig() {
     log.fine("┠ Setting provided cfg values..");
 
-    configPath = '$sortPath${Platform.pathSeparator}pubspec.yaml';
+    // Set defaults first
+    _setDefaults();
 
+    // Load YAML config, which may override some defaults like projectName
+    configPath = '$sortPath${Platform.pathSeparator}pubspec.yaml';
     _setYamlConfig();
     _setBetterImportsYaml();
 
     if (_yamlConfig == null || _biYamlSection == null) {
       log.warning(
-        "Default values will be used if no cli arguments are passed in.",
+        "Could not find 'better_imports' section in config. Default values will be used if no cli arguments are passed in.",
       );
     }
 
-    _setProjectName();
-
-    _setRecursive();
-    _setComments();
-    _setSilent();
-    _setTrace();
-    _setRelative();
-    _setDryRun();
+    // Override defaults with values from config file and then CLI arguments.
+    // CLI arguments have the highest precedence.
+    projectName = _getScalarValue(
+        Constants.projectNameKey, Constants.projectNameOption, projectName);
+    recursive = _getScalarValue(
+        Constants.recursiveFlag, Constants.recursiveFlag, recursive);
+    comments = _getScalarValue(
+        Constants.commentsFlag, Constants.commentsFlag, comments);
+    silent =
+        _getScalarValue(Constants.silentFlag, Constants.silentFlag, silent);
+    relative = _getScalarValue(
+        Constants.relativeFlag, Constants.relativeFlag, relative);
+    dryRun = _getScalarValue(Constants.dryRunKey, Constants.dryRunFlag, dryRun);
 
     _setFolders();
 
@@ -109,6 +116,12 @@ class Cfg {
     _setIgnoreFiles();
     _setFilesLike();
     _setIgnoredFilesLike();
+
+    // Trace flag is special as it affects logging globally
+    trace = _getScalarValue(Constants.traceFlag, Constants.traceFlag, trace);
+    if (trace) {
+      logging = true;
+    }
   }
 
   void _setYamlConfig() {
@@ -200,102 +213,31 @@ class Cfg {
     }
   }
 
-  void _setProjectName() {
-    log.fine("┠─ Setting project name..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.projectNameKey] != null) {
-      var cfgValue = _biYamlSection![Constants.projectNameKey] as String;
-      if (cfgValue.isNotEmpty) {
-        projectName = _biYamlSection![Constants.projectNameKey];
+  /// Gets a scalar value, prioritizing CLI arguments, then YAML config, then a default value.
+  T _getScalarValue<T>(String yamlKey, String cliKey, T defaultValue) {
+    if (_argResults.wasParsed(cliKey)) {
+      final cliValue = _argResults[cliKey];
+      // Special case for project_name which can be an empty string from CLI
+      if (cliKey == Constants.projectNameOption &&
+          (cliValue as String).isNotEmpty) {
+        return cliValue as T;
+      } else if (cliKey != Constants.projectNameOption) {
+        return cliValue as T;
       }
     }
 
-    if (_argResults.wasParsed(Constants.projectNameOption)) {
-      projectName = _argResults[Constants.projectNameOption];
-    }
-  }
-
-  void _setRecursive() {
-    log.fine("┠─ Setting recursive..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.recursiveFlag] != null) {
-      recursive = _biYamlSection![Constants.recursiveFlag];
+    final yamlValue = _biYamlSection?[yamlKey];
+    if (yamlValue != null) {
+      // Special case for project_name which can be an empty string in yaml
+      if (yamlKey == Constants.projectNameKey &&
+          (yamlValue as String).isNotEmpty) {
+        return yamlValue as T;
+      } else if (yamlKey != Constants.projectNameKey) {
+        return yamlValue as T;
+      }
     }
 
-    if (_argResults.wasParsed(Constants.recursiveFlag)) {
-      recursive = _argResults[Constants.recursiveFlag];
-    }
-  }
-
-  void _setComments() {
-    log.fine("┠─ Setting comments..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.commentsFlag] != null) {
-      comments = _biYamlSection![Constants.commentsFlag];
-    }
-
-    if (_argResults.wasParsed(Constants.commentsFlag)) {
-      comments = _argResults[Constants.commentsFlag];
-    }
-  }
-
-  void _setSilent() {
-    log.fine("┠─ Setting silent..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.silentFlag] != null) {
-      silent = _biYamlSection![Constants.silentFlag];
-    }
-
-    if (_argResults.wasParsed(Constants.silentFlag)) {
-      silent = _argResults[Constants.silentFlag];
-    }
-  }
-
-  void _setTrace() {
-    log.fine("┠─ Setting trace..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.traceFlag] != null) {
-      trace = _biYamlSection![Constants.traceFlag];
-    }
-
-    if (_argResults.wasParsed(Constants.traceFlag)) {
-      trace = _argResults[Constants.traceFlag];
-    }
-
-    if (trace) {
-      logging = true;
-    }
-  }
-
-  void _setRelative() {
-    log.fine("┠─ Setting relative..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.relativeFlag] != null) {
-      relative = _biYamlSection![Constants.relativeFlag];
-    }
-
-    if (_argResults.wasParsed(Constants.relativeFlag)) {
-      relative = _argResults[Constants.relativeFlag];
-    }
-  }
-
-  void _setDryRun() {
-    log.fine("┠─ Setting dry run..");
-
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.dryRunKey] != null) {
-      dryRun = _biYamlSection![Constants.dryRunKey];
-    }
-
-    if (_argResults.wasParsed(Constants.dryRunFlag)) {
-      dryRun = _argResults[Constants.dryRunFlag];
-    }
+    return defaultValue;
   }
 
   void _setFolders() {
@@ -303,148 +245,80 @@ class Cfg {
 
     if (_biYamlSection != null &&
         _biYamlSection![Constants.foldersKey] != null) {
-      var cfgValues = _biYamlSection![Constants.foldersKey];
-
-      if (cfgValues.isNotEmpty) {
-        folders.clear();
-      }
-
-      for (var folder in _biYamlSection![Constants.foldersKey]) {
-        if (!folders.contains((folder as String).trim())) {
-          folders.add((folder).trim());
-        }
-      }
+      folders = (_biYamlSection![Constants.foldersKey] as YamlList)
+          .map((item) => (item as String).trim())
+          .toList();
     }
 
     if (_argResults.wasParsed(Constants.foldersOption)) {
-      folders.clear();
-
-      var argValues = (_argResults[Constants.foldersOption] as String).split(
-        ",",
-      );
-
-      for (var argValue in argValues) {
-        folders.add(argValue.trim());
-      }
+      folders = (_argResults[Constants.foldersOption] as String)
+          .split(",")
+          .map((item) => item.trim())
+          .toList();
     }
   }
 
   void _setFiles() {
     log.fine("┠─ Setting files..");
-
     if (_biYamlSection != null && _biYamlSection![Constants.filesKey] != null) {
-      var cfgValues = _biYamlSection![Constants.filesKey];
-
-      if (cfgValues.isNotEmpty) {
-        files.clear();
-      }
-
-      for (var file in _biYamlSection![Constants.filesKey]) {
-        if (!files.contains((file).trim())) {
-          files.add((file).trim());
-        }
-      }
+      files = (_biYamlSection![Constants.filesKey] as YamlList)
+          .map((item) => (item as String).trim())
+          .toList();
     }
-
     if (_argResults.wasParsed(Constants.filesOption)) {
-      files.clear();
-
-      var argValues = (_argResults[Constants.filesOption] as String).split(",");
-
-      for (var argValue in argValues) {
-        files.add(argValue.trim());
-      }
+      files = (_argResults[Constants.filesOption] as String)
+          .split(",")
+          .map((item) => item.trim())
+          .toList();
     }
   }
 
   void _setIgnoreFiles() {
     log.fine("┠─ Setting ignore files..");
-
     if (_biYamlSection != null &&
         _biYamlSection![Constants.ignoreFilesKey] != null) {
-      var cfgValues = _biYamlSection![Constants.ignoreFilesKey];
-
-      if (cfgValues.isNotEmpty) {
-        ignoreFiles.clear();
-      }
-
-      for (var file in _biYamlSection![Constants.ignoreFilesKey]) {
-        if (!files.contains((file).trim())) {
-          ignoreFiles.add((file).trim());
-        }
-      }
+      ignoreFiles = (_biYamlSection![Constants.ignoreFilesKey] as YamlList)
+          .map((item) => (item as String).trim())
+          .toList();
     }
-
     if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
-      ignoreFiles.clear();
-
-      var argValues =
-          (_argResults[Constants.ignoreFilesOption] as String).split(",");
-
-      for (var argValue in argValues) {
-        ignoreFiles.add(argValue.trim());
-      }
+      ignoreFiles = (_argResults[Constants.ignoreFilesOption] as String)
+          .split(",")
+          .map((item) => item.trim())
+          .toList();
     }
   }
 
   void _setFilesLike() {
     log.fine("┠─ Setting files like..");
-
     if (_biYamlSection != null &&
         _biYamlSection![Constants.filesLikeKey] != null) {
-      var cfgValues = _biYamlSection![Constants.filesLikeKey];
-
-      if (cfgValues.isNotEmpty) {
-        filesLike.clear();
-      }
-
-      for (var file in _biYamlSection![Constants.filesLikeKey]) {
-        if (!filesLike.contains((file).trim())) {
-          filesLike.add((file).trim());
-        }
-      }
+      filesLike = (_biYamlSection![Constants.filesLikeKey] as YamlList)
+          .map((item) => (item as String).trim())
+          .toList();
     }
-
     if (_argResults.wasParsed(Constants.filesLikeOption)) {
-      filesLike.clear();
-
-      var argValues = (_argResults[Constants.filesLikeOption] as String).split(
-        ",",
-      );
-
-      for (var argValue in argValues) {
-        filesLike.add(argValue.trim());
-      }
+      filesLike = (_argResults[Constants.filesLikeOption] as String)
+          .split(",")
+          .map((item) => item.trim())
+          .toList();
     }
   }
 
   void _setIgnoredFilesLike() {
     log.fine("┠─ Setting ignore files like..");
-
     if (_biYamlSection != null &&
         _biYamlSection![Constants.ignoreFilesLikeKey] != null) {
-      var cfgValues = _biYamlSection![Constants.ignoreFilesLikeKey];
-
-      if (cfgValues.isNotEmpty) {
-        ignoreFilesLike.clear();
-      }
-
-      for (var ignored in _biYamlSection![Constants.ignoreFilesLikeKey]) {
-        if (!ignoreFilesLike.contains((ignored).trim())) {
-          ignoreFilesLike.add((ignored).trim());
-        }
-      }
+      ignoreFilesLike =
+          (_biYamlSection![Constants.ignoreFilesLikeKey] as YamlList)
+              .map((item) => (item as String).trim())
+              .toList();
     }
-
     if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
-      ignoreFilesLike.clear();
-
-      var argValues =
-          (_argResults[Constants.ignoreFilesLikeOption] as String).split(",");
-
-      for (var argValue in argValues) {
-        ignoreFilesLike.add(argValue.trim());
-      }
+      ignoreFilesLike = (_argResults[Constants.ignoreFilesLikeOption] as String)
+          .split(",")
+          .map((item) => item.trim())
+          .toList();
     }
   }
 
