@@ -18,6 +18,10 @@ jobs:
             output-name: better_imports_linux
           - os: macOS-latest
             output-name: better_imports_macos
+            arch: x64
+          - os: macOS-latest
+            output-name: better_imports_macos_arm64
+            arch: arm64
           - os: windows-latest
             output-name: better_imports.exe
 
@@ -43,7 +47,14 @@ jobs:
 
       # Compile executables
       - run: mkdir build
-      - run: dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }}
+      - name: Compile executable
+        run: |
+          if [[ "${{ matrix.os }}" == "macOS-latest" && "${{ matrix.arch }}" == "arm64" ]]; then
+            dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }} --target-os macos --target-arch arm64
+          else
+            dart compile exe bin/better_imports.dart -v -o build/${{ matrix.output-name }}
+          fi
+        shell: bash
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.output-name }}
