@@ -45,10 +45,20 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     languageVersion: Version.parse(cfg.sdkVersionForParsing),
   );
 
-  var directivesEndIndex = compiledCode.directives.last.end;
+  var lastDirective = compiledCode.directives.last.toString();
+  int lastDirectiveIndex;
+  if (lastDirective.length > formatter.pageWidth) {
+    var cutOffIndex = (formatter.pageWidth / 2).toInt();
+    var directiveMarkerIndex = lastDirective.substring(0, cutOffIndex);
+
+    lastDirectiveIndex = code.indexOf(directiveMarkerIndex);
+  } else {
+    lastDirectiveIndex = code.indexOf(lastDirective);
+  }
+
+  var directivesEndIndex = code.indexOf(';', lastDirectiveIndex) + 1;
   var directivesCode = code.substring(0, directivesEndIndex);
-  var compiledDirectives =
-      parseString(content: directivesCode, throwIfDiagnostics: false).unit;
+  var compiledDirectives = parseString(content: directivesCode).unit;
   var directivesWithComments = extractor.extract(
     compiledDirectives,
     filePaths,

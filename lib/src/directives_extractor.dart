@@ -100,7 +100,7 @@ DirectiveType _getDirectiveType(
     return DirectiveType.part;
   } else if (directiveValue.contains('dart:')) {
     return DirectiveType.dart;
-  } else if (directiveValue.startsWith("import 'package:flutter/")) {
+  } else if (directiveValue.contains('package:flutter/')) {
     return DirectiveType.flutter;
   } else if (directiveValue.contains('package:${cfg.projectName}')) {
     return DirectiveType.project;
