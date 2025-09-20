@@ -121,12 +121,82 @@ String _convertToPackageProjectImport(
   }
 
   if (directiveValue.contains("..")) {
-    return directiveValue.replaceFirst("..", "package:${cfg.projectName}");
+    final rest = directiveValue.substring(7); // Skip "import "
+    final quote = rest[0];
+    final closingQuoteIndex = rest.indexOf(quote, 1);
+    if (closingQuoteIndex == -1) return directiveValue;
+
+    final uri = rest.substring(1, closingQuoteIndex);
+    final trailing = rest.substring(closingQuoteIndex + 1);
+
+    final pathSegments = path.split('/');
+    final uriSegments = uri.split('/');
+
+    // Remove the file name from the path
+    pathSegments.removeLast();
+
+    // Resolve `../` and `./` in the URI
+    for (var segment in uriSegments) {
+      if (segment == '..') {
+        pathSegments.removeLast();
+      } else if (segment != '.') {
+        pathSegments.add(segment);
+      }
+    }
+
+    // Find the relative path within the `lib` directory
+    final libIndex = pathSegments.indexOf('lib');
+    if (libIndex == -1) return directiveValue;
+
+    final packagePath = pathSegments.sublist(libIndex + 1).join('/');
+    return "import ${quote}package:${cfg.projectName}/$packagePath$quote$trailing";
   } else {
-    return directiveValue.replaceFirst(
-      "import '",
-      "import 'package:${cfg.projectName}/",
-    );
+    final rest = directiveValue.substring(7); // Skip "import "
+    final quote = rest[0];
+    final closingQuoteIndex = rest.indexOf(quote, 1);
+    if (closingQuoteIndex == -1) return directiveValue;
+
+    final uri = rest.substring(1, closingQuoteIndex);
+    final trailing = rest.substring(closingQuoteIndex + 1);
+
+    if (uri.startsWith('package:')) {
+      return directiveValue;
+    }
+
+    // Handle same-folder imports
+    if (!uri.contains('/')) {
+      final pathSegments = path.split('/');
+
+      pathSegments.removeLast(); // Remove the current file name
+      pathSegments.add(uri); // Add the relative file name
+
+      final libIndex = pathSegments.indexOf('lib');
+
+      if (libIndex == -1) {
+        return directiveValue;
+      }
+
+      final packagePath = pathSegments.sublist(libIndex + 1).join('/');
+      return "import ${quote}package:${cfg.projectName}/$packagePath$quote$trailing";
+    }
+
+    // Remove any leading slashes and optional `lib/`
+    var remainder = uri;
+    while (remainder.startsWith('/')) {
+      remainder = remainder.substring(1);
+    }
+    if (remainder.startsWith('lib/')) {
+      remainder = remainder.substring(4);
+    }
+    while (remainder.startsWith('/')) {
+      remainder = remainder.substring(1);
+    }
+    if (remainder.isEmpty) {
+      return directiveValue;
+    }
+
+    final newUri = 'package:${cfg.projectName}/$remainder';
+    return 'import $quote$newUri$quote$trailing';
   }
 }
 

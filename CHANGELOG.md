@@ -1,4 +1,8 @@
-## 1.4.2
+## 1.4.4
+
+- Fix converting relative paths to project package imports
+
+## 1.4.3
 
 - Bump sdk version for dart formatter to 3.9.2
 
