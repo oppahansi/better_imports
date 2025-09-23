@@ -126,7 +126,6 @@ String _extractFileName(String directiveValue) {
 String _extractPathFromImport(String directiveValue) {
   var matches = RegExp(r'''['"]([^'"]*)['"]''').allMatches(directiveValue);
   if (matches.isEmpty) {
-    print("No matches found in directive: $directiveValue");
     return '';
   }
   return matches.first.group(1) ?? '';
