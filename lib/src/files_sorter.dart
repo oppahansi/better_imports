@@ -3,6 +3,7 @@ import 'dart:io';
 
 // Package Imports
 import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -41,6 +42,12 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     return SortedResult(file: File(path), sorted: code, changed: false);
   }
 
+  // Skip barrel files (files that only contain exports and optional library directive)
+  if (_isBarrelFile(compiledCode)) {
+    log.fine("┠─ Detected barrel file. Skipping processing: $path");
+    return SortedResult(file: File(path), sorted: code, changed: false);
+  }
+
   var formatter = DartFormatter(
     languageVersion: Version.parse(cfg.sdkVersionForParsing),
   );
@@ -69,6 +76,21 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     sorted: sortedCode,
     changed: code.compareTo(sortedCode) != 0,
   );
+}
+
+bool _isBarrelFile(CompilationUnit unit) {
+  final directives = unit.directives;
+  if (directives.isEmpty) return false;
+
+  final hasExport = directives.any((d) => d is ExportDirective);
+  if (!hasExport) return false;
+
+  final onlyExportsAndLibrary =
+      directives.every((d) => d is ExportDirective || d is LibraryDirective);
+
+  final hasDeclarations = unit.declarations.isNotEmpty;
+
+  return onlyExportsAndLibrary && !hasDeclarations;
 }
 
 bool _areImportsEmpty(

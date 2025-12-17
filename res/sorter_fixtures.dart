@@ -270,3 +270,9 @@ import '../res/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/sorte
 void main() {
 }
 """;
+
+const barrelFileFixture = r"""
+export 'cfg_test.dart';
+export 'file_collector_test.dart' hide main;
+export 'sorter_test.dart' hide main;
+""";

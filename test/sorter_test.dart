@@ -172,4 +172,31 @@ void main() {
       expect(sorted.first.sorted, sortedFileLongDirectives);
     });
   });
+
+  group("Sorter Tests. Barrel file.", () {
+    setUp(() {
+      File("res/unsorted.dart").writeAsStringSync(barrelFileFixture);
+    });
+
+    tearDown(() {
+      File("res/unsorted.dart").delete();
+    });
+
+    test("Sorting file. Barrel file.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filtered.length);
+
+      expect(sorted.first.sorted, barrelFileFixture);
+    });
+  });
 }
