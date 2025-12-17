@@ -1,3 +1,7 @@
+## 1.4.5
+
+- Do not process barrel files with export statements
+
 ## 1.4.4
 
 - Fix converting relative paths to project package imports
