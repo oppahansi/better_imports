@@ -1,3 +1,6 @@
+## 1.5.0
+- File Sorter: Language version selection is now dynamic and picks the current dart sdk version on the machine.
+
 ## 1.4.5
 
 - Do not process barrel files with export statements

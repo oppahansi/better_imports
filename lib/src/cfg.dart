@@ -33,7 +33,9 @@ class Cfg {
   late Map<dynamic, dynamic>? _yamlConfig;
   late Map<dynamic, dynamic>? _biYamlSection;
 
-  String sdkVersionForParsing = "3.9.2";
+  final sdkVersionForParsing =
+      RegExp(r'^\d+\.\d+\.\d+').firstMatch(Platform.version)?.group(0) ??
+      Platform.version.split(' ').first;
 
   Cfg(this._argResults) {
     _initializeConfig();
@@ -99,15 +101,30 @@ class Cfg {
     // Override defaults with values from config file and then CLI arguments.
     // CLI arguments have the highest precedence.
     projectName = _getScalarValue(
-        Constants.projectNameKey, Constants.projectNameOption, projectName);
+      Constants.projectNameKey,
+      Constants.projectNameOption,
+      projectName,
+    );
     recursive = _getScalarValue(
-        Constants.recursiveFlag, Constants.recursiveFlag, recursive);
+      Constants.recursiveFlag,
+      Constants.recursiveFlag,
+      recursive,
+    );
     comments = _getScalarValue(
-        Constants.commentsFlag, Constants.commentsFlag, comments);
-    silent =
-        _getScalarValue(Constants.silentFlag, Constants.silentFlag, silent);
+      Constants.commentsFlag,
+      Constants.commentsFlag,
+      comments,
+    );
+    silent = _getScalarValue(
+      Constants.silentFlag,
+      Constants.silentFlag,
+      silent,
+    );
     relative = _getScalarValue(
-        Constants.relativeFlag, Constants.relativeFlag, relative);
+      Constants.relativeFlag,
+      Constants.relativeFlag,
+      relative,
+    );
     dryRun = _getScalarValue(Constants.dryRunKey, Constants.dryRunFlag, dryRun);
 
     _setFolders();
@@ -163,9 +180,7 @@ class Cfg {
 
     var pubSpecName = config[Constants.nameKey] as String;
     if (pubSpecName != projectName) {
-      log.fine(
-        "┠─── Project name was set to pubspec.yaml name: $pubSpecName",
-      );
+      log.fine("┠─── Project name was set to pubspec.yaml name: $pubSpecName");
       projectName = pubSpecName;
     }
 
