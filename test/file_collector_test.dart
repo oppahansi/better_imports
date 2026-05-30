@@ -22,7 +22,7 @@ void main() {
     test("files arg provided", () {
       var args = <String>[
         "--files",
-        "cfg, cmds.dart, ${path.join('lib', 'src', 'arg_parser.dart')}"
+        "cfg, cmds.dart, ${path.join('lib', 'src', 'arg_parser.dart')}",
       ];
       var argResult = argParser.parse(args);
       var cfg = Cfg(argResult);

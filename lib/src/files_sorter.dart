@@ -54,8 +54,10 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   var directivesEndIndex = compiledCode.directives.last.end;
   var directivesCode = code.substring(0, directivesEndIndex);
-  var compiledDirectives =
-      parseString(content: directivesCode, throwIfDiagnostics: false).unit;
+  var compiledDirectives = parseString(
+    content: directivesCode,
+    throwIfDiagnostics: false,
+  ).unit;
   var directivesWithComments = extractor.extract(
     compiledDirectives,
     filePaths,
@@ -85,8 +87,9 @@ bool _isBarrelFile(CompilationUnit unit) {
   final hasExport = directives.any((d) => d is ExportDirective);
   if (!hasExport) return false;
 
-  final onlyExportsAndLibrary =
-      directives.every((d) => d is ExportDirective || d is LibraryDirective);
+  final onlyExportsAndLibrary = directives.every(
+    (d) => d is ExportDirective || d is LibraryDirective,
+  );
 
   final hasDeclarations = unit.declarations.isNotEmpty;
 
