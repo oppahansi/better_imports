@@ -50,8 +50,8 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 // Relative Project Imports
-import 'cfg_test.dart';
 import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
 
 part 'test.freezed.dart';
 part 'test.g.dart';
@@ -86,8 +86,8 @@ import 'package:test/test.dart';
 import '../lib/lib.dart';
 
 // Relative Project Imports
-import 'cfg_test.dart';
 import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
 
 part 'test.freezed.dart';
 part 'test.g.dart';
@@ -118,8 +118,8 @@ import 'package:test/test.dart';
  */
 import 'package:better_imports/lib.dart';
 
-import 'cfg_test.dart';
 import '../res/sorter_fixtures.dart';
+import 'cfg_test.dart';
 
 part 'test.freezed.dart';
 part 'test.g.dart';
@@ -263,8 +263,8 @@ import 'package:test/test.dart';
 import 'package:better_imports/lib.dart';
 
 // Relative Project Imports
-import 'cfg_test.dart';
 import '../res/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/dart/sorter_fixtures.dart';
+import 'cfg_test.dart';
 
 // Test Comment after imports
 void main() {

@@ -90,6 +90,52 @@ void main() {
 
       expect(sorted.first.sorted, sortedFileWithCommentsRelative);
     });
+
+    test("Sorting file. Complies with directives_ordering linter rule.", () {
+      final unsorted = """
+import 'package:test/test.dart';
+import 'dart:io';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'dart:async';
+
+void main() {}
+""";
+      final file = File("res/unsorted_directives.dart");
+      file.writeAsStringSync(unsorted);
+
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+      cfg.folders = ["res"];
+      cfg.files = ["unsorted_directives.dart"];
+      cfg.comments = false;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, 1);
+      final sortedContent = sorted.first.sorted;
+      file.writeAsStringSync(sortedContent);
+
+      final analysisOptions = File("res/analysis_options.yaml");
+      analysisOptions.writeAsStringSync("""
+linter:
+  rules:
+    - directives_ordering
+""");
+
+      final result = Process.runSync('dart', ['analyze', file.path]);
+      
+      expect(
+        result.stdout.toString().contains('directives_ordering'),
+        isFalse,
+        reason: 'The sorted file should not violate directives_ordering.\nAnalyzer output: ${result.stdout}',
+      );
+
+      file.deleteSync();
+      analysisOptions.deleteSync();
+    });
   });
 
   group("Sorter Tests. Multiline with show. Issue #4", () {
