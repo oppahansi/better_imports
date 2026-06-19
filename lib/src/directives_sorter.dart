@@ -1,3 +1,6 @@
+// Package Imports
+import 'package:path/path.dart' as p;
+
 // Project Imports
 import 'package:better_imports/src/cfg.dart';
 import 'package:better_imports/src/constants.dart';
@@ -94,11 +97,43 @@ String _convertToRelativeProjectImport(
     return importLine;
   }
 
-  if (importLine.contains("'package:${cfg.projectName}")) {
-    if (!path.contains("lib")) {
-      return importLine.replaceFirst("package:${cfg.projectName}", "../lib");
-    } else {
-      return importLine.replaceFirst("package:${cfg.projectName}", "..");
+  final packagePrefix = "package:${cfg.projectName}";
+  final startIndex = importLine.indexOf(packagePrefix);
+
+  if (startIndex != -1) {
+    final quote = importLine[startIndex - 1]; // "import '" -> "'"
+    final endIndex = importLine.indexOf(
+      quote,
+      startIndex + packagePrefix.length,
+    );
+
+    if (endIndex != -1) {
+      final packagePathSegment = importLine.substring(
+        startIndex + packagePrefix.length,
+        endIndex,
+      );
+
+      final importPath = packagePathSegment.startsWith('/')
+          ? packagePathSegment.substring(1)
+          : packagePathSegment;
+
+      final importedFilePath = importPath.isEmpty ? "lib" : "lib/$importPath";
+
+      final currentDir = p.dirname(path);
+      final relativeCurrentDir = p.isAbsolute(currentDir)
+          ? p.relative(currentDir, from: p.current)
+          : currentDir;
+      final relativeCurrentDirPosix = relativeCurrentDir.replaceAll('\\', '/');
+
+      final relativePath = p.posix.relative(
+        importedFilePath,
+        from: relativeCurrentDirPosix,
+      );
+
+      final prefix = importLine.substring(0, startIndex);
+      final trailing = importLine.substring(endIndex);
+
+      return "$prefix$relativePath$trailing";
     }
   }
 
