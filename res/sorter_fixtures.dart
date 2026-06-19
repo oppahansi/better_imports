@@ -291,3 +291,18 @@ import '../folder_c/import_file.dart';
 void main() {
 }
 """;
+
+const unsortedFileLongPackageImport = r"""
+import 'package:better_imports/very_long_folder_name/parts_view_that_is_over_80_characters_long_and_should_convert.dart';
+
+void main() {
+}
+""";
+
+const sortedFileLongPackageImport = r"""
+// Project Imports
+import '../lib/very_long_folder_name/parts_view_that_is_over_80_characters_long_and_should_convert.dart';
+
+void main() {
+}
+""";

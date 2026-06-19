@@ -94,9 +94,13 @@ DirectiveType _getDirectiveType(
   FilePaths filePaths,
   Cfg cfg,
 ) {
-  if (directiveValue.contains("library")) {
+  if (directiveValue.startsWith("library ") ||
+      directiveValue.startsWith("library\n") ||
+      directiveValue.startsWith("library\r")) {
     return DirectiveType.library;
-  } else if (directiveValue.contains("part")) {
+  } else if (directiveValue.startsWith("part ") ||
+      directiveValue.startsWith("part\n") ||
+      directiveValue.startsWith("part\r")) {
     return DirectiveType.part;
   } else if (directiveValue.contains('dart:')) {
     return DirectiveType.dart;
@@ -106,7 +110,17 @@ DirectiveType _getDirectiveType(
     return DirectiveType.project;
   } else if (!directiveValue.contains('package:')) {
     var fileName = _extractFileName(directiveValue);
-    var filePath = filePaths.all.firstWhere((path) => path.contains(fileName));
+    var filePath = filePaths.all.firstWhere(
+      (path) => path.contains(fileName),
+      orElse: () => '',
+    );
+
+    if (filePath.isEmpty) {
+      log.fine(
+        "┠── Falling back to relative for unknown import: $directiveValue",
+      );
+      return DirectiveType.relative;
+    }
 
     if (filePath.contains("lib/")) {
       return DirectiveType.project;
@@ -128,7 +142,7 @@ String _extractPathFromImport(String directiveValue) {
   if (matches.isEmpty) {
     return '';
   }
-  return matches.first.group(1) ?? '';
+  return matches.map((m) => m.group(1) ?? '').join('');
 }
 
 void _extractDocCommentsFromLibraryDirective(
