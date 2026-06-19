@@ -235,4 +235,34 @@ void main() {
       expect(sorted.first.sorted, sortedNestedRelativeFile);
     });
   });
+
+  group("Sorter Tests. Long package import converted to relative.", () {
+    setUp(() {
+      File(
+        "res/unsorted.dart",
+      ).writeAsStringSync(unsortedFileLongPackageImport);
+    });
+
+    tearDown(() {
+      File("res/unsorted.dart").delete();
+    });
+
+    test("Sorting file. Long package import converted to relative.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["test", "res", "lib"];
+      cfg.files = ["unsorted.dart"];
+      cfg.relative = true;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, collected.filtered.length);
+
+      expect(sorted.first.sorted, sortedFileLongPackageImport);
+    });
+  });
 }
