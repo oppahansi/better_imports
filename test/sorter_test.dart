@@ -199,4 +199,40 @@ void main() {
       expect(sorted.first.sorted, barrelFileFixture);
     });
   });
+  group("Sorter Tests. Nested relative imports.", () {
+    final nestedFileDir = Directory("lib/folder_a/folder_b/folder_d");
+    final nestedFile = File("${nestedFileDir.path}/current_file.dart");
+    final folderA = Directory("lib/folder_a");
+
+    setUp(() {
+      if (folderA.existsSync()) {
+        folderA.deleteSync(recursive: true);
+      }
+      nestedFileDir.createSync(recursive: true);
+      nestedFile.writeAsStringSync(unsortedNestedRelativeFile);
+    });
+
+    tearDown(() {
+      if (folderA.existsSync()) {
+        folderA.deleteSync(recursive: true);
+      }
+    });
+
+    test("Sorting file. Nested relative import.", () {
+      var argResult = argParser.parse([]);
+      var cfg = Cfg(argResult);
+
+      cfg.folders = ["lib/folder_a"];
+      cfg.files = ["current_file.dart"];
+      cfg.relative = true;
+
+      var collector = FilePathsCollector(cfg: cfg);
+      var collected = collector.collect();
+
+      var sorted = sort(collected, cfg);
+
+      expect(sorted.length, 1);
+      expect(sorted.first.sorted, sortedNestedRelativeFile);
+    });
+  });
 }

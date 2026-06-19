@@ -276,3 +276,18 @@ export 'cfg_test.dart';
 export 'file_collector_test.dart' hide main;
 export 'sorter_test.dart' hide main;
 """;
+
+const unsortedNestedRelativeFile = r"""
+import 'package:better_imports/folder_a/folder_b/folder_c/import_file.dart';
+
+void main() {
+}
+""";
+
+const sortedNestedRelativeFile = r"""
+// Project Imports
+import '../folder_c/import_file.dart';
+
+void main() {
+}
+""";
