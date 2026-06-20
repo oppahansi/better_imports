@@ -249,7 +249,8 @@ void _add(
         buffer.writeln(directiveTypeComment);
       }
 
-      for (var directive in directives.keys) {
+      var keys = directives.keys.toList()..sort();
+      for (var directive in keys) {
         var comments = directives[directive]!;
         if (comments.isNotEmpty) {
           buffer.writeln(comments.join("\n"));
