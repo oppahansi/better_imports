@@ -18,6 +18,18 @@
         "maintenance",
         "review"
       ]
+    },
+    {
+      "login": "burhankhanzada",
+      "name": "Burhan Khanzada",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18241005?v=4",
+      "profile": "https://burhan-khanzada.web.app/",
+      "contributions": [
+        "bug",
+        "code",
+        "test",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
