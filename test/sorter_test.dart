@@ -126,11 +126,12 @@ linter:
 """);
 
       final result = Process.runSync('dart', ['analyze', file.path]);
-      
+
       expect(
         result.stdout.toString().contains('directives_ordering'),
         isFalse,
-        reason: 'The sorted file should not violate directives_ordering.\nAnalyzer output: ${result.stdout}',
+        reason:
+            'The sorted file should not violate directives_ordering.\nAnalyzer output: ${result.stdout}',
       );
 
       file.deleteSync();

@@ -1,3 +1,14 @@
+## 1.6.0
+- Fix #10 Nestest Relative Import by @burhankhanzada in https://github.com/oppahansi/better_imports/pull/11
+- Fix #12: Long package import converion to relative import by @burhankhanzada in https://github.com/oppahansi/better_imports/pull/13
+- docs: add burhankhanzada as a contributor for bug, code, and 2 more by @allcontributors[bot] in https://github.com/oppahansi/better_imports/pull/15
+- fix: sort directive keys alphabetically to comply with the directives_ordering linter rule by @burhankhanzada in https://github.com/oppahansi/better_imports/pull/14
+
+**New Contributors**
+- @burhankhanzada made their first contribution in https://github.com/oppahansi/better_imports/pull/11
+
+**Full Changelog**: https://github.com/oppahansi/better_imports/compare/1.5.0...1.6.0
+
 ## 1.5.0
 - File Sorter: Language version selection is now dynamic and picks the current dart sdk version on the machine.
 
