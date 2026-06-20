@@ -271,6 +271,7 @@ better_imports:
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/oppahansi"><img src="https://avatars.githubusercontent.com/u/3140621?v=4?s=100" width="100px;" alt="Alexander Schellenberg"/><br /><sub><b>Alexander Schellenberg</b></sub></a><br /><a href="https://github.com/oppahansi/better_imports/commits?author=oppahansi" title="Code">💻</a> <a href="https://github.com/oppahansi/better_imports/commits?author=oppahansi" title="Tests">⚠️</a> <a href="#infra-oppahansi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-oppahansi" title="Maintenance">🚧</a> <a href="https://github.com/oppahansi/better_imports/pulls?q=is%3Apr+reviewed-by%3Aoppahansi" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://burhan-khanzada.web.app/"><img src="https://avatars.githubusercontent.com/u/18241005?v=4?s=100" width="100px;" alt="Burhan Khanzada"/><br /><sub><b>Burhan Khanzada</b></sub></a><br /><a href="https://github.com/oppahansi/better_imports/issues?q=author%3Aburhankhanzada" title="Bug reports">🐛</a> <a href="https://github.com/oppahansi/better_imports/commits?author=burhankhanzada" title="Code">💻</a> <a href="https://github.com/oppahansi/better_imports/commits?author=burhankhanzada" title="Tests">⚠️</a> <a href="#ideas-burhankhanzada" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
