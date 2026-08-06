@@ -151,10 +151,6 @@ String _convertToPackageProjectImport(
     return directiveValue;
   }
 
-  if (!directiveValue.contains("lib")) {
-    directiveValue = directiveValue.replaceFirst("lib/", "");
-  }
-
   if (directiveValue.contains("..")) {
     final rest = directiveValue.substring(7); // Skip "import "
     final quote = rest[0];

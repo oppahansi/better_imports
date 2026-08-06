@@ -1,18 +1,22 @@
 name: better_imports
 description: A CLI tool to automatically sort and organize Dart imports in your project files, supporting custom rules, configs, and formatting options.
-version: 1.6.0
+version: 1.7.0
 repository: https://github.com/oppahansi/better_imports
+topics:
+  - cli
+  - linting
+  - dart
 
 executables:
   better_imports: better_imports
 
 environment:
-  sdk: '>=3.12.0 <4.0.0' 
+  sdk: '>=3.12.0 <4.0.0'
 
 dependencies:
   analyzer: ^13.0.0
   args: ^2.5.0
-  dart_style: ^3.1.0-wip
+  dart_style: ^3.1.0
   intl: ^0.20.2
   logging: ^1.2.0
   tint: ^2.0.1
@@ -53,8 +57,8 @@ better_imports:
   # Flag to use to run a dry run without changing files
   dry_run: false
 
- # Flag to use the dart formatter after sorting imports
-  dart_fmt: true
+  # Flag to use the dart formatter after sorting imports
+  dart_fmt: false
 
   # Folder names used for collecting dart files
   folders:

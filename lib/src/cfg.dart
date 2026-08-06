@@ -23,6 +23,7 @@ class Cfg {
   late bool trace;
   late bool relative;
   late bool dryRun;
+  late bool dartFmt;
   late List<String> folders;
   late List<String> files;
   late List<String> ignoreFiles;
@@ -53,6 +54,7 @@ class Cfg {
     trace = false;
     relative = false;
     dryRun = false;
+    dartFmt = false;
 
     folders = <String>[];
     files = <String>[];
@@ -126,13 +128,33 @@ class Cfg {
       relative,
     );
     dryRun = _getScalarValue(Constants.dryRunKey, Constants.dryRunFlag, dryRun);
+    dartFmt = _getScalarValue(Constants.dartFmtKey, Constants.dartFmt, dartFmt);
 
-    _setFolders();
-
-    _setFiles();
-    _setIgnoreFiles();
-    _setFilesLike();
-    _setIgnoredFilesLike();
+    folders = _resolveListOption(
+      Constants.foldersKey,
+      Constants.foldersOption,
+      folders,
+    );
+    files = _resolveListOption(
+      Constants.filesKey,
+      Constants.filesOption,
+      files,
+    );
+    ignoreFiles = _resolveListOption(
+      Constants.ignoreFilesKey,
+      Constants.ignoreFilesOption,
+      ignoreFiles,
+    );
+    filesLike = _resolveListOption(
+      Constants.filesLikeKey,
+      Constants.filesLikeOption,
+      filesLike,
+    );
+    ignoreFilesLike = _resolveListOption(
+      Constants.ignoreFilesLikeKey,
+      Constants.ignoreFilesLikeOption,
+      ignoreFilesLike,
+    );
 
     // Trace flag is special as it affects logging globally
     trace = _getScalarValue(Constants.traceFlag, Constants.traceFlag, trace);
@@ -255,86 +277,30 @@ class Cfg {
     return defaultValue;
   }
 
-  void _setFolders() {
-    log.fine("┠─ Setting folders..");
+  /// Resolves a list-valued option, prioritizing CLI arguments, then YAML config, then the current value.
+  List<String> _resolveListOption(
+    String yamlKey,
+    String cliOption,
+    List<String> currentValue,
+  ) {
+    log.fine("┠─ Setting $yamlKey..");
 
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.foldersKey] != null) {
-      folders = (_biYamlSection![Constants.foldersKey] as YamlList)
+    var value = currentValue;
+
+    if (_biYamlSection != null && _biYamlSection![yamlKey] != null) {
+      value = (_biYamlSection![yamlKey] as YamlList)
           .map((item) => (item as String).trim())
           .toList();
     }
 
-    if (_argResults.wasParsed(Constants.foldersOption)) {
-      folders = (_argResults[Constants.foldersOption] as String)
+    if (_argResults.wasParsed(cliOption)) {
+      value = (_argResults[cliOption] as String)
           .split(",")
           .map((item) => item.trim())
           .toList();
     }
-  }
 
-  void _setFiles() {
-    log.fine("┠─ Setting files..");
-    if (_biYamlSection != null && _biYamlSection![Constants.filesKey] != null) {
-      files = (_biYamlSection![Constants.filesKey] as YamlList)
-          .map((item) => (item as String).trim())
-          .toList();
-    }
-    if (_argResults.wasParsed(Constants.filesOption)) {
-      files = (_argResults[Constants.filesOption] as String)
-          .split(",")
-          .map((item) => item.trim())
-          .toList();
-    }
-  }
-
-  void _setIgnoreFiles() {
-    log.fine("┠─ Setting ignore files..");
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.ignoreFilesKey] != null) {
-      ignoreFiles = (_biYamlSection![Constants.ignoreFilesKey] as YamlList)
-          .map((item) => (item as String).trim())
-          .toList();
-    }
-    if (_argResults.wasParsed(Constants.ignoreFilesOption)) {
-      ignoreFiles = (_argResults[Constants.ignoreFilesOption] as String)
-          .split(",")
-          .map((item) => item.trim())
-          .toList();
-    }
-  }
-
-  void _setFilesLike() {
-    log.fine("┠─ Setting files like..");
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.filesLikeKey] != null) {
-      filesLike = (_biYamlSection![Constants.filesLikeKey] as YamlList)
-          .map((item) => (item as String).trim())
-          .toList();
-    }
-    if (_argResults.wasParsed(Constants.filesLikeOption)) {
-      filesLike = (_argResults[Constants.filesLikeOption] as String)
-          .split(",")
-          .map((item) => item.trim())
-          .toList();
-    }
-  }
-
-  void _setIgnoredFilesLike() {
-    log.fine("┠─ Setting ignore files like..");
-    if (_biYamlSection != null &&
-        _biYamlSection![Constants.ignoreFilesLikeKey] != null) {
-      ignoreFilesLike =
-          (_biYamlSection![Constants.ignoreFilesLikeKey] as YamlList)
-              .map((item) => (item as String).trim())
-              .toList();
-    }
-    if (_argResults.wasParsed(Constants.ignoreFilesLikeOption)) {
-      ignoreFilesLike = (_argResults[Constants.ignoreFilesLikeOption] as String)
-          .split(",")
-          .map((item) => item.trim())
-          .toList();
-    }
+    return value;
   }
 
   @override
@@ -346,6 +312,7 @@ class Cfg {
     comments: $comments
     silent: $silent
     relative: $relative
+    dartFmt: $dartFmt
     folders: $folders
     files: $files
     ignoreFiles: $ignoreFiles

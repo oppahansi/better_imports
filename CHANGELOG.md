@@ -1,3 +1,12 @@
+## 1.7.0
+- Fix: `--dart-fmt` / `dart_fmt` was parsed and documented but never actually applied; the Dart formatter ran unconditionally regardless of the flag. It is now correctly wired up, and **defaults to `false`** (previously formatting always ran).
+- Fix: relative/project import classification could match the wrong file when one file's name was a substring of another's (e.g. `utils.dart` matching `core_utils.dart`); now matched by exact file name.
+- Fix: project-import detection could fail on Windows due to a hardcoded `/` path separator check.
+- Perf: avoid recompiling regex patterns for every collected file when filtering by `ignore-files-like` / `files-like`.
+- Perf: file-name lookup during import classification is now O(1) instead of scanning every collected file per import.
+- Chore: `dart_style` dependency no longer pins a `-wip` pre-release constraint.
+- Refactor: de-duplicated list-option config merging in `Cfg`.
+
 ## 1.6.0
 - Fix #10 Nestest Relative Import by @burhankhanzada in https://github.com/oppahansi/better_imports/pull/11
 - Fix #12: Long package import converion to relative import by @burhankhanzada in https://github.com/oppahansi/better_imports/pull/13

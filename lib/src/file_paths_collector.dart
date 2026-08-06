@@ -81,9 +81,8 @@ class FilePathsCollector {
     for (var pattern in cfg.ignoreFilesLike) {
       log.fine("┠─ Removing ignored file like: $pattern");
 
-      _filteredFilePaths.removeWhere(
-        (filePath) => RegExp(pattern).hasMatch(filePath),
-      );
+      var regex = RegExp(pattern);
+      _filteredFilePaths.removeWhere((filePath) => regex.hasMatch(filePath));
     }
   }
 
@@ -115,8 +114,7 @@ class FilePathsCollector {
   void _filterByFilesLike() {
     log.fine("┠─ Retaining only files like: ${cfg.filesLike}");
 
-    _filteredFilePaths.retainWhere(
-      (element) => RegExp(cfg.filesLike.join("|")).hasMatch(element),
-    );
+    var regex = RegExp(cfg.filesLike.join("|"));
+    _filteredFilePaths.retainWhere((element) => regex.hasMatch(element));
   }
 }

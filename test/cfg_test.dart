@@ -23,6 +23,7 @@ void main() {
       expect(cfg.relative, false);
       expect(cfg.trace, false);
       expect(cfg.dryRun, false);
+      expect(cfg.dartFmt, false);
       expect(cfg.folders, [
         "lib",
         "bin",
@@ -66,6 +67,7 @@ void main() {
         "--relative",
         "--trace",
         "--dry-run",
+        "--dart-fmt",
         "--project-name",
         "argsProjectName",
         "--folders",
@@ -89,6 +91,7 @@ void main() {
       expect(cfg.relative, true);
       expect(cfg.trace, true);
       expect(cfg.dryRun, true);
+      expect(cfg.dartFmt, true);
       expect(cfg.folders, ["lib/cmds", "lib/collectors", "lib/utils"]);
       expect(cfg.files, ["cfg", "cmds", "parser"]);
       expect(cfg.ignoreFiles, ["parser"]);

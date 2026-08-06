@@ -48,10 +48,6 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
     return SortedResult(file: File(path), sorted: code, changed: false);
   }
 
-  var formatter = DartFormatter(
-    languageVersion: Version.parse(cfg.sdkVersionForParsing),
-  );
-
   var directivesEndIndex = compiledCode.directives.last.end;
   var directivesCode = code.substring(0, directivesEndIndex);
   var compiledDirectives = parseString(
@@ -66,8 +62,14 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
 
   var sortedDirectives = sorter.sort(path, directivesWithComments, cfg);
   var remainingCode = code.substring(directivesEndIndex + 1);
-  var sortedCode =
-      formatter.format(sortedDirectives).trimLeft() + remainingCode;
+
+  var formattedDirectives = cfg.dartFmt
+      ? DartFormatter(
+          languageVersion: Version.parse(cfg.sdkVersionForParsing),
+        ).format(sortedDirectives)
+      : sortedDirectives;
+
+  var sortedCode = formattedDirectives.trimLeft() + remainingCode;
 
   if (_areImportsEmpty(directivesWithComments)) {
     return SortedResult(file: File(path), sorted: code, changed: false);

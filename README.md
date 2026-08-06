@@ -136,6 +136,7 @@ Name              Abbr                              Description
 --no-comments                                       Removes comments from import types / sections. 
 --trace                                             Prints extended logs to console.
 --dry-run                                           Prints the results of the run without writing it to the file.
+--dart-fmt                                          Runs the Dart formatter after sorting imports. Default is false.
 ```
 
 </details>
@@ -239,6 +240,9 @@ better_imports:
 
   # Flag to use to run a dry run without changing files
   dry_run: false
+
+  # Flag to use the dart formatter after sorting imports
+  dart_fmt: false
 
   # Folder names used for collecting dart files
   folders:

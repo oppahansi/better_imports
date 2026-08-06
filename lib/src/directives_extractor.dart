@@ -110,19 +110,16 @@ DirectiveType _getDirectiveType(
     return DirectiveType.project;
   } else if (!directiveValue.contains('package:')) {
     var fileName = _extractFileName(directiveValue);
-    var filePath = filePaths.all.firstWhere(
-      (path) => path.contains(fileName),
-      orElse: () => '',
-    );
+    var filePath = filePaths.findByBasename(fileName);
 
-    if (filePath.isEmpty) {
+    if (filePath == null) {
       log.fine(
         "┠── Falling back to relative for unknown import: $directiveValue",
       );
       return DirectiveType.relative;
     }
 
-    if (filePath.contains("lib/")) {
+    if (filePath.replaceAll('\\', '/').contains("lib/")) {
       return DirectiveType.project;
     } else {
       return DirectiveType.relative;
