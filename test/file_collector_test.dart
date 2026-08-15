@@ -1,6 +1,9 @@
+// Dart Imports
+import 'dart:io';
+
 // Package Imports
-import 'package:test/test.dart';
 import 'package:path/path.dart' as path;
+import 'package:test/test.dart';
 
 // Project Imports
 import 'package:better_imports/src/arg_parser.dart';
@@ -114,6 +117,57 @@ void main() {
       var collected = collector.collect();
 
       expect(collected.filtered.length == collected.all.length, true);
+    });
+
+    test("symlinked dependency folders are ignored", () {
+      final tempRoot = Directory.systemTemp.createTempSync(
+        'better_imports_symlink_test_',
+      );
+      addTearDown(() => tempRoot.deleteSync(recursive: true));
+
+      final projectRoot = Directory(path.join(tempRoot.path, 'project'));
+      projectRoot.createSync();
+
+      final libDir = Directory(path.join(projectRoot.path, 'lib'));
+      libDir.createSync();
+      File(
+        path.join(libDir.path, 'app.dart'),
+      ).writeAsStringSync("import 'dart:io';\n");
+
+      final depRoot = Directory(path.join(tempRoot.path, 'dependency_pkg'));
+      depRoot.createSync();
+      File(
+        path.join(depRoot.path, 'plugin.dart'),
+      ).writeAsStringSync("import 'dart:io';\n");
+
+      final symlinkDir = Directory(
+        path.join(projectRoot.path, 'ios', '.symlinks', 'plugins'),
+      );
+      symlinkDir.createSync(recursive: true);
+      Link(
+        path.join(symlinkDir.path, 'dependency_pkg'),
+      ).createSync(depRoot.path, recursive: true);
+
+      final cfg = Cfg(argParser.parse([]));
+      cfg.sortPath = projectRoot.path;
+      cfg.folders = <String>[];
+      cfg.recursive = true;
+
+      final collector = FilePathsCollector(cfg: cfg);
+      final collected = collector.collect();
+
+      expect(
+        collected.filtered.any(
+          (filePath) => filePath.contains('.symlinks/plugins'),
+        ),
+        isFalse,
+      );
+      expect(
+        collected.filtered.any(
+          (filePath) => filePath.endsWith(path.join('lib', 'app.dart')),
+        ),
+        isTrue,
+      );
     });
   });
 }

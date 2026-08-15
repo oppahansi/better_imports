@@ -32,14 +32,7 @@ class FilePathsCollector {
     if (cfg.folders.isEmpty) {
       log.fine("┠ No folders specified, collecting files in root directory..");
 
-      var entities = Directory(cfg.sortPath).listSync(recursive: cfg.recursive);
-
-      for (FileSystemEntity entity in entities) {
-        if (entity is File && entity.path.endsWith('.dart')) {
-          _allFilePaths.add(entity.path);
-        }
-      }
-
+      _collectFromDirectory(Directory(cfg.sortPath));
       return;
     }
 
@@ -50,12 +43,23 @@ class FilePathsCollector {
         continue;
       }
 
-      var entities = Directory(folderPath).listSync(recursive: cfg.recursive);
+      _collectFromDirectory(Directory(folderPath));
+    }
+  }
 
-      for (FileSystemEntity entity in entities) {
-        if (entity is File && entity.path.endsWith('.dart')) {
-          _allFilePaths.add(entity.path);
-        }
+  void _collectFromDirectory(Directory directory) {
+    final entities = directory.listSync(
+      recursive: cfg.recursive,
+      followLinks: false,
+    );
+
+    for (final entity in entities) {
+      if (entity is Link) {
+        continue;
+      }
+
+      if (entity is File && entity.path.endsWith('.dart')) {
+        _allFilePaths.add(entity.path);
       }
     }
   }

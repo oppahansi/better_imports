@@ -36,7 +36,17 @@ SortedResult _sortFile(String path, FilePaths filePaths, Cfg cfg) {
   log.fine("┠─ Sorting file: $path");
 
   var code = File(path).readAsStringSync();
-  var compiledCode = parseString(content: code).unit;
+  final parseResult = parseString(content: code, throwIfDiagnostics: false);
+
+  if (parseResult.errors.isNotEmpty) {
+    log.warning(
+      "┠─ Skipping file with parse diagnostics: $path\n"
+      "${parseResult.errors.map((e) => e.message).join('\n')}",
+    );
+    return SortedResult(file: File(path), sorted: code, changed: false);
+  }
+
+  var compiledCode = parseResult.unit;
 
   if (compiledCode.directives.isEmpty) {
     return SortedResult(file: File(path), sorted: code, changed: false);

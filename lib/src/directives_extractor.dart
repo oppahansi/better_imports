@@ -38,6 +38,7 @@ void _initDirectivesToComments(
   directivesToComments.putIfAbsent(DirectiveType.package, () => {});
   directivesToComments.putIfAbsent(DirectiveType.project, () => {});
   directivesToComments.putIfAbsent(DirectiveType.relative, () => {});
+  directivesToComments.putIfAbsent(DirectiveType.export, () => {});
   directivesToComments.putIfAbsent(DirectiveType.part, () => {});
 }
 
@@ -63,6 +64,15 @@ void _fillDirectivesToComments(
         _extractDocCommentsFromImportDirective(directive, directiveComments);
       } else {
         _extractPrecedingCommentsFromImportDirective(
+          directive,
+          directiveComments,
+        );
+      }
+    } else if (directive is ExportDirective) {
+      if (beginToken.lexeme.startsWith("///")) {
+        _extractDocCommentsFromExportDirective(directive, directiveComments);
+      } else {
+        _extractPrecedingCommentsFromExportDirective(
           directive,
           directiveComments,
         );
@@ -98,6 +108,10 @@ DirectiveType _getDirectiveType(
       directiveValue.startsWith("library\n") ||
       directiveValue.startsWith("library\r")) {
     return DirectiveType.library;
+  } else if (directiveValue.startsWith("export ") ||
+      directiveValue.startsWith("export\n") ||
+      directiveValue.startsWith("export\r")) {
+    return DirectiveType.export;
   } else if (directiveValue.startsWith("part ") ||
       directiveValue.startsWith("part\n") ||
       directiveValue.startsWith("part\r")) {
@@ -168,6 +182,19 @@ void _extractDocCommentsFromImportDirective(
   );
 }
 
+void _extractDocCommentsFromExportDirective(
+  ExportDirective directive,
+  Map<String, List<String>> directiveComments,
+) {
+  log.fine("┠── Extracting doc comments..");
+
+  _extractDocComments(
+    directive.toString(),
+    directive.beginToken,
+    directiveComments,
+  );
+}
+
 void _extractDocCommentsFromPartDirective(
   PartDirective directive,
   Map<String, List<String>> directiveComments,
@@ -197,6 +224,25 @@ void _extractDocComments(
 
 void _extractPrecedingCommentsFromImportDirective(
   ImportDirective directive,
+  Map<String, List<String>> directiveComments,
+) {
+  log.fine("┠── Extracting preceding comments..");
+
+  dynamic precedingComment = directive.beginToken.precedingComments;
+
+  if (precedingComment == null) {
+    return;
+  }
+
+  _extractPrecedingComments(
+    precedingComment,
+    directiveComments,
+    directive.toString(),
+  );
+}
+
+void _extractPrecedingCommentsFromExportDirective(
+  ExportDirective directive,
   Map<String, List<String>> directiveComments,
 ) {
   log.fine("┠── Extracting preceding comments..");

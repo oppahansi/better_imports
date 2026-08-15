@@ -46,6 +46,7 @@ String sort(
     Constants.relativeComment,
     cfg,
   );
+  _add(buffer, directivesWithComments[DirectiveType.export]!, "", cfg);
   _add(buffer, directivesWithComments[DirectiveType.part]!, "", cfg);
 
   return buffer.toString();
@@ -86,6 +87,34 @@ Map<String, List<String>> _convertProjectImports(
   return newProjectImports;
 }
 
+bool _isTestProjectImport(String importLine, Cfg cfg) {
+  final packagePrefix = "package:${cfg.projectName}";
+  final startIndex = importLine.indexOf(packagePrefix);
+  if (startIndex == -1) return false;
+
+  final quote = importLine[startIndex - 1];
+  final endIndex = importLine.indexOf(quote, startIndex + packagePrefix.length);
+  if (endIndex == -1) return false;
+
+  final packagePathSegment = importLine.substring(
+    startIndex + packagePrefix.length,
+    endIndex,
+  );
+  final importPath = packagePathSegment.startsWith('/')
+      ? packagePathSegment.substring(1)
+      : packagePathSegment;
+
+  if (importPath.isEmpty) return false;
+  final segments = importPath.split('/');
+  return segments.first == 'test' || segments.first == 'tests';
+}
+
+bool _isTestFile(String path) {
+  final normalizedPath = p.normalize(path).replaceAll('\\', '/');
+  final segments = normalizedPath.split('/');
+  return segments.any((segment) => segment == 'test' || segment == 'tests');
+}
+
 String _convertToRelativeProjectImport(
   String path,
   String importLine,
@@ -117,7 +146,18 @@ String _convertToRelativeProjectImport(
           ? packagePathSegment.substring(1)
           : packagePathSegment;
 
-      final importedFilePath = importPath.isEmpty ? "lib" : "lib/$importPath";
+      final isTestImport = _isTestProjectImport(importLine, cfg);
+      final importedFilePath = isTestImport
+          ? importPath.isEmpty
+                ? "test"
+                : importPath
+          : importPath.isEmpty
+          ? "lib"
+          : "lib/$importPath";
+
+      if (_isTestFile(path) && !isTestImport) {
+        return importLine;
+      }
 
       final currentDir = p.dirname(path);
       final relativeCurrentDir = p.isAbsolute(currentDir)
