@@ -1,3 +1,11 @@
+## 1.8.0
+- Fix: package imports in test files are preserved instead of being rewritten to relative imports when the file is under `test`/`tests` and the import targets the project `lib` tree.
+- Fix: test-local imports inside the test tree can still remain relative while project imports for app code keep `package:` style.
+- Fix: symlinked dependency/plugin directories are no longer traversed during collection, preventing files under `.symlinks`, generated folders, and other external trees from being sorted.
+- Fix: `export` directives are handled separately and remain below imports, instead of being mixed into project-import ordering.
+- Fix: invalid Dart files are skipped without crashing the tool while valid files continue to be processed.
+- Chore: adds regression coverage for symlinked dependency folders, test-file import rules, export ordering, and parser-skipped invalid files.
+
 ## 1.7.0
 - Fix: `--dart-fmt` / `dart_fmt` was parsed and documented but never actually applied; the Dart formatter ran unconditionally regardless of the flag. It is now correctly wired up, and **defaults to `false`** (previously formatting always ran).
 - Fix: relative/project import classification could match the wrong file when one file's name was a substring of another's (e.g. `utils.dart` matching `core_utils.dart`); now matched by exact file name.
