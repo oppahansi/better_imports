@@ -5,6 +5,7 @@
     <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/oppahansi/better_imports">
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/oppahansi/better_imports">
     <img alt="all-contributors" src="https://img.shields.io/github/all-contributors/oppahansi/better_imports?color=ee8449&style=flat-square">
+    <a href="https://discord.gg/ncKmDEArqg"><img alt="Discord" src="https://img.shields.io/static/v1?logo=discord&label=discord&message=Join&color=blue"></a>
 </p>
 
 # better_imports
